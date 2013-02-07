@@ -1,0 +1,112 @@
+<div class="block" id="block-forms">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div style="display:none;" id="div_ErrMsg">
+				<div class="ui-widget centerContainer" style="width: 75%;">
+					<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;text-align:left;">
+						<span style="float: right;font-weight:bold;"><a href="#close" onclick="$('#div_ErrMsg').hide('blind', {}, 500);" class="ui-icon ui-icon-circle-close">&nbsp;</a></span>
+						<p id="validateRes"></p>
+					</div>
+				</div>
+			</div>
+			
+			<div id="emoticons" class="color2 ui-corner-all centerContainer" style="width:500px;" align="center">
+				{{SMILES|raw}}
+				<hr />
+				<a href="#smiles" id="showAllSmiles">{{LANG_SMILES}}</a>
+			</div><br />
+
+			{{NEWPMFORM|raw}}
+			<div class="group">				
+				<label class="label">{{LANG_SUBJECT}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_subject" class="error"></span>
+					<input type="text" name="subject" class="text_field" id="subject" maxlength="50" />
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_TO}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_sendto" class="error"></span>
+					<input type="text" name="sendto" class="text_field" id="sendto" value="{{TO}}" maxlength="25" />
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_PMMSG}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_pmMsg" class="error"></span>
+					{% import "bbcode.twig" as bbcode %}
+					{{ bbcode.bbcodeToolbar('light', 'pmMsg') }}
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-comments"></span>&nbsp;{{LANG_SENDPM}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#showAllSmiles').click(function(e) {
+		e.preventDefault(); //we don't want to leave this page.
+        $('#moreSmiles').dialog('open');
+    });
+
+	new FormValidator('frmNewPM', [{
+		name: 'subject',
+		display: '{{LANG_SUBJECT}}',
+		rules: 'required|max_length[50]'
+	}, {
+		name: 'sendto',
+		display: '{{LANG_TO}}',
+		rules: 'required|alpha_numeric|max_length[25]'
+	}, {
+		name: 'pmMsg',
+		display: '{{LANG_PMMSG}}',
+		rules: 'required|max_length[255]'
+	}], function(errors, event) {
+		if (errors.length > 0) {
+			$('#validateRes').empty();
+			$('#validateRes').append(errors.join('<br />'));
+			$('#div_ErrMsg').show();
+		} else if (event != undefined && errors.length == 0) {
+			event.preventDefault(); //stay on page.
+			processForm('frmNewPM', function() {
+				$('#newPM').dialog('close');
+			}, function() { 
+				FormResults("error", "{{LANG_FORMFAILURE}}");
+				$('#frmNewPM')[0].reset();
+				$('#frmNewPM').removeClass('ui-state-error');
+			});
+		}
+
+	});
+
+	$("#sendto").autocomplete({
+		source: function(req, res) {
+			$.getJSON("{{BOARD_URL}}{{INDEX_PAGE}}/ajax/searchusernames/"+req.term, function(data) {
+				var suggestions = []; //create array for response objects
+
+				//process response
+				$.each(data, function(i, val) {
+					suggestions.push(val.Username);
+				});
+				res(suggestions); //pass array to callback
+			});
+		},
+		minLength: 2,
+		select: function( event, ui ) {
+			$(this).val(ui.item ? ui.item.label : this.value);
+		},
+		open: function() {
+			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		},
+		close: function() {
+			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		}
+	});
+</script>

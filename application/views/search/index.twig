@@ -1,0 +1,74 @@
+{% extends "master.twig" %}
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+{% block bodyRender %}
+{{BREADCRUMB|raw}}<br />
+
+<div class="block" id="block-forms-2">
+    <div class="content">
+		<h2 class="title">{{LANG_SEARCH}}</h2>
+        <div class="inner">
+			{{VALIDATIONSUMMARY|raw}}<br />
+			
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 45%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="validateRes"></span>
+			</div>
+			
+			{{SEARCHFORM|raw}}
+			<div class="columns buffer">
+				<div class="column left">
+					<div class="group">
+						<label class="label">{{LANG_KEYWORD}}</label>
+						<input type="text" name="keyword" class="text_field" id="keyword" />
+					</div>
+					<div class="group">
+						<label class="label">{{LANG_USERNAME}}</label>
+						<input type="text"name="author" class="text_field" id="author" />
+					</div>
+				</div>
+				<div class="column right">
+					<div class="group">
+						<label class="label">{{LANG_SELBOARD}}</label>
+						{{BOARDLIST|raw}}
+					</div>
+					<div class="group">
+						<label class="label">{{LANG_SEARCHTYPE}}</label>
+						<div>
+							<input type="radio" name="search_type" value="topic" id="search_topic" checked=checked /> <label for="search_topic" class="radio">{{LANG_TOPIC}}</label>
+						</div>
+						<div>
+							<input type="radio" name="search_type" value="post" id="search_post" /> <label for="search_post" class="radio">{{LANG_POST}}</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+				  <span class="icon-search"></span>&nbsp;{{LANG_SEARCH}}
+				</button>
+			</div>
+			</form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$('#keyword').focus();
+
+new FormValidator('frmSearch', [{
+	name: 'keyword',
+	display: '{{LANG_KEYWORD}}',
+	rules: 'required|min_length[5]'
+}], function(errors, event) {
+
+	if (errors.length > 0) {
+		$('#validateRes').empty();
+		$('#validateRes').append(errors.join('<br />'));
+		$('#div_ErrMsg').show();
+	} else {
+		event.returnValue = true; //allow form to process.
+	}
+
+});
+</script>
+{% endblock %}

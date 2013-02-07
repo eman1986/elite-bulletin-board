@@ -1,0 +1,110 @@
+<div class="block" id="block-forms">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 60%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="validateRes"></span>
+			</div>
+
+			{{UCPUSETTINGSFORM|raw}}
+			<div class="group">
+				<label class="label">{{LANG_PMNOTIFY}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_pm_notice" class="error"></span>
+					<div>
+						<input type="radio" name="pm_notice" id="pm_notice_1" value="1" class="checkbox" {{PMNOTIFY == 1 ? 'checked=checked' : ''}} /> <label for="pm_notice_1" class="radio">{{LANG_YES}}</label>
+					</div>
+					<div>
+						<input type="radio" name="pm_notice" id="pm_notice_0" value="0" class="checkbox" {{PMNOTIFY == 0 ? 'checked=checked' : ''}} /> <label for="pm_notice_0" class="radio">{{LANG_NO}}</label>
+					</div>
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_SHOWEMAIL}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_show_email" class="error"></span>
+					<div>
+						<input type="radio" name="show_email" id="show_email_1" value="1" class="checkbox" {{PMNOTIFY == 1 ? 'checked=checked' : ''}} /> <label for="show_email_1" class="radio">{{LANG_YES}}</label>
+					</div>
+					<div>
+						<input type="radio" name="show_email" id="show_email_0" value="0" class="checkbox" {{PMNOTIFY == 0 ? 'checked=checked' : ''}} /> <label for="show_email_0" class="radio">{{LANG_NO}}</label>
+					</div>
+				</div>
+			</div>
+			 <div class="group">
+				<label class="label">{{LANG_TIMEFORMAT}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_time_format" class="error"></span>
+					{# TODO: look into making this a select box to make it easier on the user. #}
+					{{TIMEFORMAT|raw}}
+				</div>
+			</div>
+			 <div class="group">
+				<label class="label">{{LANG_DATEFORMAT}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_date_format" class="error"></span>
+					{# TODO: look into making this a select box to make it easier on the user. #}
+					{{DATEFORMAT|raw}}
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_TIME}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_time_zone" class="error"></span>
+					{{TimeZone|raw}}
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_LANGUAGE}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_language" class="error"></span>
+					{{LANGUAGE|raw}}
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-cogs"></span>&nbsp;{{LANG_SAVESETTINGS}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#curemail').focus();
+new FormValidator('frmUpdateUSettings', [{
+    name: 'date_format',
+    display: '{{LANG_DATEFORMAT}}',
+    rules: 'required'
+}, {
+    name: 'time_format',
+	display: '{{LANG_TIMEFORMAT}}',
+    rules: 'required'
+}, {
+    name: 'time_zone',
+	display: '{{LANG_TIME}}',
+    rules: 'required'
+}, {
+    name: 'language',
+    display: '{{LANG_LANGUAGE}}',
+    rules: 'required'
+}], function(errors, event) {
+    if (errors.length > 0) {
+        $('#validateRes').empty();
+        $('#validateRes').append(errors.join('<br />'));
+        $('#div_ErrMsg').show();
+    } else if (event != undefined && errors.length == 0) {
+        event.preventDefault(); //stay on page.
+		processForm('frmUpdateUSettings', function() {
+			$('#ucpFrm').dialog('close');
+		}, function() { 
+			FormResults("error", "{{LANG_FORMFAILURE}}");
+			$('#frmUpdateProfile')[0].reset();
+			$('#frmUpdateProfile').removeClass('ui-state-error');
+		});
+    }
+    
+});
+</script>

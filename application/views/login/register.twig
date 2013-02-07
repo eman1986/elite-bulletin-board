@@ -1,0 +1,207 @@
+{% extends "master.twig" %}
+
+{% block title %}{{boardName}} - {{LANG_REGISTER}}{% endblock %}
+
+{% block bodyRender %}
+
+{{BREADCRUMB|raw}}<br />
+
+
+{%if PREF_RULES == 1%}
+    <div id="DlgTOS" class="hideElement">
+        {{RULES}}
+    </div>
+    <script type="text/javascript">
+		var btnTOS = {};
+		 btnTOS['{{LANG_AGREE}}'] = function() {
+			 $(this).dialog('close');
+		 };
+
+		$("#DlgTOS").dialog({
+			title: "{{LANG_TOSTITLE}}",
+			modal: true,
+			resizable: false,
+			draggable: false,
+			width: '400',
+			height: '200',
+			buttons: btnTOS,
+			open: function(event, ui) {
+				$(".ui-dialog-titlebar-close", ui.dialog).hide();
+			}
+		});
+    </script>
+{%endif%}
+
+<script type="text/javascript" src="{{BOARD_URL}}js/pwdTester.js"></script>
+<script type="text/javascript">
+//$(document).ready(function(){
+	//$('#password').keyup(function() {
+	$(document).on("keyup", '#password', function() {
+		var howStrong = passwordStrength($(this).val());
+		$('.strength-text', $(this).next()).text(howStrong);
+		var sColor = '#555';
+		switch(howStrong) {
+			case 'Strong':
+				$('.password-strength', $(this).next()).css('background-color', '#006600');
+			break;
+			case 'Medium':
+				$('.password-strength', $(this).next()).css('background-color', '#009900');
+			break;
+			case 'Weak':
+				$('.password-strength', $(this).next()).css('background-color', '#CC9900');
+			break;
+			case 'Short':
+				$('.password-strength', $(this).next()).css('background-color', '#FF0000');
+			break;
+			default :
+				$('.password-strength', $(this).next()).css('background-color', '#555');
+			break;
+		}
+	}).focusout( function() {
+		$(this).trigger('keyup');
+	});
+//});
+</script>
+<div id="box">
+	<div class="block" id="block-signup">
+        <h2>{{LANG_REGISTER}}</h2>
+        <div class="content">
+			
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 60%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="validateRes"></span>
+			</div><br />	
+			
+			{{REGISTERFORM|raw}}
+            <div class="group buffer">
+				<div class="left">
+					<label class="label">{{LANG_EMAIL}}</label>
+				</div>
+				<div class="right">
+					<div class="fieldWithErrors">
+						<span class="error">{{VALIDATION_EMAIL}}</span>
+						<input type="text" name="email" maxlength="255" class="text_field" id="email" />
+					</div>
+				</div>
+            </div>
+            <div class="group buffer">
+				<div class="left">
+					<label class="label">{{LANG_USERNAME}}</label>
+				</div>
+				<div class="right">
+					<div class="fieldWithErrors">
+						<span class="error">{{VALIDATION_USERNAME}}</span>
+						<input name="username" type="text" maxlength="25" class="text_field" id="username" />
+						<span class="description">{{LANG_RULE}}</span>
+					</div>
+				</div>
+            </div>
+            <div class="group buffer">
+				<div class="left">
+					<label class="label">{{LANG_PASSWORD}}</label>
+				</div>
+				<div class="right">
+					<div class="fieldWithErrors">
+						<span class="error">{{VALIDATION_PASSWORD}}</span>
+						<input name="password" type="password" class="text_field" id="password" />
+						<div class="PwdStrengthBox"><span class="password-strength"></span> <span class="strength-text">Type Password</span></div>
+					</div>
+				</div>
+            </div>
+            <div class="group buffer">
+				<div class="left">
+					<label class="label">{{LANG_LANGUAGE}}</label>
+				</div>
+				<div class="right">
+					<div class="fieldWithErrors">
+						<span class="error">{{VALIDATION_LANGUAGE}}</span><br />
+						{{LANGUAGE|raw}}
+					</div>
+				</div>
+            </div>
+			{%if PREF_CAPTCHA == 1%}
+            <div class="group buffer">
+				<div class="left">
+					<label class="label">{{LANG_CAPTCHA}}</label>
+				</div>
+				<div class="right">
+					<div class="fieldWithErrors">
+						<span class="error">{{VALIDATION_CAPTCHA}}</span><br />
+						<strong>{{CAPTCHA}}</strong>
+						<input type="text" name="captcha" maxlength="2" class="text_field" id="captcha" />
+					</div>
+				</div>
+            </div>
+			{%endif%}
+			{%if PREF_COPPA == 13 or PREF_COPPA == 16 or PREF_COPPA == 18 or PREF_COPPA == 21%}
+            <div class="group">
+				<input name="coppavalid" id="coppavalid" type="checkbox" value="yes" />
+				{%if PREF_COPPA == 13%}
+					<strong>{{COPPA_13}}</strong>
+				{%elseif PREF_COPPA == 16%}
+					<strong>{{COPPA_16}}</strong>
+				{%elseif PREF_COPPA == 18%}
+					<strong>{{COPPA_18}}</strong>
+				{%elseif PREF_COPPA == 21%}
+					<strong>{{COPPA_21}}</strong>
+				{%endif%}
+			</div>
+			{%endif%}
+            <div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-user"></span>&nbsp;{{LANG_REGISTER}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#email').focus();
+new FormValidator('frmRegister', [{
+    name: 'username',
+    display: '{{LANG_USERNAME}}',
+    rules: 'required|alpha_numeric'
+}, {
+    name: 'password',
+	display: '{{LANG_PASSWORD}}',
+    rules: 'required'
+}, {
+    name: 'email',
+	display: '{{LANG_EMAIL}}',
+    rules: 'required|valid_email'
+},
+{% if PREF_COPPA == 13 or PREF_COPPA == 16 or PREF_COPPA == 18 or PREF_COPPA == 21 %}
+{
+    name: 'coppavalid',
+    display: '{{LANG_COPPA}}',
+    rules: 'required'
+},
+{% endif %}
+{%if PREF_CAPTCHA == 1%}
+{
+    name: 'captcha',
+    display: '{{LANG_CAPTCHA}}',
+    rules: 'required|numeric'
+},
+{% endif %}
+{
+    name: 'email',
+	display: '{{LANG_EMAIL}}',
+    rules: 'required|valid_email'
+}
+], function(errors, event) {
+
+    if (errors.length > 0) {
+        $('#validateRes').empty();
+        $('#validateRes').append(errors.join('<br />'));
+        $('#div_ErrMsg').show();
+    } else {
+        event.returnValue = true; //allow form to process.
+    }
+    
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends "master.twig" %}
+
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+
+{% block bodyRender %}
+
+<script type="text/javascript" src="{{BOARD_URL}}js/jquery.jUploader.js"></script>
+
+{{BREADCRUMB|raw}}<br />
+
+<div class="block" id="block-tables">
+    <div class="content">
+
+        <div class="inner"><br />
+            <table class="table">
+				<tr>
+					<th>{{LANG_POSTINGRULES}}</th>
+                </tr><tr>
+					<td class="centerText">
+						{{LANG_ALLOWSMILES}}: 
+						{% if ALLOWSMILES == 1 %}
+						<strong>{{LANG_YES}}</strong>
+						{% else %}
+						<strong>{{LANG_NO}}</strong>
+						{% endif %}
+						&nbsp;|&nbsp;
+						{{LANG_ALLOWBBCODE}}:
+						{% if ALLOWBBCODE == 1 %}
+						<strong>{{LANG_YES}}</strong>
+						{% else %}
+						<strong>{{LANG_NO}}</strong>
+						{% endif %}
+						&nbsp;|&nbsp;
+						{{LANG_ALLOWIMG}}: 
+						{% if ALLOWIMG == 1 %}
+						<strong>{{LANG_YES}}</strong>
+						{% else %}
+						<strong>{{LANG_NO}}</strong>
+						{% endif %}
+					</td>
+				</tr>
+            </table>
+		</div>
+	</div>
+</div>
+
+<div class="block" id="block-forms-2">
+	<div class="content">
+		<h2 class="title">{{LANG_EDITTOPIC}}</h2>
+		<div class="inner">			
+			{{VALIDATIONSUMMARY|raw}}<br />
+
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 45%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="ErrMsg"></span>
+				<span id="validateRes"></span>
+			</div>
+			<br />
+
+			{% if ATTACHMENTLIMIT > 0 %}
+			<div id="DLG_upload">
+				{{UPLOADFORM|raw}}
+					<input id="attach" name="userfile" type="file" /><br />
+					<input type="submit" value="{{LANG_UPLOAD}}" id="fileUpload" />
+					<input type="reset" value="{{LANG_CLEAR}}" id="ClearList" />
+					<input type="button" value="{{LANG_ADDMOREFILES}}" id="addMoreFiles" />
+				</form>
+				<div id="filelist"></div>
+			</div>
+			<script type="text/javascript">
+				$(function(){
+					$('#attach').jUploader({
+						lngOk: lang.Ok,
+						lngYes: lang.Yes,
+						lngNo: lang.No,
+						lngError: lang.Error,
+						duplicateTitle: lang.duplicateTitle,
+						duplicateMsg: lang.duplicateMsg,
+						LoadingGfx: "{{BOARD_URL}}themes/{{THEME_NAME}}/images/loading.gif",
+						LoadingMsg: lang.attachLoading,
+						PendingMsg: lang.attachPending,
+						SuccessMsg: lang.attachSuccess,
+						FailureMsg: lang.attachFailed,
+						uploadLimitTitle: lang.attachLimitTitle,
+						uploadLimitMsg: lang.attachLimit,
+						uploadLimit: "{{ATTACHMENTLIMIT}}",
+						confirmDeleteTitle: lang.attachDeleteTitle,
+						deleteUrl: "{{BOARD_URL}}{{INDEX_PAGE}}/upload/delete",
+						confirmDeletMsg: lang.attachDeletePrompt,
+						fileMgrUrl: "{{BOARD_URL}}{{INDEX_PAGE}}/upload/"
+					});
+				});
+			</script>
+			{% endif %}
+
+				<div id="emoticons" class="color2 ui-corner-all centerContainer" style="width:500px;" align="center">
+					{{SMILES|raw}}
+					<hr />
+					<a href="#smiles" id="showAllSmiles">{{LANG_SMILES}}</a>
+				</div><br />
+			
+			{{EDITTOPICFORM|raw}}
+			<div class="columns buffer">
+				<div class="column left">
+					<div class="group">
+						<label class="label">{{LANG_TOPIC}}</label>
+						<input type="text" name="topic" class="text_field" id="topic" maxlength="50" value="{{TOPIC}}" />
+					</div>
+					<div class="group">
+						{% import "bbcode.twig" as bbcode %}
+						{{ bbcode.bbcodeToolbar('full', 'post', POSTTOPIC) }}
+					</div>
+				</div>
+				<div class="column right">
+					{% if GAC_IMPORTANT == TRUE %}
+						<div class="group">
+							<label class="label">{{LANG_POSTTYPE}}</label>
+							<div>							
+								<input type="radio" name="post_type" id="important_topic" value="1" class="checkbox" /> <label for="important_topic" class="radio inline">{{LANG_IMPORTANT}}</label>
+							</div>
+							<div>
+								<input type="radio" name="post_type" id="normal_topic" value="0" class="checkbox" checked=checked /> <label for="normal_topic" class="radio inline">{{LANG_NORMAL}}</label>
+							</div>
+						</div>
+					{% else %}
+					<input type="hidden" name="post_type" value="0" />
+					{% endif %}	
+					<div class="group">
+						<label class="label">{{LANG_OPTIONS}}</label>
+						<div>
+							<input type="checkbox" name="subscribe" id="subscribe" value="1" /> <label for="subscribe" class="checkbox inline">{{LANG_NOTIFY}}</label>
+						</div>
+						<div>
+							<input type="checkbox" name="no_smile" id="no_smile" value="1" /> <label for="no_smile" class="checkbox inline">{{LANG_DISABLESMILES}}</label>
+						</div>
+						<div>
+							<input type="checkbox" name="no_bbcode" id="no_bbcode" value="1" /> <label for="no_bbcode" class="checkbox inline">{{LANG_DISABLEBBCODE}}</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="group navform buffer">
+			  <button class="button" type="submit">
+				<span class="icon-pencil"></span>&nbsp;{{LANG_EDITTOPIC}}
+			  </button>
+			</div>
+				</form><br />
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$('#topic').focus();
+
+	//add jquery.markitup plugin to textarea.
+ 	$('#topicBody').markItUp(myBbcodeSettings);
+
+	new FormValidator('frmEditTopic', [{
+		name: 'topic',
+		display: '{{LANG_TOPIC}}',
+		rules: 'required|max_length[50]'
+	},{
+		name: 'post',
+		display: '{{LANG_TOPICBODY}}',
+		rules: 'required|min_length[10]'
+	}], function(errors, event) {
+		if (errors.length > 0) {
+			$('#validateRes').empty();
+			$('#validateRes').append(errors.join('<br />'));
+			$('#div_ErrMsg').show();
+		} else {
+			event.returnValue = true; //allow form to process.
+		}
+	});
+</script>
+
+{% endblock %}

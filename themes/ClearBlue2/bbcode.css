@@ -1,0 +1,383 @@
+/* -------------------------------------------------------------------
+// markItUp!
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+
+.bbcode .markItUpButton1 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -136px; width: 10px; height: 9px;
+}
+.bbcode .markItUpButton2 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -159px; width: 8px; height: 9px;
+}
+.bbcode .markItUpButton3 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -182px; width: 10px; height: 8px;
+}
+
+.bbcode .markItUpButton4 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -407px; width: 13px; height: 9px;
+}
+.bbcode .markItUpButton5 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -451px; width: 11px; height: 9px;
+}
+
+.bbcode .markItUpButton6 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 0; width: 16px; height: 13px;
+}
+.bbcode .markItUpButton7 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -313px; width: 16px; height: 8px;
+}
+
+.bbcode .markItUpButton8 a {
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -261px; width: 14px; height: 15px;
+}
+
+	.bbcode .markItUpButton8 ul {
+		width:81px;
+		padding:1px;
+	}
+	.bbcode .markItUpButton8  li {
+		border:1px solid white;
+		width:25px;	height:25px;
+		overflow:hidden;
+		padding:0px; margin:0px;
+		float:left;
+	}
+	.bbcode .markItUpButton8 ul a {
+		width:25px;	height:25px;
+	}
+
+	.bbcode .markItUpButton8 .col1-1 a {
+		background:#FCE94F;
+	}
+	.bbcode .markItUpButton8 .col1-2 a {
+		background:#EDD400;
+	}
+	.bbcode .markItUpButton8 .col1-3 a {
+		background:#C4A000;
+	}
+
+	.bbcode .markItUpButton8 .col2-1 a {
+		background:#FCAF3E;
+	}
+	.bbcode .markItUpButton8 .col2-2 a {
+		background:#F57900;
+	}
+	.bbcode .markItUpButton8 .col2-3 a {
+		background:#CE5C00;
+	}
+
+	.bbcode .markItUpButton8 .col3-1 a {
+		background:#E9B96E;
+	}
+	.bbcode .markItUpButton8 .col3-2 a {
+		background:#C17D11;
+	}
+	.bbcode .markItUpButton8 .col3-3 a {
+		background:#8F5902;
+	}
+
+	.bbcode .markItUpButton8 .col4-1 a {
+		background:#8AE234;
+	}
+	.bbcode .markItUpButton8 .col4-2 a {
+		background:#73D216;
+	}
+	.bbcode .markItUpButton8 .col4-3 a {
+		background:#4E9A06;
+	}
+
+	.bbcode .markItUpButton8 .col5-1 a {
+		background:#729FCF;
+	}
+	.bbcode .markItUpButton8 .col5-2 a {
+		background:#3465A4;
+	}
+	.bbcode .markItUpButton8 .col5-3 a {
+		background:#204A87;
+	}
+
+	.bbcode .markItUpButton8 .col6-1 a {
+		background:#AD7FA8;
+	}
+	.bbcode .markItUpButton8 .col6-2 a {
+		background:#75507B;
+	}
+	.bbcode .markItUpButton8 .col6-3 a {
+		background:#5C3566;
+	}
+
+	.bbcode .markItUpButton8 .col7-1 a {
+		background:#EF2929;
+	}
+	.bbcode .markItUpButton8 .col7-2 a {
+		background:#CC0000;
+	}
+	.bbcode .markItUpButton8 .col7-3 a {
+		background:#A40000;
+	}
+
+	.bbcode .markItUpButton8 .col8-1 a {
+		background:#FFFFFF;
+	}
+	.bbcode .markItUpButton8 .col8-2 a {
+		background:#D3D7CF;
+	}
+	.bbcode .markItUpButton8 .col8-3 a {
+		background:#BABDB6;
+	}
+
+	.bbcode .markItUpButton8 .col9-1 a {
+		background:#888A85;
+	}
+	.bbcode .markItUpButton8 .col9-2 a {
+		background:#555753;
+	}
+	.bbcode .markItUpButton8 .col9-3 a {
+		background:#000000;
+	}
+	
+.bbcode .markItUpButton9 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -290px; width: 20px; height: 9px;
+}
+
+.bbcode .markItUpButton9 ul {
+	width:81px;
+	padding:1px;
+}
+.bbcode .markItUpButton9  li {
+	overflow:hidden;
+	float:left;
+}
+.bbcode .markItUpButton9 ul a {
+	width:50px;
+}
+.bbcode .markItUpButton9 ul a:hover {
+	background-color: #C2C9D1;
+}
+
+.bbcode .markItUpButton10 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -81px; width: 20px; height: 12px;
+}
+
+.bbcode .markItUpButton10 ul {
+	width:81px;
+	padding:1px;
+}
+.bbcode .markItUpButton10  li {
+	overflow:hidden;
+	padding:0px; margin:0px;
+	float:left;
+}
+.bbcode .markItUpButton10 ul a {
+	width:50px;
+}
+.bbcode .markItUpButton10 ul a:hover {
+	background-color: #C2C9D1;
+}
+
+.bbcode .markItUpButton11 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -335px; width: 15px; height: 13px;
+}
+.bbcode .markItUpButton12 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -362px; width: 15px; height: 14px;
+}
+.bbcode .markItUpButton13 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -390px; width: 13px; height: 3px;
+}
+
+.bbcode .markItUpButton14 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -54px; width: 14px; height: 13px;
+}
+.bbcode .markItUpButton15 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -237px; width: 14px; height: 10px;
+}
+
+.bbcode .markItUpButton16 a{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -429px; width: 16px; height: 16px;
+}
+
+.bbcode .attach a{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -107px; width: 15px; height: 15px;
+}
+
+.bbcode .markItUpButton18 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -207px; width: 16px; height: 16px;
+}
+
+.bbcode .preview a {
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -27px; width: 14px; height: 13px;
+}
+
+/*
+limited bbcode for non-topic textareas.
+*/
+
+.limitedbbcode .markItUpButton1 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -136px; width: 10px; height: 9px;
+}
+.limitedbbcode .markItUpButton2 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -159px; width: 8px; height: 9px;
+}
+.limitedbbcode .markItUpButton3 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -182px; width: 10px; height: 8px;
+}
+
+.limitedbbcode .markItUpButton4 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -407px; width: 13px; height: 9px;
+}
+.limitedbbcode .markItUpButton5 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -451px; width: 11px; height: 9px;
+}
+
+.limitedbbcode .markItUpButton6 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 0; width: 16px; height: 13px;
+}
+.limitedbbcode .markItUpButton7 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -313px; width: 16px; height: 8px;
+}
+
+.limitedbbcode .markItUpButton8 a {
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -261px; width: 14px; height: 15px;
+}
+
+	.limitedbbcode .markItUpButton8 ul {
+		width:81px;
+		padding:1px;
+	}
+	.limitedbbcode .markItUpButton8  li {
+		border:1px solid white;
+		width:25px;	height:25px;
+		overflow:hidden;
+		padding:0px; margin:0px;
+		float:left;
+	}
+	.limitedbbcode .markItUpButton8 ul a {
+		width:25px;	height:25px;
+	}
+
+	.limitedbbcode .markItUpButton8 .col1-1 a {
+		background:#FCE94F;
+	}
+	.limitedbbcode .markItUpButton8 .col1-2 a {
+		background:#EDD400;
+	}
+	.limitedbbcode .markItUpButton8 .col1-3 a {
+		background:#C4A000;
+	}
+
+	.limitedbbcode .markItUpButton8 .col2-1 a {
+		background:#FCAF3E;
+	}
+	.limitedbbcode .markItUpButton8 .col2-2 a {
+		background:#F57900;
+	}
+	.limitedbbcode .markItUpButton8 .col2-3 a {
+		background:#CE5C00;
+	}
+
+	.limitedbbcode .markItUpButton8 .col3-1 a {
+		background:#E9B96E;
+	}
+	.limitedbbcode .markItUpButton8 .col3-2 a {
+		background:#C17D11;
+	}
+	.limitedbbcode .markItUpButton8 .col3-3 a {
+		background:#8F5902;
+	}
+
+	.limitedbbcode .markItUpButton8 .col4-1 a {
+		background:#8AE234;
+	}
+	.limitedbbcode .markItUpButton8 .col4-2 a {
+		background:#73D216;
+	}
+	.limitedbbcode .markItUpButton8 .col4-3 a {
+		background:#4E9A06;
+	}
+
+	.limitedbbcode .markItUpButton8 .col5-1 a {
+		background:#729FCF;
+	}
+	.limitedbbcode .markItUpButton8 .col5-2 a {
+		background:#3465A4;
+	}
+	.limitedbbcode .markItUpButton8 .col5-3 a {
+		background:#204A87;
+	}
+
+	.limitedbbcode .markItUpButton8 .col6-1 a {
+		background:#AD7FA8;
+	}
+	.limitedbbcode .markItUpButton8 .col6-2 a {
+		background:#75507B;
+	}
+	.limitedbbcode .markItUpButton8 .col6-3 a {
+		background:#5C3566;
+	}
+
+	.limitedbbcode .markItUpButton8 .col7-1 a {
+		background:#EF2929;
+	}
+	.limitedbbcode .markItUpButton8 .col7-2 a {
+		background:#CC0000;
+	}
+	.limitedbbcode .markItUpButton8 .col7-3 a {
+		background:#A40000;
+	}
+
+	.limitedbbcode .markItUpButton8 .col8-1 a {
+		background:#FFFFFF;
+	}
+	.limitedbbcode .markItUpButton8 .col8-2 a {
+		background:#D3D7CF;
+	}
+	.limitedbbcode .markItUpButton8 .col8-3 a {
+		background:#BABDB6;
+	}
+
+	.limitedbbcode .markItUpButton8 .col9-1 a {
+		background:#888A85;
+	}
+	.limitedbbcode .markItUpButton8 .col9-2 a {
+		background:#555753;
+	}
+	.limitedbbcode .markItUpButton8 .col9-3 a {
+		background:#000000;
+	}
+
+.limitedbbcode .markItUpButton9 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -290px; width: 20px; height: 9px;
+}
+
+.limitedbbcode .markItUpButton10 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: -1px -81px; width: 20px; height: 12px;
+}
+
+.limitedbbcode .markItUpButton11 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -335px; width: 15px; height: 13px;
+}
+.limitedbbcode .markItUpButton12 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -362px; width: 15px; height: 14px;
+}
+.limitedbbcode .markItUpButton13 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -390px; width: 13px; height: 3px;
+}
+
+.limitedbbcode .markItUpButton14 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -54px; width: 14px; height: 13px;
+}
+.limitedbbcode .markItUpButton15 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -237px; width: 14px; height: 10px;
+}
+
+.limitedbbcode .markItUpButton16 a{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -429px; width: 16px; height: 16px;
+}
+
+.limitedbbcode .markItUpButton17 a	{
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -207px; width: 16px; height: 16px;
+}
+
+.limitedbbcode .preview a {
+	background-image:url(images/bbcode-sprite.png); background-position: 0 -27px; width: 14px; height: 13px;
+}

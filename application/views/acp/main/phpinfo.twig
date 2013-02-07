@@ -1,0 +1,10 @@
+{% extends "master.twig" %}
+{% block title %}{{boardName}} - {{pageTitle}} - {{subpageTitle}}{% endblock %}
+{% block bodyRender %}
+
+{{BREADCRUMB|raw}}<br />
+
+<div class="centerContainer">
+	{{PHPINFO|raw}}
+</div>
+{% endblock %}

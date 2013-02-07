@@ -1,0 +1,51 @@
+{% extends "master.twig" %}
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+{% block bodyRender %}
+{{BREADCRUMB|raw}}<br />
+
+<div class="block" id="block-tables">
+    <div class="content">
+		<h2 class="title">{{pageTitle}}</h2>
+        <div class="inner"><br />
+            <table class="table">
+				<tr>
+					<th width="5%">&nbsp;</th>
+					<th width="45%">{{LANG_TOPIC}}</th>
+					<th width="25%">{{LANG_POSTEDBY}}</th>
+					<th class="last" width="25%">{{LANG_POSTEDIN}}</th>
+                </tr>
+				{% if SEARCH_RESULTS_COUNT == 0 %}
+				<tr>
+					<td colspan="4" class="centerText">{{LANG_NORESULTS}}</td>
+				</tr>
+				{% else %}
+				{% for t in SEARCH_RESULTS %}
+				<tr>
+					<td class="centerText" width="5%">
+				{# icon setup. #}
+				{% if t.important == 1 %}
+					<div class="board-status-icon important_topic centerContainer"></div>
+				{% elseif t.Locked == 1 %}
+					<div class="board-status-icon locked_topic centerContainer"></div>
+				{% elseif t.topic_type == 1 %}
+					<div class="board-status-icon poll_topic centerContainer"></div>
+				{% elseif t.tid|counter("TopicReplies") >= 15 %}
+				{# topic is popular. #}
+					<div class="board-status-icon hot_topic centerContainer"></div>
+				{% elseif t.tid|TopicReadStat(LOGGEDUSER) %}
+					<div class="board-status-icon old_topic centerContainer"></div>
+				{% else %}
+					<div class="board-status-icon new_topic centerContainer"></div>
+				{% endif %}
+					</td>
+					<td width="45%">{{Attachment(t.tid) ? '<div class="board-status-icon-attachment floatLeft"></div>&nbsp;' : "" }} {{URL_TAG("/viewtopic/"~ t.tid, t.Topic)|raw}}</td>
+					<td width="25%">{{URL_TAG("/users/#/"~ t.uid, t.Username)|raw}}</td>
+					<td width="25%">{{URL_TAG("/viewboard/"~ t.id, t.Board)|raw}}</td>
+				</tr>
+				{% endfor %}
+				{% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

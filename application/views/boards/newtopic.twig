@@ -1,0 +1,236 @@
+{% extends "master.twig" %}
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+{% block bodyRender %}
+<script type="text/javascript" src="{{BOARD_URL}}js/jquery.jUploader.js"></script>
+
+{{BREADCRUMB|raw}}<br />
+
+<div class="block" id="block-tables">
+    <div class="content">
+
+        <div class="inner"><br />
+            <table class="table">
+				<tr>
+					<th>{{LANG_POSTINGRULES}}</th>
+                </tr><tr>
+					<td class="centerText">
+						{{LANG_ALLOWSMILES}}: 
+						{% if ALLOWSMILES == 1 %}
+						<strong>{{LANG_YES}}</strong>
+						{% else %}
+						<strong>{{LANG_NO}}</strong>
+						{% endif %}
+						&nbsp;|&nbsp;
+						{{LANG_ALLOWBBCODE}}:
+						{% if ALLOWBBCODE == 1 %}
+						<strong>{{LANG_YES}}</strong>
+						{% else %}
+						<strong>{{LANG_NO}}</strong>
+						{% endif %}
+						&nbsp;|&nbsp;
+						{{LANG_ALLOWIMG}}: 
+						{% if ALLOWIMG == 1 %}
+						<strong>{{LANG_YES}}</strong>
+						{% else %}
+						<strong>{{LANG_NO}}</strong>
+						{% endif %}
+					</td>
+				</tr>
+            </table>
+		</div>
+	</div>
+</div>
+
+
+<div class="block" id="block-forms-2">
+	<div class="content">
+		<h2 class="title">{{LANG_POSTTOPIC}}</h2>
+		<div class="inner">			
+			{{VALIDATIONSUMMARY|raw}}<br />
+
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 45%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="ErrMsg"></span>
+				<span id="validateRes"></span>
+			</div>
+
+			<!-- Similar Topic results. -->
+			<div class="hideElement centerContainer alert" id="div_notice" style="width: 45%;">
+				<div id="smloading"><img src="{{BOARD_URL}}themes/{{THEME_NAME}}/images/smloader.gif" /></div>
+				<span class="icon-search" style="float: left; margin-right: .3em;"></span>
+				<div id="similar"></div>
+			</div>
+			<br />
+
+			{% if ATTACHMENTLIMIT > 0 %}
+			<div id="DLG_upload">
+				{{UPLOADFORM|raw}}
+					<input id="attach" name="userfile" type="file" /><br />
+					<input type="submit" value="{{LANG_UPLOAD}}" id="fileUpload" />
+					<input type="reset" value="{{LANG_CLEAR}}" id="ClearList" />
+					<input type="button" value="{{LANG_ADDMOREFILES}}" id="addMoreFiles" />
+				</form>
+				<div id="filelist"></div>
+			</div>
+			<script type="text/javascript">
+				$(function(){
+					$('#attach').jUploader({
+						lngOk: lang.Ok,
+						lngYes: lang.Yes,
+						lngNo: lang.No,
+						lngError: lang.Error,
+						duplicateTitle: lang.duplicateTitle,
+						duplicateMsg: lang.duplicateMsg,
+						LoadingGfx: "{{BOARD_URL}}themes/{{THEME_NAME}}/images/loading.gif",
+						LoadingMsg: lang.attachLoading,
+						PendingMsg: lang.attachPending,
+						SuccessMsg: lang.attachSuccess,
+						FailureMsg: lang.attachFailed,
+						uploadLimitTitle: lang.attachLimitTitle,
+						uploadLimitMsg: lang.attachLimit,
+						uploadLimit: "{{ATTACHMENTLIMIT}}",
+						confirmDeleteTitle: lang.attachDeleteTitle,
+						deleteUrl: "{{BOARD_URL}}{{INDEX_PAGE}}/upload/delete",
+						confirmDeletMsg: lang.attachDeletePrompt,
+						fileMgrUrl: "{{BOARD_URL}}{{INDEX_PAGE}}/upload/"
+					});
+				});
+			</script>
+			{% endif %}
+
+				<div id="emoticons" class="color2 ui-corner-all centerContainer" style="width:500px;" align="center">
+					{{SMILES|raw}}
+					<hr />
+					<a href="#smiles" id="showAllSmiles">{{LANG_SMILES}}</a>
+				</div><br />
+			
+			{% if POLLOPTION == TRUE %}
+			{{NEWPOLLFORM|raw}}
+			{% else %}
+			{{NEWTOPICFORM|raw}}
+			{% endif %}
+
+			<div class="columns buffer">
+				<div class="column left">
+					<div class="group">
+						<label class="label">{{LANG_TOPIC}}</label>
+						<input type="text" name="topic" class="text_field" id="topic" maxlength="50" />
+					</div>
+					<div class="group">
+						{% import "bbcode.twig" as bbcode %}
+						{{ bbcode.bbcodeToolbar('full', 'post') }}
+					</div>
+				</div>
+				<div class="column right">
+					{% if GAC_IMPORTANT == TRUE %}
+						<div class="group">
+							<label class="label">{{LANG_POSTTYPE}}</label>
+							<div>							
+								<input type="radio" name="post_type" id="important_topic" value="1" class="checkbox" /> <label for="important_topic" class="radio inline">{{LANG_IMPORTANT}}</label>
+							</div>
+							<div>
+								<input type="radio" name="post_type" id="normal_topic" value="0" class="checkbox" checked=checked /> <label for="normal_topic" class="radio inline">{{LANG_NORMAL}}</label>
+							</div>
+						</div>
+					{% else %}
+					<input type="hidden" name="post_type" value="0" />
+					{% endif %}	
+					<div class="group">
+						<label class="label">{{LANG_OPTIONS}}</label>
+						<div>
+							<input type="checkbox" name="subscribe" id="subscribe" value="1" /> <label for="subscribe" class="checkbox inline">{{LANG_NOTIFY}}</label>
+						</div>
+						<div>
+							<input type="checkbox" name="no_smile" id="no_smile" value="1" /> <label for="no_smile" class="checkbox inline">{{LANG_DISABLESMILES}}</label>
+						</div>
+						<div>
+							<input type="checkbox" name="no_bbcode" id="no_bbcode" value="1" /> <label for="no_bbcode" class="checkbox inline">{{LANG_DISABLEBBCODE}}</label>
+						</div>
+					</div>
+					{% if POLLOPTION == TRUE %}
+					<div class="group">
+						<label class="label">{{LANG_QUESTION}}</label>
+						<input type="text" name="question" class="text_field" id="question" maxlength="50" />
+					</div>
+					<div class="group">
+						<label class="label">{{LANG_POLL}}</label>
+						<textarea name="pollOpts" id="pollOpts" rows="5" cols="50"  class="text_area"></textarea>
+					</div>
+					{% endif%}
+				</div>
+			</div>
+			<div class="group navform buffer">
+			  <button class="button" type="submit">
+				<span class="icon-comments"></span>&nbsp;{{LANG_POSTTOPIC}}
+			  </button>
+			</div>
+				</form><br />
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$('#topic').focus();
+
+	//add jquery.markitup plugin to textarea.
+ 	$('#topicBody').markItUp(myBbcodeSettings);
+
+	new FormValidator('frmNewTopic', [{
+		name: 'topic',
+		display: '{{LANG_TOPIC}}',
+		rules: 'required|max_length[50]'
+	},
+	{% if POLLOPTION == TRUE %}
+	{
+		name: 'question',
+		display: '{{LANG_QUESTION}}',
+		rules: 'required|min_length[5]|max_length[50]'
+	},{
+		name: 'pollOpts',
+		display: '{{LANG_POLLOPTIONS}}',
+		rules: 'required'
+	},
+	{% endif %}
+	{
+		name: 'post',
+		display: '{{LANG_TOPICBODY}}',
+		rules: 'required|min_length[10]'
+	}], function(errors, event) {
+
+		if (errors.length > 0) {
+			$('#validateRes').empty();
+			$('#validateRes').append(errors.join('<br />'));
+			$('#div_ErrMsg').show();
+		} else {
+			event.returnValue = true; //allow form to process.
+		}
+
+	});
+
+	/**
+	 * similarTopics
+	 * AJAX call to find similar topics.
+	**/
+	$('#topic').change(function() {
+		//ensure we enter in data first.
+		if ($(this).val() != "") {
+
+			//show panel.
+			$('#div_notice').show();
+
+			//call .ajax to call server.
+			$.post("{{BOARD_URL}}{{INDEX_PAGE}}/ajax/SimilarTopics", $('#frmNewTopic').serialize(),function(html){
+				$("#similar").html(html).removeClass("ui-state-error");
+			}); //END $.ajax(
+
+			//error handler.
+			$("#similar").ajaxError(function(e, xhr){
+				var msg = lang.jsError + ":<br />";
+				$(this).html(msg + xhr.status + " " + xhr.statusText).addClass("ui-state-error");
+			});
+
+		}
+	}); //END .change
+</script>
+
+{% endblock %}

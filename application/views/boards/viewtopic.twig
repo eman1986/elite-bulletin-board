@@ -1,0 +1,489 @@
+{% extends "master.twig" %}
+
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+
+{% block bodyRender %}
+<script type="text/javascript" src="{{BOARD_URL}}js/jquery.hovercard.min.js"></script>
+<script type="text/javascript" src="{{BOARD_URL}}js/jqbar.min.js"></script>
+
+{{BREADCRUMB|raw}}<br />
+
+{# grab permissions for posting on this board. #}
+{% if LOGGEDUSER == "guest" %}
+<button type="button" class="btn btn-inverse disabled" disabled="disabled"><span class="icon-lock"></span>&nbsp;{{LANG_BTNLOCKED}}</button>
+{% else %}
+
+{# can user post a reply?. #}
+{% if CANPOST_REPLY == TRUE %}
+<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}reply/{{TOPICID}}/{{FORM_PAGE}}');"><span class="icon-comment"></span>&nbsp;{{LANG_BTNREPLY}}</button>
+{% endif %}
+
+{% endif %}
+
+<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}print/{{TOPICID}}');"><span class="icon-print"></span>&nbsp;{{LANG_PRINT}}</button>
+
+{# Show these buttons only when the user is an admin or a moderator. #}
+{% if groupAccess == 1 or groupAccess == 2 %}
+	{% if GAC_MOVEACL == TRUE %}
+	<!-- move topic Modal -->
+	<div id="mod_move" style="display:none" title="{{LANG_MOVETOPIC}}">
+		<div class="centerContainer">
+			{{MOVETOPICFORM|raw}}
+				{{MOVETOPIC_SELECT|raw}}
+				<input type="hidden" name="origBoard" value="{{BOARDID}}" />
+				<input type="hidden" name="topicID" value="{{TOPICID}}" />
+				<input type="submit" value="{{LANG_MOVETOPIC}}" class="btn btn-primary" />
+			</form>
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-primary" onclick="$('#mod_move').dialog('open');"><span class="icon-external-link"></span>&nbsp;{{LANG_BTNMOVETOPIC}}</button>
+	{% endif%}
+
+	{% if GAC_DELETEACL == TRUE %}
+	<button type="button" class="btn btn-danger" onclick="confirmDlg('{{LANG_DELPROMPT}}', '{{BOARD_URL}}{{INDEX_PAGE}}maintenance/delete/{{TOPICID}}');return false;"><span class="icon-remove"></span>&nbsp;{{LANG_BTNDELETETOPIC}}</button>
+	{% endif%}
+
+	{# see if user can toggle lock. #}
+	{% if GAC_TOGGLELOCKACL == TRUE %}
+		{%if TOPIC_LOCKED == 1 %}
+			<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}maintenance/unlock/{{TOPICID}}');"><span class="icon-unlock"></span>&nbsp;{{LANG_BTNUNLOCKTOPIC}}</button>
+		{%else%}
+			<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}maintenance/lock/{{TOPICID}}');"><span class="icon-lock"></span>&nbsp;{{LANG_BTNLOCKTOPIC}}</button>
+		{% endif %}
+	{% endif %}
+{% endif %}
+<br /><br />
+{# display a poll if present. #}
+{% if TOPIC_TYPE == 1 %}
+
+{% if VOTECHECK(LOGGEDUSERID, TOPICID) == TRUE or CANVOTE == FALSE or LOGGEDUSER == "guest" %}
+<script type="text/javascript">
+	$(function() {
+{% for pd in POLLDATA %}
+		$("#tally_{{pd.option_id}}").jqbar({ barWidth: 20, label: '{{pd.option_value}}&nbsp;', value: {{TOTAL_VOTES == 0 ?  0 : MATH_ROUND(CALC_VOTE(pd.option_id, TOPICID) / TOTAL_VOTES * 100)}}, barColor: '#3A4F63' });
+{% endfor %}
+	});
+</script>
+<div class="block" id="block-forms">
+	<div class="content">
+		<h2 class="title">{{POLL_QUESTION}}</h2>
+		<div class="inner">
+			<div class="form">
+		{% for p in POLLDATA %}
+			{% if CALC_VOTE(p.option_id, TOPICID) == 0%}
+				<div class="group">
+					<div id="tally_{{p.option_id}}"></div>
+                </div>
+			{% else %}
+				<div class="group">
+					<div id="tally_{{p.option_id}}"></div>
+                </div>
+			{% endif %}
+        {% endfor %}
+				<div class="group">
+					<label class="label">{{LANG_TOTAL}}: {{TOTAL_VOTES}}</label>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% else %}
+<div class="block" id="block-forms">
+	<div class="content">
+		<h2 class="title">{{POLL_QUESTION}}</h2>
+		<div class="inner">
+			{{POLLFORM|raw}}
+			<div class="group">
+				{% for p in POLLDATA %}
+				<div>
+					<input type="radio" name="vote" id="vote_{{p.option_id}}" value="{{p.option_id}}" /> <label for="vote_{{p.option_id}}" class="checkbox">{{p.option_value}}</label>
+				</div>
+				{% endfor %}
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+				  <span class="icon-bar-chart"></span>&nbsp;{{LANG_VOTE}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endif %}
+<br />
+{% endif %}
+
+<div class="block" id="block-lists">
+    <div class="content">
+        <h2 class="title">{{TOPIC_SUBJECT}}</h2>
+        <div class="inner">
+			<div class="actions-bar buffer">
+				{{PAGINATION|raw}}
+			</div>
+			
+            <div class="commentbox">
+				
+				<div id="topic">
+				{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, TOPIC_BODY),1))|raw}}
+				</div><br />
+
+				{# grab a list of attachments, if logged in. #}
+				{% if LOGGEDUSER != "guest" and ATTACH_BAR("topic", TOPIC_USERID, TOPICID) != FALSE %}
+				<div class="attachheader">{{LANG_ATTACHMENTS}}</div>
+				<div class="attachment">
+				{% for a in ATTACH_BAR("topic", TOPIC_USERID, TOPICID) %}
+				{{URL_TAG("/download/"~a.id, a.Filename)|raw}} {{a.File_Size}} Kb {{LANG_DOWNLOADS}}: {{a.Download_Count|number_format}}<br />
+				{% endfor %}
+				</div>
+				{% endif %}
+				<br />
+				_________________<br />
+				{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, AUTHOR_SIG),1))|raw}}
+				
+            </div>
+            <div class="commentfooter">
+                <label id="origPosterVCard">{{TOPIC_AUTHOR}}</label> {{LANG_POSTED}}: {{TOPIC_POSTEDON|PostedDate(TimeFormat, TimeZone)}}
+				{% if groupAccess == 1 or groupAccess == 2 %}
+					{# see if poster is an admin and logged user is not. #}
+					{% if AUTHOR_GROUPLEVEL == 1 and groupAccess == 2 %}
+						{{LANG_IPLOGGED}}&nbsp;
+					{% else %}
+						{% if GAC_EDITTOPICACL == TRUE %}
+							<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}edittopic/{{TOPICID}}');"><span class="icon-pencil"></span>&nbsp;{{LANG_BTNEDITPOST}}</button>
+						{% endif%}
+
+						{% if GAC_DELETEACL == TRUE %}
+							<button type="button" class="btn btn-danger" onclick="confirmDlg('{{LANG_DELPROMPT}}', '{{BOARD_URL}}{{INDEX_PAGE}}deletetopic/{{TOPICID}}');return false;"><span class="icon-remove"></span>&nbsp;{{LANG_BTNDELETEPOST}}</button>
+						{% endif%}
+					{% endif%}
+				{% else %}
+					{% if LOGGEDUSER == TOPIC_AUTHOR and GAC_EDITTOPIC == TRUE %}
+						<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}edittopic/{{TOPICID}}');"><span class="icon-pencil"></span>&nbsp;{{LANG_BTNEDITPOST}}</button>
+					{% endif %}
+
+					{% if LOGGEDUSER == TOPIC_AUTHOR and GAC_DELETETOPIC == TRUE %}
+						<button type="button" class="btn btn-danger" onclick="confirmDlg('{{LANG_DELPROMPT}}', '{{BOARD_URL}}{{INDEX_PAGE}}/deletetopic/{{TOPICID}}');return false;"><span class="icon-remove"></span>&nbsp;{{LANG_BTNDELETEPOST}}</button>
+					{% endif %}
+
+				{% endif%}
+				{% if LOGGEDUSER != "guest" %}
+					<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}quote/{{TOPICID}}/0/1');"><span class="icon-comments"></span>&nbsp;{{LANG_BTNQUOTEAUTHOR}}</button>
+					<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}reporttopic/{{TOPICID}}');"><span class="icon-flag"></span>&nbsp;{{LANG_BTNREPORTPOST}}</button>
+				{% endif%}
+            </div>      
+				
+			<div id="origPosterVCardData" class="hideElement">
+				<p>
+				{%if AUTHOR_GROUPLEVEL == 1 %}
+					<div class="board-common-icons admin-star"></div><em>{{AUTHOR_GROUPNAME}}</em><br />
+				{%elseif AUTHOR_GROUPLEVEL == 2 %}
+					<div class="board-common-icons mod-star"></div><em>{{AUTHOR_GROUPNAME}}</em><br />
+				{%elseif AUTHOR_GROUPLEVEL == 3 %}
+					<div class="board-common-icons user-star"></div><em>{{AUTHOR_GROUPNAME}}</em><br />
+				{%endif%}
+				{{AUTHOR_CTITLE}}<br />
+					
+				{# see if poster is an admin and logged user is not. #}
+				{% if AUTHOR_GROUPLEVEL == 1 and groupAccess == 2 %}
+					{{LANG_IPLOGGED}}<br />
+				{% else %}
+					{# IP Visiblity#}
+					{% if GAC_SEEIP == TRUE %}
+						{{LANG_IP}}&nbsp;{{URL_TAG("maintenance/viewip/", TOPIC_IP)|raw}}<br />
+					{% else %}
+						{{LANG_IPLOGGED}}<br />
+					{% endif%}
+				{% endif%}					
+				{{LANG_POSTCOUNT}}: {{AUTHOR_POSTCOUNT}}<br />
+
+				{# See if user is an admin or moderator. #}
+				{%if groupAccess == 1 or groupAccess == 2 %}
+					{#see if user they wish to warn is higher in rank than them, if so don't let them set anything. #}
+					{%if groupAccess == 2 and AUTHOR_GROUPLEVEL == 1 %}
+						{{LANG_WARNLEVEL}}: {{AUTHOR_WARNLEVEL}}%
+					{%else%}
+						{# See if user has preoper permissions to do this. #}
+						{% if GAC_WARNINGLEVELS == TRUE %}
+							{{LANG_WARNLEVEL}}: {{URL_TAG("maintenance/warn/"~TOPIC_USERID, AUTHOR_WARNLEVEL)|raw}}%
+						{%else%}
+							{{LANG_WARNLEVEL}}: {{AUTHOR_WARNLEVEL}}%
+						{%endif%}
+					{%endif%}
+				{%else%}
+					{# See if author is logged in user. #}
+					{% if TOPIC_USERID == LOGGEDUSERID %}
+						{{LANG_WARNLEVEL}}: {{AUTHOR_WARNLEVEL}}%
+					{%endif%}
+				{%endif%}
+
+			{# Hide user bar if user is guest. #}
+			{% if LOGGEDUSER != "guest" %}
+				<br />{{LANG_UOPTIONS}}<br />
+				<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}viewprofile/{{TOPIC_USERID}}');"><span class="icon-user"></span>&nbsp;{{LANG_PROFILE}}</button>
+				<button type="button" class="btn btn-primary" onclick="buildModal('newPM', '{{LANG_POSTPM}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/newpm/{{TOPIC_USERID}}',720);"><span class="icon-comments"></span>&nbsp;{{LANG_BTNPMAUTHOR}}</button>
+			{%endif %}
+				<p>
+			</div>
+				
+			<script type="text/javascript">
+			$(document).ready(function () {
+				$("#origPosterVCard").hovercard({
+					detailsHTML: $('#origPosterVCardData').html(),
+					width: 400,
+					
+					{% if PREF_AVATARTYPE == "gravatar" %}
+					cardImgSrc: '{{GRAVATAR(AUTHOR_EMAIL, PREF_GRAVATAR_SIZE, PREF_GRAVATAR_NOAVATAR, PREF_GRAVATAR_RATING, PREF_GRAVATAR_SECURE)}}'
+					{% else %}
+						
+					{%if AUTHOR_AVATAR == "" %}
+					cardImgSrc: '{{BOARD_URL}}images/noavatar.gif'
+					{%else%}
+					cardImgSrc: '{{AUTHOR_AVATAR}}'
+					{%endif%}
+						
+					{%endif%}
+				});
+			});
+			</script>
+				
+			{# display a list of replies if present. #}
+			{% for r in REPLYDATA %}
+			<div class="commentbox">
+                <div id="edit">
+					{{nl_2_br(Spam_Filter(FormatMsg(r.disable_smiles, BOARDPREF_SMILES, r.disable_bbcode, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Body),1))|raw}}
+
+					{# grab a list of attachments #}
+					{% if LOGGEDUSER != "guest" and ATTACH_BAR("post", r.author, r.pid) != FALSE %}
+					<div class="attachheader">{{LANG_ATTACHMENTS}}</div>
+					<div class="attachment">
+					{% for a in ATTACH_BAR("post", r.author, r.pid) %}
+					{{URL_TAG("/download/"~a.id, a.Filename)|raw}} {{a.File_Size}} Kb {{LANG_DOWNLOADS}}: {{a.Download_Count|number_format}}<br />
+					{% endfor %}
+					</div>
+					{% endif %}
+					<br />
+					_________________<br />
+					{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Sig),1))|raw}}
+				</div>
+            </div>
+            <div class="commentfooter">
+                <label id="replyVCard_{{r.pid}}">{{r.Username}}</label> {{LANG_POSTED}}: {{r.Original_Date|PostedDate(TimeFormat, TimeZone)}}
+				{% if groupAccess == 1 or groupAccess == 2 %}
+
+					{# see if poster is an admin and logged user is not. #}
+					{% if r.access_level  == 1 and groupAccess == 2 %}
+						{# they can't do anything to admins. #}
+					{% else %}
+						{% if GAC_EDITTOPICACL == TRUE %}
+							<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}editpost/{{r.pid}}');"><span class="icon-pencil"></span>&nbsp;{{LANG_BTNEDITPOST}}</button>
+						{% endif%}
+
+						{% if GAC_DELETEACL == TRUE %}
+							<button type="button" class="btn btn-danger" onclick="confirmDlg('{{LANG_DELPROMPT2}}', '{{BOARD_URL}}{{INDEX_PAGE}}deletepost/{{r.pid}}');return false;"><span class="icon-remove"></span>&nbsp;{{LANG_BTNDELETEPOST}}</button>
+						{% endif%}
+
+					{% endif%}
+				{% else %}
+
+					{% if LOGGEDUSER == r.Username and GAC_EDITTOPIC == TRUE %}
+						<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}editpost/{{r.pid}}');"><span class="icon-pencil"></span>&nbsp;{{LANG_BTNEDITPOST}}</button>
+					{% endif %}
+
+					{% if LOGGEDUSER == r.Username and GAC_DELETETOPIC == TRUE %}
+						<button type="button" class="btn btn-danger" onclick="confirmDlg('{{LANG_DELPROMPT2}}', '{{BOARD_URL}}{{INDEX_PAGE}}deletepost/{{r.pid}}');return false;"><span class="icon-remove"></span>&nbsp;{{LANG_BTNDELETEPOST}}</button>
+					{% endif %}
+
+				{% endif%}
+
+				{% if LOGGEDUSER != "guest" %}
+					<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}quote/{{TOPICID}}/{{r.pid}}/2');"><span class="icon-comments"></span>&nbsp;{{LANG_BTNQUOTEAUTHOR}}</button>
+					<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}reporttopic/{{r.tid}}');"><span class="icon-flag"></span>&nbsp;{{LANG_BTNREPORTPOST}}</button>
+				{% endif%}
+            </div> 
+			<div id="replyVCardData_{{r.pid}}" class="hideElement">
+				<p>
+				{%if r.access_level  == 1 %}
+					<div class="board-common-icons admin-star"></div><em>{{r.profile}}</em><br />
+				{%elseif r.access_level  == 2 %}
+					<div class="board-common-icons mod-star"></div><em>{{r.profile}}</em><br />
+				{%elseif r.access_level  == 3 %}
+					<div class="board-common-icons user-star"></div><em>{{r.profile}}</em><br />
+				{%endif%}
+				{{r.Custom_Title}}<br />
+				{# see if poster is an admin and logged user is not. #}
+				{% if r.access_level == 1 and groupAccess == 2 %}
+					{{LANG_IPLOGGED}}&nbsp;
+				{% else %}
+					{# IP Visiblity#}
+					{% if GAC_SEEIP == TRUE %}
+						{{LANG_IP}}&nbsp;{{URL_TAG("maintenance/viewip/", r.IP)|raw}}<br />
+					{% else %}
+						{{LANG_IPLOGGED}}<br />
+					{% endif%}
+				{% endif%}
+				{{LANG_POSTCOUNT}}: {{AUTHOR_POSTCOUNT}}<br />
+
+				{# See if user is an admin or moderator. #}
+				{%if groupAccess == 1 or groupAccess == 2 %}
+					{#see if user they wish to warn is higher in rank than them, if so don't let them set anything. #}
+					{%if groupAccess == 2 and r.access_level == 1 %}
+						{{LANG_WARNLEVEL}}: {{r.warning_level}}%
+					{%else%}
+						{# See if user has preoper permissions to do this. #}
+						{% if GAC_WARNINGLEVELS == TRUE %}
+							{{LANG_WARNLEVEL}}: {{URL_TAG("maintenance/warn/"~TOPIC_USERID, r.warning_level)|raw}}%
+						{%else%}
+							{{LANG_WARNLEVEL}}: {{r.warning_level}}%
+						{%endif%}
+					{%endif%}
+				{%else%}
+					{# See if author is logged in user. #}
+					{% if r.author == LOGGEDUSERID %}
+						{{LANG_WARNLEVEL}}: {{r.warning_level}}%
+					{%endif%}
+				{%endif%}
+
+			{# Hide user bar if user is guest. #}
+			{% if LOGGEDUSER != "guest" %}
+				<br /><br />{{LANG_UOPTIONS}}<br />
+				<button type="button" class="btn btn-primary" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}viewprofile/{{r.author}}');"><span class="icon-user"></span>&nbsp;{{LANG_PROFILE}}</button>
+				<button type="button" class="btn btn-primary" onclick="buildModal('newPM', '{{LANG_POSTPM}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/newpm/{{r.author}}',720);"><span class="icon-comments"></span>&nbsp;{{LANG_BTNPMAUTHOR}}</button>
+			{%endif %}
+				<p>
+			</div>
+
+			<script type="text/javascript">
+			$(document).ready(function () {
+				$("#replyVCard_{{r.pid}}").hovercard({
+					detailsHTML: $('#replyVCardData_{{r.pid}}').html(),
+					width: 400,
+					{% if PREF_AVATARTYPE == "gravatar" %}
+					cardImgSrc: '{{GRAVATAR(r.Email, PREF_GRAVATAR_SIZE, PREF_GRAVATAR_NOAVATAR, PREF_GRAVATAR_RATING, PREF_GRAVATAR_SECURE)}}'
+					{% else %}
+					{%if r.Avatar == "" %}
+					cardImgSrc: '{{BOARD_URL}}images/noavatar.gif'
+					{%else%}
+					cardImgSrc: '{{r.Avatar}}'
+					{%endif%}
+					{%endif%}
+				});
+			});
+			</script>
+			{% endfor %}
+        </div>
+    </div>
+</div>
+
+{# setup quick reply #}
+{% if LOGGEDUSER != "guest" and CANPOST_REPLY == TRUE %}
+<script type="text/javascript" src="{{BOARD_URL}}js/jquery.jUploader.js"></script>
+
+<div class="block" id="block-forms-2">
+    <div class="content">
+		<h2 class="title">{{LANG_BTNREPLY}}</h2>
+        <div class="inner">
+			<!-- warning container -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 45%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="ErrMsg"></span>
+				<span id="validateRes"></span>
+			</div>
+
+			{% if ATTACHMENTLIMIT > 0 %}
+			<div id="DLG_upload">
+				{{UPLOADFORM|raw}}
+					<input id="attach" name="userfile" type="file" /><br />
+					<input type="submit"class="btn btn-primary" value="{{LANG_UPLOAD}}" id="fileUpload" />
+					<input type="reset"class="btn btn-primary" value="{{LANG_CLEAR}}" id="ClearList" />
+					<input type="button"class="btn btn-primary" value="{{LANG_ADDMOREFILES}}" id="addMoreFiles" />
+				</form>
+				<div id="filelist"></div>
+			</div>
+			<script type="text/javascript">
+					$(function(){
+						$('#attach').jUploader({
+							lngOk: lang.Ok,
+							lngYes: lang.Yes,
+							lngNo: lang.No,
+							lngError: lang.Error,
+							duplicateTitle: lang.duplicateTitle,
+							duplicateMsg: lang.duplicateMsg,
+							LoadingGfx: "{{BOARD_URL}}themes/{{THEME_NAME}}/images/loading.gif",
+							LoadingMsg: lang.attachLoading,
+							PendingMsg: lang.attachPending,
+							SuccessMsg: lang.attachSuccess,
+							FailureMsg: lang.attachFailed,
+							uploadLimitTitle: lang.attachLimitTitle,
+							uploadLimitMsg: lang.attachLimit,
+							uploadLimit: "{{ATTACHMENTLIMIT}}",
+							confirmDeleteTitle: lang.attachDeleteTitle,
+							deleteUrl: "{{BOARD_URL}}{{INDEX_PAGE}}/upload/delete",
+							confirmDeletMsg: lang.attachDeletePrompt,
+							fileMgrUrl: "{{BOARD_URL}}{{INDEX_PAGE}}/upload"
+						});
+					});
+			</script>
+			{% endif %}
+
+			<div id="emoticons" class="color2 ui-corner-all centerContainer" style="width:500px;" align="center">
+				{{SMILES|raw}}
+				<hr />
+				<a href="#smiles" id="showAllSmiles">{{LANG_SMILES}}</a>
+			</div><br />
+			
+			{{QREPLYFORM|raw}}
+			<div class="columns buffer">
+				<div class="column left">
+					<div class="group">
+						{% import "bbcode.twig" as bbcode %}
+						{{ bbcode.bbcodeToolbar('full', 'reply_post') }}
+					</div>
+				</div>
+				<div class="column right">
+					<div class="group">
+						<label class="label">{{LANG_OPTIONS}}</label>
+						<div>
+							<input type="checkbox" name="subscribe" id="subscribe" value="1" /> <label for="subscribe" class="checkbox inline">{{LANG_NOTIFY}}</label>
+						</div>
+						<div>
+							<input type="checkbox" name="no_smile" id="no_smile" value="1" /> <label for="no_smile" class="checkbox inline">{{LANG_DISABLESMILES}}</label>
+						</div>
+						<div>
+							<input type="checkbox" name="no_bbcode" id="no_bbcode" value="1" /> <label for="no_bbcode" class="checkbox inline">{{LANG_DISABLEBBCODE}}</label>
+						</div>
+						<input type="hidden" name="page" value="{{FORM_PAGE}}" />
+					</div>
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+				  <span class="icon-comments"></span>&nbsp;{{LANG_REPLY}}
+				</button>
+			</div>
+			</form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	//add jquery.markitup plugin to textarea.
+	//$('#replyBody').markItUp(myBbcodeSettings);
+	
+	new FormValidator('frmQReply', [{
+		name: 'replyBody',
+		display: '{{LANG_TOPICBODY}}',
+		rules: 'required|min_length[10]'
+	}], function(errors, event) {
+
+		if (errors.length > 0) {
+			$('#validateRes').empty();
+			$('#validateRes').append(errors.join('<br />'));
+			$('#div_ErrMsg').show();
+		} else {
+			event.returnValue = true; //allow form to process.
+		}
+	});
+</script>
+{% endif %}
+{% endblock %}

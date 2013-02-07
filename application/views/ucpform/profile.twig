@@ -1,0 +1,73 @@
+<div class="block" id="block-forms">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 60%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="validateRes"></span>
+			</div>
+
+			{{UCPPROFILEFORM|raw}}
+			<div class="group">
+				<label class="label">{{LANG_CUSTOMTITLE}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_ctitle" class="error"></span>
+					<input type="text" name="ctitle" class="text_field" id="ctitle" value="{{CUSTOMTITLE}}" {{ALLOWCTITLE == 0 ? 'readonly=readonly' : ''}} />
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_WWW}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_www" class="error"></span>
+					<input type="text" name="www" class="text_field" id="www" value="{{WWW}}" />
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_LOCATION}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_loc" class="error"></span>
+					<input type="text" name="loc" class="text_field" id="loc" value="{{LOCATION}}" />
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-user"></span>&nbsp;{{LANG_EDITPROFILE}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#curemail').focus();
+var validator = new FormValidator('frmUpdateProfile', [{
+    name: 'loc',
+    display: '{{LANG_LOCATION}}',
+    rules: 'max_length[70]'
+}, {
+    name: 'www',
+	display: '{{LANG_WWW}}',
+    rules: 'max_length[200]'
+}, {
+    name: 'ctitle',
+    display: '{{LANG_CUSTOMTITLE}}',
+    rules: 'max_length[20]'
+}], function(errors, event) {
+    if (errors.length > 0) {
+        $('#validateRes').empty();
+        $('#validateRes').append(errors.join('<br />'));
+        $('#div_ErrMsg').show();
+    } else if (event != undefined && errors.length == 0) {
+        event.preventDefault(); //stay on page.
+		processForm('frmUpdateProfile', function() {
+			$('#ucpFrm').dialog('close');
+		}, function() { 
+			FormResults("error", "{{LANG_FORMFAILURE}}");
+			$('#frmUpdateProfile')[0].reset();
+			$('#frmUpdateProfile').removeClass('ui-state-error');
+		});
+    }
+    
+});
+</script>

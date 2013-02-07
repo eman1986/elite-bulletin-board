@@ -1,0 +1,18 @@
+<div class="hc-details" style="width: 400px; background: none repeat scroll 0% 0% rgb(255, 255, 255);">
+	<strong>{{USERNAME}}</strong>
+	<p></p>
+	{%if AVATAR == "" %}
+	<img class="hc-pic" src="{{BOARD_URL}}images/noavatar.gif" />
+	{% else %}
+	<img class="hc-pic" src="{{AVATAR}}" />
+	{% endif %}
+	{%if GROUPLEVEL == 1 %}
+		<div class="board-common-icons admin-star"></div><em>{{GROUPNAME}}</em><br />
+	{%elseif GROUPLEVEL == 2 %}
+		<div class="board-common-icons mod-star"></div><em>{{GROUPNAME}}</em><br />
+	{%elseif GROUPLEVEL == 3 %}
+		<div class="board-common-icons user-star"></div><em>{{GROUPNAME}}</em><br />
+	{%endif%}
+	{{CTITLE}}<br />
+	{{LANG_POSTCOUNT}}: {{POSTCOUNT}}
+</div>

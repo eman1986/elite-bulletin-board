@@ -1,0 +1,39 @@
+<html>
+<head>
+	<title>{{boardName}} - {{pageTitle}}</title>
+	<meta name="robots" content="noindex" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	{{LinkTag("themes/"~THEME_NAME~"/printable.css")|raw}}
+</head>
+<body>
+	<h1 id="title">{{TOPIC_SUBJECT}}</h1>
+	
+	<small>{{URL_TAG("/viewtopic/"~TOPICID, LANG_VIEWORIGTOPIC)|raw}}</small><br /><br />
+	<dl id="posts">
+		<dt class="postheader">
+			<strong>{{LANG_POSTEDBY}}:</strong> {{TOPIC_AUTHOR}}<br />
+			<strong>{{LANG_POSTED}}:</strong> {{TOPIC_POSTEDON|PostedDate(TimeFormat, TimeZone)}}
+		</dt>
+		<dd class="postbody">
+			{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, TOPIC_BODY, TRUE),1))|raw}}
+		</dd>
+	</dl>
+	
+	{# display a list of replies if present. #}
+	{% for r in REPLYDATA %}
+	<dl id="posts">
+		<dt class="postheader">
+			<strong>{{LANG_POSTEDBY}}:</strong> {{r.Username}}<br />
+			<strong>{{LANG_POSTED}}:</strong> {{r.Original_Date|PostedDate(TimeFormat, TimeZone)}}
+		</dt>
+		<dd class="postbody">
+			{{nl_2_br(Spam_Filter(FormatMsg(r.disable_smiles, BOARDPREF_SMILES, r.disable_bbcode, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Body, TRUE),1))|raw}}
+		</dd>
+	</dl>
+	{% endfor %}
+	
+	<small>
+		{{LANG_POWERED}} <a href="http://elite-board.us/" target="_blank">Elite Bulletin Board</a> &#169; 2006-2012
+	</small>
+</body>
+</html>
