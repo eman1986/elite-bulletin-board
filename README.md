@@ -1,4 +1,4 @@
-Elite Bulletin Board version
+Elite Bulletin Board Version 3
 ====================
 
 This is where you will find the codework for version 3, the next generation of Elite Bulletin Board.
