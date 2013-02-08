@@ -1,6 +1,8 @@
 Elite Bulletin Board Version 3
 ====================
 
+Visit http://dev.elite-board.us/ to see the up to date roadmap and the tasks left per milestone.
+
 This is where you will find the codework for version 3, the next generation of Elite Bulletin Board.
 
 ###How to contribute to Elite Bulletin Board Version 3###
