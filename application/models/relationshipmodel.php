@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 11/07/2012
+ * @version 02/08/2013
 */
 class Relationshipmodel extends CI_Model {
 
@@ -151,7 +151,7 @@ class Relationshipmodel extends CI_Model {
 	public function getFriendListByUser($uid) {
 		$friendList = array();
 		
-		$this->select('username')
+		$this->db->select('username')
 		  ->from('ebb_relationship')
 		  ->where('status', 1)
 		  ->where('uid', $uid)
@@ -174,13 +174,13 @@ class Relationshipmodel extends CI_Model {
 	 * @return boolean TRUE, user is blocked; FALSE, user is not blocked.
 	*/
 	public function IsBannedByUser($uid, $bUser) {
-		$this->select('rid')
+		$this->db->select('rid')
 		  ->from('ebb_relationship')
 		  ->where('status', 2)
 		  ->where('username', $bUser)
 		  ->where('uid', $uid)
 		  ->limit(1);
-		$query = $this->get();
+		$query = $this->db->get();
 		
 		if ($query->num_rows() == 1) {
 			return TRUE;

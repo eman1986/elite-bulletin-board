@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 10/14/2012
+ * @version 02/08/2013
 */
 
 /**
@@ -27,11 +27,13 @@ class Pmmodel extends CI_Model {
 	private $date;
 	private $readStatus;
 	private static $db;
+	private static $ci;
 	public static $validFolders = array('Inbox', 'Archive');
 
 	public function __construct() {
         parent::__construct();
 		self::$db = &get_instance()->db;
+		self::$ci =& get_instance();
     }
 
 	/**
@@ -440,9 +442,9 @@ class Pmmodel extends CI_Model {
 			$folderQuota = $query->num_rows();
 
 			//see if we went over our quota.
-			if ($folder == "Inbox" && $this->preference->getPreferenceValue("pm_quota") == $folderQuota) {
+			if ($folder == "Inbox" && self::$ci->preference->getPreferenceValue("pm_quota") == $folderQuota) {
 				return FALSE;
-			} elseif ($folder == "Archive" && $this->preference->getPreferenceValue("archive_quota") == $folderQuota) {
+			} elseif ($folder == "Archive" && self::$ci->preference->getPreferenceValue("archive_quota") == $folderQuota) {
 				return FALSE;
 			} else {
 				return TRUE;

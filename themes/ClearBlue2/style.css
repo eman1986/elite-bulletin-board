@@ -1,7 +1,7 @@
 /*
 ========================================
 Filename: style.css
-Last Modified: 02/06/2013
+Last Modified: 02/08/2013
 ClearBlue2 CSS template file for Elite Bulletin Board v3.0.0
 All formatting belongs here.
 CREDIT
@@ -657,20 +657,6 @@ BREADCRUMB CSS
     color: #CC6600;
     text-decoration: none;
 }
-
-/*
-==============================
-Icon Sprite
-==============================
-*/
-.board-status-icon { width: 23px; height: 182px; background-image:url(images/icons-sprite.png); background-position:0 0; }
-.board-status-icon.hot_topic { background-position: 0 0; width: 23px; height: 24px; }
-.board-status-icon.important_topic { background-position: 0 -33px; width: 23px; height: 24px; }
-.board-status-icon.locked_topic { background-position: 0 -66px; width: 23px; height: 24px; }
-.board-status-icon.new_topic { background-position: 0 -99px; width: 16px; height: 18px; }
-.board-status-icon.old_topic { background-position: 0 -126px; width: 16px; height: 18px; }
-.board-status-icon.poll_topic { background-position: 0 -153px; width: 15px; height: 24px; }
-.board-status-icon-attachment { background-position: 0 -188px; width: 15px; height: 15px; }
 
 /*
 ==============================

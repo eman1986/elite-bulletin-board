@@ -22,15 +22,15 @@
 				</tr>
 				{% for b in SUBBOARDDATA %}
 				<tr>
-					<td>						
+					<td class="centerText">						
 						{% if b.last_update <= LAST30DAYS %}
-						<div class="board-status-icon old_topic centerContainer"></div>
+						<div class="icon-comment-alt icon-2x"></div>
 						{% elseif LOGGEDUSER == b.Username %}
-						<div class="board-status-icon old_topic centerContainer"></div>
+						<div class="icon-comment-alt icon-2x"></div>
 						{% elseif b.tid|TopicReadStat(LOGGEDUSERID) == 1 %}
-						<div class="board-status-icon old_topic centerContainer"></div>
+						<div class="icon-comment-alt icon-2x"></div>
 						{% else %}
-						<div class="board-status-icon new_topic centerContainer"></div>
+						<div class="icon-comment icon-2x centerContainer"></div>
 						{% endif %}
 					</td>
 					<td><span class="floatLeft"><strong>{{URL_TAG("/viewboard/"~ b.id, b.Board)|raw}}</strong>&nbsp;</span><div class="board-common-icons rss floatLeft" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br />{{b.id|SubBoards|raw}}</td>
@@ -93,25 +93,25 @@
 					<td class="centerText" width="5%">
 						{# icon setup. #}
 						{% if t.important == 1 %}
-						<div class="board-status-icon important_topic centerContainer"></div>
+						<div class="icon-exclamation-sign icon-2x"></div>
 						{% elseif t.Locked == 1 %}
-						<div class="board-status-icon locked_topic centerContainer"></div>
+						<div class="icon-lock icon-2x"></div>
 						{% elseif t.topic_type == 1 %}
-						<div class="board-status-icon poll_topic centerContainer"></div>
+						<div class="icon-bar-chart icon-2x"></div>
 						{% elseif t.tid|counter("TopicReplies") >= 15 %}
 						{# topic is popular. #}
-						<div class="board-status-icon hot_topic centerContainer"></div>
+						<div class="icon-flag icon-2x"></div>
 						{% elseif t.last_update < LAST30DAYS %}
-						<div class="board-status-icon old_topic centerContainer"></div>
+						<div class="icon-comment-alt icon-2x"></div>
 						{% elseif LOGGEDUSER == t.Username %}
-						<div class="board-status-icon old_topic centerContainer"></div>
+						<div class="icon-comment-alt icon-2x"></div>
 						{% elseif t.tid|TopicReadStat(LOGGEDUSERID) == 1 %}
-						<div class="board-status-icon old_topic centerContainer"></div>
+						<div class="icon-comment-alt icon-2x"></div>
 						{% else %}
-						<div class="board-status-icon new_topic centerContainer"></div>
+						<div class="icon-comment icon-2x"></div>
 						{% endif %}
 					</td>
-				<td width="40%">{{ Attachment(t.tid) ? '<div class="board-status-icon-attachment floatLeft"></div>&nbsp;' : "" }} {{URL_TAG("/viewtopic/"~ t.tid, t.Topic)|raw}}</td>
+				<td width="40%">{{ Attachment(t.tid) ? '<div class="icon-paper-clip icon-large floatLeft"></div>&nbsp;' : "" }} {{URL_TAG("/viewtopic/"~ t.tid, t.Topic)|raw}}</td>
 				<td width="15%">{{t.Username}}</td>
 				<td width="10%" class="centerText">{{t.tid|counter("TopicReplies")}}</td>
 				<td width="10%" class="centerText">{{t.Views|counter("TopicViews")}}</td>
@@ -122,12 +122,12 @@
 				{% endif %}
             </table>
 			<div class="color2 ui-corner-all centerContainer" style="width:600px;padding:0 .7em;overflow: hidden;">
-				<div class="board-status-icon important_topic floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_IMPORTANTTOPIC}}&nbsp;</div>
-				<div class="board-status-icon locked_topic floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_LOCKTOPIC}}&nbsp;</div>
-				<div class="board-status-icon poll_topic floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_POLLTOPIC}}&nbsp;</div>
-				<div class="board-status-icon hot_topic floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_HOTTOPIC}}&nbsp;</div>
-				<div class="board-status-icon old_topic floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_OLDPOST}}&nbsp;</div>
-				<div class="board-status-icon new_topic floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_NEWPOST}}&nbsp;</div>
+				<div class="icon-exclamation-sign icon-2x floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_IMPORTANTTOPIC}}&nbsp;</div>
+				<div class="icon-lock icon-2x floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_LOCKTOPIC}}&nbsp;</div>
+				<div class="icon-bar-chart icon-2x floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_POLLTOPIC}}&nbsp;</div>
+				<div class="icon-fire icon-2x floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_HOTTOPIC}}&nbsp;</div>
+				<div class="icon-comment-alt icon-2x floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_OLDPOST}}&nbsp;</div>
+				<div class="icon-comment icon-2x floatLeft"></div><div class="floatLeft">&nbsp;{{LANG_NEWPOST}}&nbsp;</div>
 			</div>
         </div>
     </div>

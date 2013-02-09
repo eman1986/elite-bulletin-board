@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright  (c) 2006-2011
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 11/21/2012
+ * @version 02/08/2013
 */
 
 /**
@@ -156,8 +156,8 @@ function BBCode_print($string) {
  * Checks for foul language and spam-ish words.
  * @param string [str] item to look for on banlist.
  * @param type [int] (1=foul language;2=spam check)
- * @version 12/01/11
  * @return mixed
+ * @TODO rebuild this to use ebb_spam_list.
 */
 function language_filter($string, $type) {
 
@@ -166,7 +166,7 @@ function language_filter($string, $type) {
 
 	#see if an invalid operation was set.
 	if((!isset($string)) or (empty($string))){
-		show_error($ci->lang->line('invalidcensoraction'), 500, $ci->lang->line('error'));
+		return null; //nothing entered, then just return null.
 	}
 
 	#see if anything was entered.
@@ -257,7 +257,6 @@ function flood_check($type, $LastActivity){
 /**
  * increments the user's post count.
  * @param string $user user to increment count.
- * @version 05/29/12
 */
 function post_count($user){
 
@@ -266,7 +265,7 @@ function post_count($user){
 	
 	$ci->db->select('Post_Count')
 	  ->from('ebb_users')
-	  ->where('Username', $user);
+	  ->where('id', $user);
 	$q = $ci->db->get();
 	$usrData = $q->row();
 	

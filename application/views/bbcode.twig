@@ -1,4 +1,4 @@
-{% macro bbcodeToolbar(bbcode_type, name, value) %}
+{% macro bbcodeToolbar(bbcode_type, id, name, value) %}
     <script type="text/javascript">
 		var openTag = '';
 		var closeTag = '';
@@ -6,7 +6,7 @@
 			//smile BBCode Handler.
 			$('#emoticons a').click(function(e) {
 				e.preventDefault(); //we don't want to leave this page.
-				$('#txtarea').insertAtCaret($(this).attr("title"));
+				$('#{{ id }}').insertAtCaret($(this).attr("title"));
 			});
 			
   		    $('.promptBBCode').click(function(e) {
@@ -15,58 +15,58 @@
 					case 'Bold':
 						bootbox.prompt(lang.bbcodeBold, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[b]'+result+'[/b]');
+								$('#{{ id }}').insertAtCaret('[b]'+result+'[/b]');
 							}
 						});
 					break;
 					case 'Italic':
 						bootbox.prompt(lang.bbcodeItalic, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[i]'+result+'[/i]');
+								$('#{{ id }}').insertAtCaret('[i]'+result+'[/i]');
 							}
 						});
 					break;
 					case 'Underline':
 						bootbox.prompt(lang.bbcodeUnderline, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[u]'+result+'[/u]');
+								$('#{{ id }}').insertAtCaret('[u]'+result+'[/u]');
 							}
 						});
 					break;
 					case 'Image':
 						bootbox.prompt(lang.bbcodePicture, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result === null) {
-								$('#txtarea').insertAtCaret('[img][/img]');
+								$('#{{ id }}').insertAtCaret('[img][/img]');
 							} else {
-								$('#txtarea').insertAtCaret('[img]'+result+'[/img]');
+								$('#{{ id }}').insertAtCaret('[img]'+result+'[/img]');
 							}
 						});
 					break;
 					case 'Url':
 						bootbox.prompt(lang.bbcodeLink, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[url='+result+']'+result+'[/url]');
+								$('#{{ id }}').insertAtCaret('[url='+result+']'+result+'[/url]');
 							}
 						});
 					break;
 					case 'Youtube':
 						bootbox.prompt(lang.bbcodeYoutube, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[youtube]'+result+'[/youtube]');
+								$('#{{ id }}').insertAtCaret('[youtube]'+result+'[/youtube]');
 							}
 						});
 					break;
 					case 'Quote':
 						bootbox.prompt(lang.bbcodeQuote, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[quote]'+result+'[/quote]');
+								$('#{{ id }}').insertAtCaret('[quote]'+result+'[/quote]');
 							}
 						});
 					break;
 					case 'Code':
 						bootbox.prompt(lang.bbcodeCode, lang.cancel, lang.btnApplyBbcode, function(result) {
 							if (result !== null) {
-								$('#txtarea').insertAtCaret('[code]'+result+'[/code]');
+								$('#{{ id }}').insertAtCaret('[code]'+result+'[/code]');
 							}
 						});
 					break;
@@ -88,7 +88,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-primary applyBBCode" onclick="$('#txtarea').insertAtCaret(openTag+$('#bbcodeValue').val()+closeTag);$('#bbcodeDlg').modal('hide');return false; ">Apply BBCode</button>
+		<button class="btn btn-primary applyBBCode" onclick="$('#{{ id }}').insertAtCaret(openTag+$('#bbcodeValue').val()+closeTag);$('#bbcodeDlg').modal('hide');return false; ">Apply BBCode</button>
 	</div>
 </div>
 
@@ -97,18 +97,18 @@
   <div class="btn-group">
     <button class="btn btn-inverse bbcodeTip dropdown-toggle" data-toggle="dropdown" rel="tooltip" data-placement="top" title="Text Size"><i class="icon-text-height"></i><span class="caret"></span></button>
     <ul class="dropdown-menu">
-        <li><a href="#" style="font-size:200%" onclick="$('#txtarea').insertAtCaret('[size=200]text[/size]');return false;">XLarge</a></li>
-        <li><a href="#" style="font-size:150%" onclick="$('#txtarea').insertAtCaret('[size=150]text[/size]');return false;">Large</a></li>
-        <li><a href="#" style="font-size:100%" onclick="$('#txtarea').insertAtCaret('[size=100]text[/size]');return false;">Medium</a></li>
-        <li><a href="#" style="font-size:50%" onclick="$('#txtarea').insertAtCaret('[size=50]text[/size]');return false;">Small</a></li>
+        <li><a href="#" style="font-size:200%" onclick="$('#{{ id }}').insertAtCaret('[size=200]text[/size]');return false;">XLarge</a></li>
+        <li><a href="#" style="font-size:150%" onclick="$('#{{ id }}').insertAtCaret('[size=150]text[/size]');return false;">Large</a></li>
+        <li><a href="#" style="font-size:100%" onclick="$('#{{ id }}').insertAtCaret('[size=100]text[/size]');return false;">Medium</a></li>
+        <li><a href="#" style="font-size:50%" onclick="$('#{{ id }}').insertAtCaret('[size=50]text[/size]');return false;">Small</a></li>
 	</ul>
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Bold" data-placement="top" title="Bold"><i class="icon-bold"></i></button>
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Italic" data-placement="top" title="Italic"><i class="icon-italic"></i></button>
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Underline" data-placement="top" title="Underline"><i class="icon-underline"></i></button>
 	</div>
 	<div class="btn-group">
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Bulleted list" onclick="$('#txtarea').insertAtCaret('[list]\n[*] list item\n[/list]');return false;"><i class="icon-list-ul"></i></button>
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Numeric list" onclick="$('#txtarea').insertAtCaret('[list=1]\n[*] list item\n[/list]');return false;"><i class="icon-list-ol"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Bulleted list" onclick="$('#{{ id }}').insertAtCaret('[list]\n[*] list item\n[/list]');return false;"><i class="icon-list-ul"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Numeric list" onclick="$('#{{ id }}').insertAtCaret('[list=1]\n[*] list item\n[/list]');return false;"><i class="icon-list-ol"></i></button>
 	</div>
 	<div class="btn-group">
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Image" data-placement="top" title="Picture"><i class="icon-picture"></i></button>
@@ -121,48 +121,48 @@
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Attachment" data-placement="top" title="Attachment"><i class="icon-paper-clip"></i></button>
   </div>
   <div class="btn-group">
-	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Left" onclick="$('#txtarea').insertAtCaret('[left]text[/left]');return false;"><i class="icon-align-left"></i></button>
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Center" onclick="$('#txtarea').insertAtCaret('[center]text[/center]');return false;"><i class="icon-align-center"></i></button>
-	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Right" onclick="$('#txtarea').insertAtCaret('[right]text[/right]');return false;"><i class="icon-align-right"></i></button>
+	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Left" onclick="$('#{{ id }}').insertAtCaret('[left]text[/left]');return false;"><i class="icon-align-left"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Center" onclick="$('#{{ id }}').insertAtCaret('[center]text[/center]');return false;"><i class="icon-align-center"></i></button>
+	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Right" onclick="$('#{{ id }}').insertAtCaret('[right]text[/right]');return false;"><i class="icon-align-right"></i></button>
   </div>
   <div class="btn-group">
       <button class="btn btn-inverse bbcodeTip dropdown-toggle" data-toggle="dropdown" rel="tooltip" data-placement="top" title="Font Color"><i class="icon-tint"></i><span class="caret"></span></button>
     <ul class="dropdown-menu">
-        <li><a href="#" style="color: #FCE94F;" onclick="$('#txtarea').insertAtCaret('[color=#FCE94F]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #EDD400;" onclick="$('#txtarea').insertAtCaret('[color=#EDD400]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #C4A000;" onclick="$('#txtarea').insertAtCaret('[color=#C4A000]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #FCE94F;" onclick="$('#{{ id }}').insertAtCaret('[color=#FCE94F]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #EDD400;" onclick="$('#{{ id }}').insertAtCaret('[color=#EDD400]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #C4A000;" onclick="$('#{{ id }}').insertAtCaret('[color=#C4A000]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #FCAF3E;" onclick="$('#txtarea').insertAtCaret('[color=#FCAF3E]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #F57900;" onclick="$('#txtarea').insertAtCaret('[color=#F57900]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #CE5C00;" onclick="$('#txtarea').insertAtCaret('[color=#CE5C00]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #FCAF3E;" onclick="$('#{{ id }}').insertAtCaret('[color=#FCAF3E]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #F57900;" onclick="$('#{{ id }}').insertAtCaret('[color=#F57900]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #CE5C00;" onclick="$('#{{ id }}').insertAtCaret('[color=#CE5C00]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-		<li><a href="#" style="color: #E9B96E;" onclick="$('#txtarea').insertAtCaret('[color=#E9B96E]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #C17D11;" onclick="$('#txtarea').insertAtCaret('[color=#C17D11]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #8F5902;" onclick="$('#txtarea').insertAtCaret('[color=#8F5902]text[/color]');return false;">TEXT</a></li>
+		<li><a href="#" style="color: #E9B96E;" onclick="$('#{{ id }}').insertAtCaret('[color=#E9B96E]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #C17D11;" onclick="$('#{{ id }}').insertAtCaret('[color=#C17D11]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #8F5902;" onclick="$('#{{ id }}').insertAtCaret('[color=#8F5902]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-		<li><a href="#" style="color: #8AE234;" onclick="$('#txtarea').insertAtCaret('[color=#8AE234]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #73D216;" onclick="$('#txtarea').insertAtCaret('[color=#73D216]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #4E9A06;" onclick="$('#txtarea').insertAtCaret('[color=#4E9A06]text[/color]');return false;">TEXT</a></li>
+		<li><a href="#" style="color: #8AE234;" onclick="$('#{{ id }}').insertAtCaret('[color=#8AE234]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #73D216;" onclick="$('#{{ id }}').insertAtCaret('[color=#73D216]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #4E9A06;" onclick="$('#{{ id }}').insertAtCaret('[color=#4E9A06]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #729FCF;" onclick="$('#txtarea').insertAtCaret('[color=#729FCF]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #3465A4;" onclick="$('#txtarea').insertAtCaret('[color=#3465A4]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #204A87;" onclick="$('#txtarea').insertAtCaret('[color=#204A87]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #729FCF;" onclick="$('#{{ id }}').insertAtCaret('[color=#729FCF]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #3465A4;" onclick="$('#{{ id }}').insertAtCaret('[color=#3465A4]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #204A87;" onclick="$('#{{ id }}').insertAtCaret('[color=#204A87]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #AD7FA8;" onclick="$('#txtarea').insertAtCaret('[color=#AD7FA8]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #75507B;" onclick="$('#txtarea').insertAtCaret('[color=#75507B]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #5C3566;" onclick="$('#txtarea').insertAtCaret('[color=#5C3566]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #AD7FA8;" onclick="$('#{{ id }}').insertAtCaret('[color=#AD7FA8]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #75507B;" onclick="$('#{{ id }}').insertAtCaret('[color=#75507B]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #5C3566;" onclick="$('#{{ id }}').insertAtCaret('[color=#5C3566]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #EF2929;" onclick="$('#txtarea').insertAtCaret('[color=#EF2929]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #CC0000;" onclick="$('#txtarea').insertAtCaret('[color=#CC0000]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #A40000;" onclick="$('#txtarea').insertAtCaret('[color=#A40000]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #EF2929;" onclick="$('#{{ id }}').insertAtCaret('[color=#EF2929]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #CC0000;" onclick="$('#{{ id }}').insertAtCaret('[color=#CC0000]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #A40000;" onclick="$('#{{ id }}').insertAtCaret('[color=#A40000]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #D3D7CF;" onclick="$('#txtarea').insertAtCaret('[color=#D3D7CF]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #aaaaaa;" onclick="$('#txtarea').insertAtCaret('[color=#aaaaaa]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #BABDB6;" onclick="$('#txtarea').insertAtCaret('[color=#BABDB6]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #D3D7CF;" onclick="$('#{{ id }}').insertAtCaret('[color=#D3D7CF]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #aaaaaa;" onclick="$('#{{ id }}').insertAtCaret('[color=#aaaaaa]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #BABDB6;" onclick="$('#{{ id }}').insertAtCaret('[color=#BABDB6]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-		<li><a href="#" style="color: #888A85;" onclick="$('#txtarea').insertAtCaret('[color=#888A85]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #555753;" onclick="$('#txtarea').insertAtCaret('[color=#555753]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #000000;" onclick="$('#txtarea').insertAtCaret('[color=#000000]text[/color]');return false;">TEXT</a></li>
+		<li><a href="#" style="color: #888A85;" onclick="$('#{{ id }}').insertAtCaret('[color=#888A85]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #555753;" onclick="$('#{{ id }}').insertAtCaret('[color=#555753]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #000000;" onclick="$('#{{ id }}').insertAtCaret('[color=#000000]text[/color]');return false;">TEXT</a></li>
     </ul>
   </div>
 </div>
@@ -171,18 +171,18 @@
   <div class="btn-group">
     <button class="btn btn-inverse bbcodeTip dropdown-toggle" data-toggle="dropdown" rel="tooltip" data-placement="top" title="Text Size"><i class="icon-text-height"></i><span class="caret"></span></button>
     <ul class="dropdown-menu">
-        <li><a href="#" style="font-size:200%" onclick="$('#txtarea').insertAtCaret('[size=200]text[/size]');return false;">XLarge</a></li>
-        <li><a href="#" style="font-size:150%" onclick="$('#txtarea').insertAtCaret('[size=150]text[/size]');return false;">Large</a></li>
-        <li><a href="#" style="font-size:100%" onclick="$('#txtarea').insertAtCaret('[size=100]text[/size]');return false;">Medium</a></li>
-        <li><a href="#" style="font-size:50%" onclick="$('#txtarea').insertAtCaret('[size=50]text[/size]');return false;">Small</a></li>
+        <li><a href="#" style="font-size:200%" onclick="$('#{{ id }}').insertAtCaret('[size=200]text[/size]');return false;">XLarge</a></li>
+        <li><a href="#" style="font-size:150%" onclick="$('#{{ id }}').insertAtCaret('[size=150]text[/size]');return false;">Large</a></li>
+        <li><a href="#" style="font-size:100%" onclick="$('#{{ id }}').insertAtCaret('[size=100]text[/size]');return false;">Medium</a></li>
+        <li><a href="#" style="font-size:50%" onclick="$('#{{ id }}').insertAtCaret('[size=50]text[/size]');return false;">Small</a></li>
 	</ul>
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Bold" data-placement="top" title="Bold"><i class="icon-bold"></i></button>
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Italic" data-placement="top" title="Italic"><i class="icon-italic"></i></button>
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Underline" data-placement="top" title="Underline"><i class="icon-underline"></i></button>
 	</div>
 	<div class="btn-group">
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Bulleted list" onclick="$('#txtarea').insertAtCaret('[list]\n[*] list item\n[/list]');return false;"><i class="icon-list-ul"></i></button>
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Numeric list" onclick="$('#txtarea').insertAtCaret('[list=1]\n[*] list item\n[/list]');return false;"><i class="icon-list-ol"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Bulleted list" onclick="$('#{{ id }}').insertAtCaret('[list]\n[*] list item\n[/list]');return false;"><i class="icon-list-ul"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Numeric list" onclick="$('#{{ id }}').insertAtCaret('[list=1]\n[*] list item\n[/list]');return false;"><i class="icon-list-ol"></i></button>
 	</div>
 	<div class="btn-group">
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Image" data-placement="top" title="Picture"><i class="icon-picture"></i></button>
@@ -190,55 +190,55 @@
       <button class="btn btn-inverse bbcodeTip promptBBCode" rel="tooltip" bbcode="Youtube" data-placement="top" title="YouTube"><i class="icon-play"></i></button>
   </div>
   <div class="btn-group">
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Quote" onclick="$('#txtarea').insertAtCaret('[quote]text[/quote]');return false;"><i class="icon-quote-right"></i></button>
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Code" onclick="$('#txtarea').insertAtCaret('[code]text[/code]');return false;"><i class="icon-angle-left"></i>&nbsp;&nbsp;<i class="icon-angle-right"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Quote" onclick="$('#{{ id }}').insertAtCaret('[quote]text[/quote]');return false;"><i class="icon-quote-right"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Code" onclick="$('#{{ id }}').insertAtCaret('[code]text[/code]');return false;"><i class="icon-angle-left"></i>&nbsp;&nbsp;<i class="icon-angle-right"></i></button>
   </div>
   <div class="btn-group">
-	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Left" onclick="$('#txtarea').insertAtCaret('[left]text[/left]');return false;"><i class="icon-align-left"></i></button>
-      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Center" onclick="$('#txtarea').insertAtCaret('[center]text[/center]');return false;"><i class="icon-align-center"></i></button>
-	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Right" onclick="$('#txtarea').insertAtCaret('[right]text[/right]');return false;"><i class="icon-align-right"></i></button>
+	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Left" onclick="$('#{{ id }}').insertAtCaret('[left]text[/left]');return false;"><i class="icon-align-left"></i></button>
+      <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Center" onclick="$('#{{ id }}').insertAtCaret('[center]text[/center]');return false;"><i class="icon-align-center"></i></button>
+	  <button class="btn btn-inverse bbcodeTip" rel="tooltip" data-placement="top" title="Align Right" onclick="$('#{{ id }}').insertAtCaret('[right]text[/right]');return false;"><i class="icon-align-right"></i></button>
   </div>
   <div class="btn-group">
       <button class="btn btn-inverse bbcodeTip dropdown-toggle" data-toggle="dropdown" rel="tooltip" data-placement="top" title="Font Color"><i class="icon-tint"></i><span class="caret"></span></button>
     <ul class="dropdown-menu">
-        <li><a href="#" style="color: #FCE94F;" onclick="$('#txtarea').insertAtCaret('[color=#FCE94F]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #EDD400;" onclick="$('#txtarea').insertAtCaret('[color=#EDD400]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #C4A000;" onclick="$('#txtarea').insertAtCaret('[color=#C4A000]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #FCE94F;" onclick="$('#{{ id }}').insertAtCaret('[color=#FCE94F]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #EDD400;" onclick="$('#{{ id }}').insertAtCaret('[color=#EDD400]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #C4A000;" onclick="$('#{{ id }}').insertAtCaret('[color=#C4A000]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #FCAF3E;" onclick="$('#txtarea').insertAtCaret('[color=#FCAF3E]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #F57900;" onclick="$('#txtarea').insertAtCaret('[color=#F57900]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #CE5C00;" onclick="$('#txtarea').insertAtCaret('[color=#CE5C00]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #FCAF3E;" onclick="$('#{{ id }}').insertAtCaret('[color=#FCAF3E]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #F57900;" onclick="$('#{{ id }}').insertAtCaret('[color=#F57900]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #CE5C00;" onclick="$('#{{ id }}').insertAtCaret('[color=#CE5C00]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-		<li><a href="#" style="color: #E9B96E;" onclick="$('#txtarea').insertAtCaret('[color=#E9B96E]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #C17D11;" onclick="$('#txtarea').insertAtCaret('[color=#C17D11]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #8F5902;" onclick="$('#txtarea').insertAtCaret('[color=#8F5902]text[/color]');return false;">TEXT</a></li>
+		<li><a href="#" style="color: #E9B96E;" onclick="$('#{{ id }}').insertAtCaret('[color=#E9B96E]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #C17D11;" onclick="$('#{{ id }}').insertAtCaret('[color=#C17D11]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #8F5902;" onclick="$('#{{ id }}').insertAtCaret('[color=#8F5902]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-		<li><a href="#" style="color: #8AE234;" onclick="$('#txtarea').insertAtCaret('[color=#8AE234]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #73D216;" onclick="$('#txtarea').insertAtCaret('[color=#73D216]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #4E9A06;" onclick="$('#txtarea').insertAtCaret('[color=#4E9A06]text[/color]');return false;">TEXT</a></li>
+		<li><a href="#" style="color: #8AE234;" onclick="$('#{{ id }}').insertAtCaret('[color=#8AE234]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #73D216;" onclick="$('#{{ id }}').insertAtCaret('[color=#73D216]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #4E9A06;" onclick="$('#{{ id }}').insertAtCaret('[color=#4E9A06]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #729FCF;" onclick="$('#txtarea').insertAtCaret('[color=#729FCF]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #3465A4;" onclick="$('#txtarea').insertAtCaret('[color=#3465A4]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #204A87;" onclick="$('#txtarea').insertAtCaret('[color=#204A87]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #729FCF;" onclick="$('#{{ id }}').insertAtCaret('[color=#729FCF]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #3465A4;" onclick="$('#{{ id }}').insertAtCaret('[color=#3465A4]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #204A87;" onclick="$('#{{ id }}').insertAtCaret('[color=#204A87]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #AD7FA8;" onclick="$('#txtarea').insertAtCaret('[color=#AD7FA8]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #75507B;" onclick="$('#txtarea').insertAtCaret('[color=#75507B]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #5C3566;" onclick="$('#txtarea').insertAtCaret('[color=#5C3566]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #AD7FA8;" onclick="$('#{{ id }}').insertAtCaret('[color=#AD7FA8]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #75507B;" onclick="$('#{{ id }}').insertAtCaret('[color=#75507B]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #5C3566;" onclick="$('#{{ id }}').insertAtCaret('[color=#5C3566]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #EF2929;" onclick="$('#txtarea').insertAtCaret('[color=#EF2929]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #CC0000;" onclick="$('#txtarea').insertAtCaret('[color=#CC0000]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #A40000;" onclick="$('#txtarea').insertAtCaret('[color=#A40000]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #EF2929;" onclick="$('#{{ id }}').insertAtCaret('[color=#EF2929]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #CC0000;" onclick="$('#{{ id }}').insertAtCaret('[color=#CC0000]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #A40000;" onclick="$('#{{ id }}').insertAtCaret('[color=#A40000]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="color: #D3D7CF;" onclick="$('#txtarea').insertAtCaret('[color=#D3D7CF]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #aaaaaa;" onclick="$('#txtarea').insertAtCaret('[color=#aaaaaa]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #BABDB6;" onclick="$('#txtarea').insertAtCaret('[color=#BABDB6]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #D3D7CF;" onclick="$('#{{ id }}').insertAtCaret('[color=#D3D7CF]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #aaaaaa;" onclick="$('#{{ id }}').insertAtCaret('[color=#aaaaaa]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #BABDB6;" onclick="$('#{{ id }}').insertAtCaret('[color=#BABDB6]text[/color]');return false;">TEXT</a></li>
         <li class="divider"></li>
-		<li><a href="#" style="color: #888A85;" onclick="$('#txtarea').insertAtCaret('[color=#888A85]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #555753;" onclick="$('#txtarea').insertAtCaret('[color=#555753]text[/color]');return false;">TEXT</a></li>
-        <li><a href="#" style="color: #000000;" onclick="$('#txtarea').insertAtCaret('[color=#000000]text[/color]');return false;">TEXT</a></li>
+		<li><a href="#" style="color: #888A85;" onclick="$('#{{ id }}').insertAtCaret('[color=#888A85]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #555753;" onclick="$('#{{ id }}').insertAtCaret('[color=#555753]text[/color]');return false;">TEXT</a></li>
+        <li><a href="#" style="color: #000000;" onclick="$('#{{ id }}').insertAtCaret('[color=#000000]text[/color]');return false;">TEXT</a></li>
     </ul>
   </div>
 </div>
 {% endif %}
-<textarea id="txtarea" name="{{ name }}" style="height: 150px; width: 500px;">{{ value|default("") }}</textarea>
+<textarea id="{{ id }}" name="{{ name }}" style="height: 150px; width: 500px;">{{ value|default("") }}</textarea>
 {% endmacro %}

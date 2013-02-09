@@ -42,15 +42,15 @@ $(function(){
 					{# make sure we get the correct data in the right spots. #}
 					{% if c.id == b.Category %}
 						<tr>
-							<td>
+							<td class="centerText">
 								{% if b.last_update < LAST30DAYS %}
-								<div class="board-status-icon old_topic centerContainer"></div>
+								<div class="icon-comment-alt icon-2x"></div>
 								{% elseif LOGGEDUSER == b.Username %}
-								<div class="board-status-icon old_topic centerContainer"></div>
+								<div class="icon-comment-alt icon-2x"></div>
 								{% elseif b.tid|TopicReadStat(LOGGEDUSERID) == 1 %}
-								<div class="board-status-icon old_topic centerContainer"></div>
+								<div class="icon-comment-alt icon-2x"></div>
 								{% else %}
-								<div class="board-status-icon new_topic centerContainer"></div>
+								<div class="icon-comment icon-2x"></div>
 								{% endif %}
 							</td>
 							<td><span class="floatLeft"><strong>{{URL_TAG("/viewboard/"~ b.id, b.Board)|raw}}</strong>&nbsp;</span><div class="board-common-icons rss floatLeft" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br />{{b.id|SubBoards|raw}}</td>
@@ -83,8 +83,8 @@ $(function(){
         </div>
 		<h2 class="title">{{LANG_ICONGUIDE}}</h2>
 		<div class="inner">
-			<div class="board-status-icon old_topic floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
-			<div class="board-status-icon new_topic floatLeft"></div><div class="floatLeft">{{LANG_OLDPOST}}</div>
+			<div class="icon-comment-alt icon-2x floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
+			<div class="icon-comment icon-2x floatLeft"></div><div class="floatLeft">{{LANG_OLDPOST}}</div>
 		</div><br />
 	</div>
 </div>

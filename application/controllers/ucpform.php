@@ -729,7 +729,7 @@ class Ucpform extends EBB_Controller {
 				);
 			} else {
 				//see if user your sending to is over their quota.
-				if (Pmmodel::QuotaCheck('Inbox', $senderUID)) {
+				if (!Pmmodel::QuotaCheck('Inbox', $senderUID)) {
 					$data = array(
 							'status' => 'error',
 							'msg' => $this->lang->line('overquota'),

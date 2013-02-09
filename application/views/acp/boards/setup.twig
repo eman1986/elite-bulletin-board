@@ -1,0 +1,43 @@
+<script type="text/javascript">
+$(document).ready(function () {
+
+	$('#cat').sortable({
+		scrollSpeed: 1, //will no longer scroll endlessly.
+		axis: 'y', //can only drag it up/down.
+		placeholder: 'ui-state-highlight',
+		forcePlaceholderSize: true,
+		update: function(e, ui){
+			var newOrdering = $('#cat').sortable('toArray');
+			var len = 'cat_'.length;
+			var cid = null;
+			alert(newOrdering);
+
+			//loop over each value in the array and get the ID & index.
+	        $.each(newOrdering, function(intIndex, objValue) {
+	            cid = objValue.substring(len, objValue.length); //get our recid.
+				processGetRequest("{{BOARD_URL}}{{INDEX_PAGE}}/ACP/boards/reorderboard/".cid."/".intIndex, function() {
+				}, function() { 
+					FormResults("error", "{{LANG_FORMFAILURE}}");
+				});
+	        });
+		}
+	});
+
+});
+</script>
+
+<div id="cat">
+{% for c in Category %}
+	<div id="cat{{c.id}}" class="cat">
+		<div class="cat_sort">{{c.Board}}</div>
+		<div class="jQSort">
+		{% for b in Boards %}
+			{% if c.id == b.Category %}
+			<div class="div" id="{{b.id}}">{{b.Board}}</div>
+			<input type="hidden" name="childOrder_{{b.id}}" value="" />
+			{% endif %}
+		{% endfor %}
+		</div>
+	</div>
+{% endfor %}
+</div>

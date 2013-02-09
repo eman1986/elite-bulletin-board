@@ -170,16 +170,19 @@ table.jtable th.jtable-column-header-sortable {
 /* Sorting icon in the sortable table column header */
 table.jtable th.jtable-column-header-sortable div.jtable-column-header-container {
     background: url('images/column-sortable.png') no-repeat right;
+	/*background: url('images/grid-sprite.png') no-repeat 0 -93px;*/
 }
 
 /* Ascending sorted icon in the table column header */
 table.jtable th.jtable-column-header-sorted-asc div.jtable-column-header-container {
     background: url('images/column-asc.png') no-repeat right;
+	/*background: url('images/grid-sprite.png') no-repeat 0 -45px; width: 12px; height: 16px*/
 }
 
 /* Descending sorted icon in the table column header */
 table.jtable th.jtable-column-header-sorted-desc div.jtable-column-header-container {
     background: url('images/column-desc.png') no-repeat right;
+	/*background: url('images/grid-sprite.png') no-repeat 0 -69px; width: 12px; height: 16px*/
 }
 
 /* PAGING ********************************************************************/

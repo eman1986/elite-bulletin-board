@@ -594,12 +594,12 @@ a.text-info:hover {
 a.text-success:hover {
   color: #356635;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.modal-header h1,
+.modal-header h2,
+.modal-header h3,
+.modal-header h4,
+.modal-header h5,
+.modal-header h6 {
   margin: 10px 0;
   font-family: inherit;
   font-weight: bold;
@@ -607,49 +607,43 @@ h6 {
   color: inherit;
   text-rendering: optimizelegibility;
 }
-h1 small,
-h2 small,
-h3 small,
-h4 small,
-h5 small,
-h6 small {
+.modal-header h1 small,
+.modal-header h2 small,
+.modal-header h3 small,
+.modal-header h4 small,
+.modal-header h5 small,
+.modal-header h6 small {
   font-weight: normal;
   line-height: 1;
   color: #999999;
 }
-h1,
-h2,
-h3 {
-  line-height: 40px;
-}
-h1 {
+
+.modal-header h1 {
   font-size: 38.5px;
 }
-h2 {
-  font-size: 31.5px;
-}
-h3 {
+
+.modal-header h3 {
   font-size: 24.5px;
 }
-h4 {
+.modal-header h4 {
   font-size: 17.5px;
 }
-h5 {
+.modal-header h5 {
   font-size: 14px;
 }
-h6 {
+.modal-header h6 {
   font-size: 11.9px;
 }
-h1 small {
+.modal-header h1 small {
   font-size: 24.5px;
 }
-h2 small {
+.modal-header h2 small {
   font-size: 17.5px;
 }
-h3 small {
+.modal-header h3 small {
   font-size: 14px;
 }
-h4 small {
+.modal-header h4 small {
   font-size: 14px;
 }
 .page-header {

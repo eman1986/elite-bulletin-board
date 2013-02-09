@@ -454,6 +454,34 @@ class Boardmodel extends CI_Model {
 		}
 		return array("Parent_Boards" => $parent, "Child_Boards" => $child);
 	}
+	
+	/**
+	 * Useed for ACP board setup.
+	 * @return array an array of both the parent boards & the child boards.
+	*/
+	public function loadBoardHier() {
+		$parent = $child = array();
+
+		//get parent boards
+		$this->db->select('id, Board')->from('ebb_boards')->where('type', 1)->order_by("B_Order", "asc");
+		$query = $this->db->get();
+		foreach ($query->result() as $row) {
+
+        	$parent[] = $row;
+
+			//build second query.
+			$this->db->select('id, Board, Category')
+			  ->from('ebb_boards')
+			  ->where('type', 2)
+			  ->where('Category',$row->id)
+			  ->order_by("B_Order", "asc");
+			$query2 = $this->db->get();
+			foreach ($query2->result() as $row2) {
+					$child[] = $row2;
+			}
+		}
+		return array("Parent_Boards" => $parent, "Child_Boards" => $child);
+	}
 
     /**
      * Load Entity with values from our database.

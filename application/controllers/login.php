@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 12/18/2012
+ * @version 02/08/2013
 */
 
 /**
@@ -352,7 +352,7 @@ class Login extends EBB_Controller {
 			  );
 			
 			#get username.
-			$this->db->select('id, Email')
+			$this->db->select('id, Username, Email, Language, Time_Zone, Time_format, date_format')
 			  ->from('ebb_users')
 			  ->where('Username', $this->input->post('recover_info', TRUE))
 			  ->or_where('Email', $this->input->post('recover_info', TRUE))
@@ -389,16 +389,15 @@ class Login extends EBB_Controller {
 			$this->email->to($userData->Email);
 			$this->email->from($this->preference->getPreferenceValue("board_email"), $this->title);
 			$this->email->subject($this->lang->line('passwordrecovery'));
-			$this->email->message($this->twig->renderNoStyle('/emails/'.$this->lng.'/eml_pwd_reset.twig', array(
-			  'TimeFormat' => $this->timeFormat,
-			  'TimeZone' => $this->timeZone,
+			$this->email->message($this->twig->renderNoStyle('/emails/'.$userData->Language.'/eml_pwd_reset.twig', array(
 			  'USERNAME' => $userData->Username,
+			  'UID' => $userData->id,
 			  'NEW_PWD' => $newPwd,
 			  'TITLE' => $this->title,
 			  'BOARDADDR' => $this->boardUrl,
 			  'KEY' => $act_key,
 			  'IP_ADDR' => detectProxy(),
-			  'PWD_RECOVERY_REQ' => $pwdRecoveryReq,
+			  'PWD_RECOVERY_REQ' => datetimeFormatter($pwdRecoveryReq,getDateTimeFormat($userData->date_format, $userData->Time_format),$userData->Time_Zone),
 			  'USER_AGENT' => $this->agent->agent_string()
 			)));
 

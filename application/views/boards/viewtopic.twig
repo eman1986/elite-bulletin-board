@@ -97,7 +97,7 @@
 			<div class="group">
 				{% for p in POLLDATA %}
 				<div>
-					<input type="radio" name="vote" id="vote_{{p.option_id}}" value="{{p.option_id}}" /> <label for="vote_{{p.option_id}}" class="checkbox">{{p.option_value}}</label>
+					<input type="radio" name="vote" id="vote_{{p.option_id}}" value="{{p.option_id}}" /> <label for="vote_{{p.option_id}}" class="checkbox inline">{{p.option_value}}</label>
 				</div>
 				{% endfor %}
 			</div>
@@ -437,7 +437,7 @@
 				<div class="column left">
 					<div class="group">
 						{% import "bbcode.twig" as bbcode %}
-						{{ bbcode.bbcodeToolbar('full', 'reply_post') }}
+						{{ bbcode.bbcodeToolbar('full', 'replyBody', 'reply_post') }}
 					</div>
 				</div>
 				<div class="column right">
