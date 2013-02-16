@@ -175,10 +175,7 @@ class Main extends EBB_Controller {
 			'LANG_ACTIVATE' => $this->lang->line('activateacct'),
 			'LANG_WARNLOG' => $this->lang->line('warninglist'),
 			'LANG_USERMGR' => $this->lang->line('manageusers'),
-		  
-		  
-//			'LANG_STYLEMENU' => $this->lang->line('stylemenu'),
-			'LANG_SETTINGS' => $this->lang->line('settings'),
+			'LANG_SETTINGS' => $this->lang->line('settings')
 		));
 	}
 

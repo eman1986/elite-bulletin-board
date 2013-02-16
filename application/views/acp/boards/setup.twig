@@ -1,43 +1,36 @@
-<script type="text/javascript">
-$(document).ready(function () {
-
-	$('#cat').sortable({
-		scrollSpeed: 1, //will no longer scroll endlessly.
-		axis: 'y', //can only drag it up/down.
-		placeholder: 'ui-state-highlight',
-		forcePlaceholderSize: true,
-		update: function(e, ui){
-			var newOrdering = $('#cat').sortable('toArray');
-			var len = 'cat_'.length;
-			var cid = null;
-			alert(newOrdering);
-
-			//loop over each value in the array and get the ID & index.
-	        $.each(newOrdering, function(intIndex, objValue) {
-	            cid = objValue.substring(len, objValue.length); //get our recid.
-				processGetRequest("{{BOARD_URL}}{{INDEX_PAGE}}/ACP/boards/reorderboard/".cid."/".intIndex, function() {
-				}, function() { 
-					FormResults("error", "{{LANG_FORMFAILURE}}");
-				});
-	        });
-		}
-	});
-
-});
-</script>
-
-<div id="cat">
+{% extends "acp-master.twig" %}
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+{% block acpbodyRender %}
 {% for c in Category %}
-	<div id="cat{{c.id}}" class="cat">
-		<div class="cat_sort">{{c.Board}}</div>
-		<div class="jQSort">
+	<table class="table">
+		<tr>
+			<td width="40%">{{c.Board}}</td>
+			<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{c.id}}');">{{LANG_EDIT}}</a></td>
+			<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{c.id}}');">{{LANG_DELETE}}</a></td>
+			<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/1/{{c.id}}');">{{LANG_REORDER}}</a></td>
+		</tr>
 		{% for b in Boards %}
+			{# make sure we get the correct data in the right spots. #}
 			{% if c.id == b.Category %}
-			<div class="div" id="{{b.id}}">{{b.Board}}</div>
-			<input type="hidden" name="childOrder_{{b.id}}" value="" />
-			{% endif %}
+				<tr>
+					<td width="40%"><i class=" icon-arrow-right icon-large"></i>&nbsp;{{b.Board}}</td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{b.id}}', 800);">{{LANG_EDIT}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{b.id}}');">{{LANG_DELETE}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/2/{{b.id}}');">{{LANG_REORDER}}</a></td>
+				</tr>
+				{% for sb in SubBoards %}
+				{# make sure we get the correct data in the right spots. #}
+				{% if b.id == sb.Category %}
+				<tr>
+					<td width="40%"><i class=" icon-arrow-right icon-large"></i>&nbsp;<i class=" icon-arrow-right icon-large"></i>&nbsp;{{sb.Board}}</td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{sb.id}}', 800);">{{LANG_EDIT}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{sb.id}}');">{{LANG_DELETE}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/3/{{sb.id}}');">{{LANG_REORDER}}</a></td>
+				</tr>
+				{%- endif -%}
+				{% endfor %}
+			{%- endif -%}
 		{% endfor %}
-		</div>
-	</div>
+	</table>
 {% endfor %}
-</div>
+{% endblock %}

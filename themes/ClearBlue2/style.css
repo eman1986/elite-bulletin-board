@@ -162,6 +162,12 @@ NOTICIATION PANELS
 	color: #000;
 }
 
+.sort-panel {
+	border: 1px solid #163061;
+    background: #C2C9D1;
+	font-size: 1.3em;
+}
+
 /*
 ==============================
 LOGIN FORM

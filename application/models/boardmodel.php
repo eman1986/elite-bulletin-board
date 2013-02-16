@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 12/23/2012
+ * @version 02/15/2013
 */
 
 /**
@@ -406,16 +406,81 @@ class Boardmodel extends CI_Model {
 	 * METHODS
 	*/
 
+	/**
+	 * Creates a new Board.
+	 * @return integer returns the new Board ID.
+	*/
 	public function CreateBoard() {
+		
+		$data = array(
+		  'Board' => $this->getBoard(),
+		  'Description' => $this->getDescription(),
+		  'type' => $this->getType(),
+		  'Category' => $this->getCategory(),
+		  'Smiles' => $this->getSmiles(),
+		  'BBcode' => $this->getBbCode(),
+		  'Post_Increment' => $this->getPostIncrement(),
+		  'Image' => $this->getImage(),
+		  'B_Order' => $this->getMaxBOrder($this->getCategory())
+		);
 
-	}
-
-	public function EditBoard() {
-
+		#add new topic.
+		$this->db->insert('ebb_boards', $data);
+		
+		//get board id
+		return $this->db->insert_id();
 	}
 
 	public function DeleteBoard() {
 
+	}
+	
+	/**
+	 * Update board record
+	 * @param array $data updated data for record.
+	*/
+	public function UpdateBoard($data = NULL) {
+		#see if any specific field was defined.
+		if (is_null($data)) {
+			$data = array(
+			  'Board' => $this->getBoard(),
+			  'Description' => $this->getDescription(),
+			  'last_update' => $this->getLastUpdate(),
+			  'Posted_User' => $this->getPostedUser(),
+			  'tid' => $this->getTiD(),
+			  'pid' => $this->getPiD(),
+			  'last_page' => $this->getLastPage(),
+			  'type' => $this->getType(),
+			  'Category' => $this->getCategory(),
+			  'Smiles' => $this->getSmiles(),
+			  'BBcode' => $this->getBbCode(),
+			  'Post_Increment' => $this->getPostIncrement(),
+			  'Image' => $this->getImage(),
+			  'B_Order' => $this->getBOrder()
+			  );
+		}
+		
+		#update board.
+		$this->db->where('id', $this->getId());
+		$this->db->update('ebb_boards', $data);
+	}
+	
+	/**
+	 * Get the next order sequence for a board category.
+	 * @param integer $id The Parent Board ID.
+	 * @return integer|null the next order number or NULL if no record exists.
+	*/
+	private function getMaxBOrder($id) {
+		//SELECT Board, MAX(B_Order)+1 AS T_ORDER FROM ebbv3.ebb_boards WHERE Category=1;
+		$this->db->select('MAX(B_Order)+1 AS T_ORDER', FALSE)->from('ebb_boards')->where('Category', $id);
+		$query = $this->db->get();
+		
+		if($query->num_rows() > 0) {
+			$res = $query->row();
+			return $res->T_ORDER;
+		} else {
+			return NULL;
+		}
 	}
 	
 	/**
@@ -425,31 +490,35 @@ class Boardmodel extends CI_Model {
 	public function loadBoardIndex() {
 		$parent = $child = array();
 
-		//SQL CI style.
 		$this->db->select('id, Board')->from('ebb_boards')->where('type', 1)->order_by("B_Order", "asc");
 		$query = $this->db->get();
 		foreach ($query->result() as $row) {
+			#board rules
+			$this->Boardaccessmodel->GetBoardAccess($row->id);
+			
+			#see if user can view the board.
+			if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())) {
+				$parent[] = $row;
 
-        	$parent[] = $row;
+				//build second query.
+				$this->db->select('b.id, b.Board, b.Description, b.last_update, u.Username, b.tid, b.last_page, b.Category')
+				  ->from('ebb_boards b')
+				  ->join('ebb_users u', 'b.Posted_User=u.id', 'LEFT')
+				  ->where('b.type', 2)
+				  ->where('b.Category',$row->id)
+				  ->order_by("b.B_Order", "asc");
+				$query2 = $this->db->get();
+				foreach ($query2->result() as $row2) {
 
-			//build second query.
-			$this->db->select('b.id, b.Board, b.Description, b.last_update, u.Username, b.tid, b.last_page, b.Category')
-			  ->from('ebb_boards b')
-			  ->join('ebb_users u', 'b.Posted_User=u.id', 'LEFT')
-			  ->where('b.type', 2)
-			  ->where('b.Category',$row->id)
-			  ->order_by("b.B_Order", "asc");
-			$query2 = $this->db->get();
-			foreach ($query2->result() as $row2) {
+					#board rules
+					$this->Boardaccessmodel->GetBoardAccess($row2->id);
 
-				#board rules sql.
-				$this->Boardaccessmodel->GetBoardAccess($row2->id);
+					#see if user can view the board.
+					if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())){
+						$child[] = $row2;
+					}
 
-				#see if user can view the board.
-				if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())){
-					$child[] = $row2;
 				}
-
 			}
 		}
 		return array("Parent_Boards" => $parent, "Child_Boards" => $child);
@@ -460,13 +529,15 @@ class Boardmodel extends CI_Model {
 	 * @return array an array of both the parent boards & the child boards.
 	*/
 	public function loadBoardHier() {
-		$parent = $child = array();
+		$parent = $child = $subChild = array();
 
 		//get parent boards
-		$this->db->select('id, Board')->from('ebb_boards')->where('type', 1)->order_by("B_Order", "asc");
+		$this->db->select('id, Board')
+		  ->from('ebb_boards')
+		  ->where('type', 1)
+		  ->order_by("B_Order", "asc");
 		$query = $this->db->get();
 		foreach ($query->result() as $row) {
-
         	$parent[] = $row;
 
 			//build second query.
@@ -477,10 +548,80 @@ class Boardmodel extends CI_Model {
 			  ->order_by("B_Order", "asc");
 			$query2 = $this->db->get();
 			foreach ($query2->result() as $row2) {
-					$child[] = $row2;
+				$child[] = $row2;
+
+				//build third query.
+				$this->db->select('id, Board, Category')
+				  ->from('ebb_boards')
+				  ->where('type', 3)
+				  ->where('Category',$row2->id)
+				  ->order_by("B_Order", "asc");
+				$query3 = $this->db->get();
+				foreach ($query3->result() as $row3) {
+					$subChild[] = $row3;
+				}
 			}
 		}
-		return array("Parent_Boards" => $parent, "Child_Boards" => $child);
+		return array("Parent_Boards" => $parent, "Child_Boards" => $child, "SubChild_Boards" => $subChild);
+	}
+	
+	/**
+	 * Get a list of Parent boards
+	 * @return array list of parent boards
+	*/
+	public function ListParentBoards() {
+		$parent = array();
+
+		//get parent boards
+		$this->db->select('id, Board')
+		  ->from('ebb_boards')
+		  ->where('type', 1)
+		  ->order_by("B_Order", "asc");
+		$query = $this->db->get();
+		foreach ($query->result() as $row) {
+        	$parent[] = $row;
+		}
+		return $parent;
+	}
+	
+	/**
+	 * Get a list of boards
+	 * @return array list of boards
+	*/
+	public function ListBoards($parentId) {
+		$boards = array();
+
+		//get parent boards
+		$this->db->select('id, Board')
+			  ->from('ebb_boards')
+			  ->where('type', 2)
+			  ->where('Category',$parentId)
+			  ->order_by("B_Order", "asc");
+		$query = $this->db->get();
+		foreach ($query->result() as $row) {
+        	$boards[] = $row;
+		}
+		return $boards;
+	}
+	
+	/**
+	 * Get a list of sub boards
+	 * @return array list of sub boards
+	*/
+	public function ListSubBoards($parentId) {
+		$boards = array();
+
+		//get parent boards
+		$this->db->select('id, Board')
+			  ->from('ebb_boards')
+			  ->where('type', 3)
+			  ->where('Category',$parentId)
+			  ->order_by("B_Order", "asc");
+		$query = $this->db->get();
+		foreach ($query->result() as $row) {
+        	$boards[] = $row;
+		}
+		return $boards;
 	}
 
     /**

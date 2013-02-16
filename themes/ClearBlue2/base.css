@@ -1,13 +1,17 @@
 /*
 ========================================
 Filename: base.css
-Modified: 09/01/2012
+Modified: 02/11/2013
 This file holds the structure and layout of the design.
 CREDIT
 @author Andrea Franz <https://github.com/pilu/web-app-theme>
 @license http://opensource.org/licenses/mit-license.php MIT License
 ========================================
 */
+
+#sortable {
+	list-style-type: none;
+}
 
 .centerContainer {
 	margin: 0 auto;
@@ -345,6 +349,21 @@ input.checkbox {
 	font-size: 1.2em;
 	padding: 1px 0;
 	margin: 0;
+}
+
+.textarea_small {
+	height: 150px;
+	width: 200px;
+}
+
+.textarea_medium {
+	height: 150px;
+	width: 350px;
+}
+
+.textarea_large {
+	height: 150px;
+	width: 500px;
 }
 
 .form label.right {

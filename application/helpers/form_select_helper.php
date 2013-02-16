@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 10/10/2012
+ * @version 02/13/2013
 */
 
 /**
@@ -29,7 +29,7 @@ function boardListSelect($boardID="") {
 	}
 	
 	//setup form based on user's selection.
-	//@todo was movetopic, repalce any refernce to that now.
+	//@todo was movetopic, replace any reference to that now.
 	return form_dropdown('boardIDs', $data, $boardID, 'id="movetopic"');
 }
 
@@ -560,4 +560,199 @@ function LanguageList($language){
 	
 	//setup form based on user's selection.
 	return form_dropdown('language', $AssocArray, $language, 'id="language"');
+}
+
+/**
+ * Creates a boolean select field.
+ * @param string $type question, Yes/No; toggle, On/Off; status, Enable/Disable.
+ * @param string $fldName the name of this select element.
+ * @param string $selectedValue What is to be selected by default.
+ * @param string $attrib Define any other attributes to apply to this select element.
+ * @return null|string NULL if an invalid type was set; HTML Select code.
+ */
+function booleanSelect($type, $fldName, $selectedValue=NULL, $attrib=NULL) {
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	if ($type == "question") {
+		$data = array(
+		  0 => $ci->lang->line('no'),
+		  1 => $ci->lang->line('yes')
+		);
+	} elseif ($type == "toggle") {
+		$data = array(
+		  0 => $ci->lang->line('off'),
+		  1 => $ci->lang->line('on')
+		);
+	} elseif ($type == "status") {
+		$data = array(
+		  0 => $ci->lang->line('disable'),
+		  1 => $ci->lang->line('enable')
+		);
+	} else {
+		return NULL;
+	}
+
+	//setup form based on user's selection.
+	return form_dropdown($fldName, $data, $selectedValue, $attrib);	
+}
+
+/**
+ * Get a list of parent boards.
+ * @param string $type The type of parent board to look for.
+ * @param integer $boardID selected BoardID
+ * @return string HTML Select code.
+*/
+function parentBoardSelection($type, $boardID="") {
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array('' => "Select Board");
+	
+	#see what type of board to look for.
+	if ($type == "parent") {
+		$ci->db->select('id, Board')
+		  ->from('ebb_boards')
+		  ->where('type', 1);
+	} else {
+		$ci->db->select('id, Board')
+		  ->from('ebb_boards')
+		  ->where('id !=', $boardID)
+		  ->where('type', 2)
+		  ->or_where('type',3);
+	}
+
+	$query = $ci->db->get();
+	foreach ($query->result_array() as $row) {
+			$data[$row['id']] = $row['Board'];
+	}
+	
+	//setup form based on user's selection.
+	return form_dropdown('category', $data, $boardID, 'id="category"');
+}
+
+/**
+ * Build HTML for the read access select element.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function BoardReadAccessSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  0 => $ci->lang->line('access_all'),
+	  1 => $ci->lang->line('access_admin'),
+	  2 => $ci->lang->line('access_admin_mod'),
+	  3 => $ci->lang->line('access_users'),
+	  5 => $ci->lang->line('access_private')
+	  );
+	
+	return form_dropdown('readaccess', $data, $selectedValue, 'id="readaccess"');	
+}
+
+/**
+ * Build HTML for the write access select element.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function BoardWriteAccessSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  1 => $ci->lang->line('access_admin'),
+	  2 => $ci->lang->line('access_admin_mod'),
+	  3 => $ci->lang->line('access_users'),
+	  4 => $ci->lang->line('access_none'),
+	  5 => $ci->lang->line('access_private')
+	  );
+	
+	return form_dropdown('writeaccess', $data, $selectedValue, 'id="writeaccess"');	
+}
+
+/**
+ * Build HTML for the reply access select element.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function BoardReplyAccessSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  1 => $ci->lang->line('access_admin'),
+	  2 => $ci->lang->line('access_admin_mod'),
+	  3 => $ci->lang->line('access_users'),
+	  4 => $ci->lang->line('access_none'),
+	  5 => $ci->lang->line('access_private')
+	  );
+	
+	return form_dropdown('replyaccess', $data, $selectedValue, 'id="replyaccess"');	
+}
+
+/**
+ * Build HTML for the vote access select element.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function BoardVoteAccessSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  1 => $ci->lang->line('access_admin'),
+	  2 => $ci->lang->line('access_admin_mod'),
+	  3 => $ci->lang->line('access_users'),
+	  4 => $ci->lang->line('access_none'),
+	  5 => $ci->lang->line('access_private')
+	  );
+	
+	return form_dropdown('voteaccess', $data, $selectedValue, 'id="voteaccess"');	
+}
+
+/**
+ * Build HTML for the poll access select element.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function BoardPollAccessSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  1 => $ci->lang->line('access_admin'),
+	  2 => $ci->lang->line('access_admin_mod'),
+	  3 => $ci->lang->line('access_users'),
+	  4 => $ci->lang->line('access_none'),
+	  5 => $ci->lang->line('access_private')
+	  );
+	
+	return form_dropdown('pollaccess', $data, $selectedValue, 'id="pollaccess"');	
+}
+
+/**
+ * Build HTML for the attachment access select element.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function BoardAttachmentAccessSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  1 => $ci->lang->line('access_admin'),
+	  2 => $ci->lang->line('access_admin_mod'),
+	  3 => $ci->lang->line('access_users'),
+	  4 => $ci->lang->line('access_none'),
+	  5 => $ci->lang->line('access_private')
+	  );
+	
+	return form_dropdown('attachaccess', $data, $selectedValue, 'id="attachaccess"');	
 }

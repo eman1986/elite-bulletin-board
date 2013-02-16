@@ -4,14 +4,11 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * boardaccessmodel.php
  * @package Elite Bulletin Board v3
  * @author Elite Bulletin Board Team <http://elite-board.us>
- * @copyright  (c) 2006-2011
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @verson 07/02/2012
+ * @copyright (c) 2006-2013
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
+ * @verson 02/15/2013
 */
 
-/**
- * Board Access Entity
- */
 class Boardaccessmodel extends CI_Model {
 
 	/**
@@ -23,8 +20,6 @@ class Boardaccessmodel extends CI_Model {
 	private $bReply;
 	private $bVote;
 	private $bPoll;
-	private $bDelete;
-	private $bEdit;
 	private $bAttachment;
 	private $bId;
 
@@ -157,54 +152,6 @@ class Boardaccessmodel extends CI_Model {
 	}
 
 	/**
-	 * set value for B_Delete 
-	 *
-	 * type:BIT,size:0,default:0
-	 *
-	 * @param mixed $bDelete
-	 * @return EbbBoardAccessmodel
-	 */
-	public function &setBDelete($bDelete) {
-		$this->bDelete=$bDelete;
-		return $this;
-	}
-
-	/**
-	 * get value for B_Delete
-	 *
-	 * type:BIT,size:0,default:0
-	 *
-	 * @return mixed
-	 */
-	public function getBDelete() {
-		return $this->bDelete;
-	}
-	
-	/**
-	 * set value for B_Edit
-	 *
-	 * type:BIT,size:0,default:0
-	 *
-	 * @param mixed $bEdit
-	 * @return EbbBoardAccessmodel
-	 */
-	public function &setBEdit($bEdit) {
-		$this->bEdit=$bEdit;
-		return $this;
-	}
-
-	/**
-	 * get value for B_Edit 
-	 *
-	 * type:BIT,size:0,default:0
-	 *
-	 * @return mixed
-	 */
-	public function getBEdit() {
-		return $this->bEdit;
-	}
-
-	/**
 	 * set value for B_Attachment 
 	 *
 	 * type:BIT,size:0,default:null
@@ -255,17 +202,59 @@ class Boardaccessmodel extends CI_Model {
 	/**
 	 * METHODS
 	*/
+	
+	/**
+	 * Create board access rules
+	*/
+	public function CreateAccessRules() {
+		
+		$data = array(
+		  'B_Read' => $this->getBRead(),
+		  'B_Post' => $this->getBPost(),
+		  'B_Reply' => $this->getBReply(),
+		  'B_Vote' => $this->getBVote(),
+		  'B_Poll' => $this->getBPoll(),
+		  'B_Attachment' => $this->getBAttachment(),
+		  'B_id' => $this->getBId()
+		);
 
+		#create new set of rules for board.
+		$this->db->insert('ebb_board_access', $data);
+
+		return TRUE;
+	}
+
+	/**
+	 * Update board access rules
+	 * @param array $data new data for record.
+	*/
+	public function UpdateAccessRules($data = NULL) {
+		#see if any specific field was defined.
+		if (is_null($data)) {
+			$data = array(
+			  'B_Read' => $this->getBRead(),
+			  'B_Post' => $this->getBPost(),
+			  'B_Reply' => $this->getBReply(),
+			  'B_Vote' => $this->getBVote(),
+			  'B_Poll' => $this->getBPoll(),
+			  'B_Attachment' => $this->getBAttachment()
+			);
+		}
+		
+		#update board access.
+		$this->db->where('B_id', $this->getBId());
+		$this->db->update('ebb_board_access', $data);
+	}
+	
 	/**
 	 * Loads Entity weith data from database.
 	 * @param int $bid BoardID
-	 * @version 06/17/12
 	 * @return boolean
 	 */
 	public function GetBoardAccess($bid) {
 
 		//fetch board access data.
-		$this->db->select('B_Read, B_Post, B_Reply, B_Vote, B_Poll, B_Delete, B_Edit, B_Attachment, B_id');
+		$this->db->select('B_Read, B_Post, B_Reply, B_Vote, B_Poll, B_Attachment, B_id');
 		$this->db->from('ebb_board_access');
 		$this->db->where('B_id', $bid);
 		$query = $this->db->get();
@@ -281,8 +270,6 @@ class Boardaccessmodel extends CI_Model {
 			$this->setBReply($BoardAccessData->B_Reply);
 			$this->setBVote($BoardAccessData->B_Vote);
 			$this->setBPoll($BoardAccessData->B_Poll);
-			$this->setBDelete($BoardAccessData->B_Delete);
-			$this->setBEdit($BoardAccessData->B_Edit);
 			$this->setBAttachment($BoardAccessData->B_Attachment);
 			return TRUE;
 		} else {

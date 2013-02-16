@@ -4,9 +4,9 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * boardindex_helper.php
  * @package Elite Bulletin Board v3
  * @author Elite Bulletin Board Team <http://elite-board.us>
- * @copyright  (c) 2006-2013
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version 12/18/2012
+ * @copyright (c) 2006-2013
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
+ * @verson 02/15/2013
 */
 
 /**
@@ -163,7 +163,7 @@ function HasAttachment($tid) {
  * Get a count of sub-boards.
  * @param int $boardID
  * @return int
- * @version 06/27/12
+ * @TODO place this in Boardmodel class.
  */
 function GetSubBoardCount($boardID) {
 	
@@ -235,6 +235,7 @@ function boardStats($type){
  * Will list all sub-boards linked to a parent board.
  * @param int $boardID - Board ID to search for any sub-boards.
  * @return string
+ * @TODO place this in Boardmodel class.
 */
 function getSubBoard($boardID) {
 
@@ -271,6 +272,9 @@ function getSubBoard($boardID) {
 			if ($ci->Groupmodel->validateAccess(0, $ci->Boardaccessmodel->getBRead())){
 				$subBoard .= sprintf("<em>%s</em>%s", anchor('/viewboard/'.$row->id, $row->Board), $marker);
 			}
+			
+			//increment counter.
+			$counter++;
 		} #END forloop
 	}
 

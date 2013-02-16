@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 01/21/2013
+ * @version 02/15/2013
 */
 
 #Common language tags.
@@ -19,6 +19,16 @@ $lang['welcomeguest'] = 'Not Logged In';
 $lang['yes'] = 'Yes';
 $lang['no'] = 'No';
 $lang['del'] = 'delete';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['modify'] = 'Modify';
+$lang['enable'] = 'Enable';
+$lang['disable'] = 'Disable';
+$lang['on'] = 'On';
+$lang['off'] = 'Off';
+$lang['submit'] = 'Submit'; //@todo try to reduce the usage of generic verbiage like submit.
+
+
 //$lang['installadmin'] = 'the installation files are still active!!!! Your board is disabled until you remove the installation files!';
 //$lang['install'] = 'This Board is currently under work, please come back later once all work here is completed.';
 $lang['banned'] = 'The administrator of this board has banned you from accessing this board.';
@@ -331,7 +341,6 @@ $lang['bbcode'] = 'BBcode';
 $lang['smiles'] = 'Smiles';
 $lang['moresmiles'] = 'More Smiles';
 $lang['smiletxt'] = 'Look to the right of the smile to see the bbcode for that smile.';
-$lang['disablertf'] = 'Disable Rich Text Editor';
 $lang['topic'] = 'Topic';
 $lang['topicbody'] = 'Topic Body';
 $lang['options'] = 'Options';
@@ -500,12 +509,6 @@ $lang['admincp'] = 'Administration Panel';
 //$lang['nosession'] = 'No session length entered.';
 //$lang['invalidsession'] = 'Invalid session length entered.';
 //$lang['sessiontoolong'] = 'Session length entered is too long.';
-$lang['modify'] = 'Modify';
-$lang['enable'] = 'Enable';
-$lang['disable'] = 'Disable';
-$lang['on'] = 'On';
-$lang['off'] = 'Off';
-$lang['submit'] = 'Submit'; //@todo try to reduce the usage of generic verbiage like submit.
 $lang['noboardtype'] = 'No Board Type was identified.';
 $lang['noacplog'] = 'No action is listed currently.';
 $lang['noaccess'] = 'Sorry but only full administrators can access this section.';
@@ -567,17 +570,15 @@ $lang['attachmentsettings'] = 'Attachment Settings';
 $lang['userprune'] = 'User-Pruning';
 $lang['modinstalltxt'] = 'Below you will see any Add-ons that are available to install.';
 #board cp.
-//$lang['addnew'] = 'Add New...';
-//$lang['goup1'] = 'Go Up One Level';
 $lang['newboard'] = 'Create a Message Board';
 $lang['newparentboard'] = 'Create a Parent Board';
 $lang['newsubboard'] = 'Create a Child-Board';
-$lang['moveup'] = 'Move Up';
-$lang['movedown'] = 'Move Down';
-$lang['boardtext'] = 'This is where you can add, edit, delete, re-order, and add boards &amp; sub-boards. Just click on the parent board that has a child board under it.';
-//$lang['ontop'] = 'This is already on top, you cannot move this any higher.';
-//$lang['onbottom'] = 'This is already on the bottom, you cannot move this any lower.';
-//$lang['notfound'] = 'Board either does not exist or incorrect id is used.';
+$lang['reorder'] = 'Reorder Board';
+$lang['reorderText'] = 'Drag panels to reorder the board.';
+
+$lang['reordersuccess'] = 'Reorder Applied.';
+$lang['reorderfail'] = 'Fail to Reorder Board.';
+
 $lang['boardname'] = 'Board Name';
 $lang['description'] = 'Description';
 $lang['boardsettings'] = 'Board Settings';
@@ -600,6 +601,10 @@ $lang['postincrement'] = 'Allow post in board count towards user\'s post count';
 $lang['bbcode'] = 'BBCode';
 $lang['img'] = '[img] Tag';
 $lang['addboard'] = 'Add New Board';
+
+$lang['addboardsuccess'] = 'New Board Added Successfully';
+$lang['editboardsuccess'] = 'Board Updated Successfully';
+
 $lang['modifyboard'] = 'Modify Board';
 $lang['delboard'] = 'Delete Board';
 $lang['catdelwarning'] = 'PARENT BOARD NOTICE: if any boards are set-up to a parent board, they will get deleted as well!!!';
