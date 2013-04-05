@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 11/14/2012
+ * @version 04/04/2013
 */
 
 class auth {
@@ -123,154 +123,6 @@ class auth {
 	}
 
     /**
-	 * Performs a check through the database to ensure the user can access the adminstration panel.
-	 * @version 07/25/12
-	 * @return boolean
-	 * @access public
-	*/
-	public function validateAdministrator() {
-		#See if this is a guest account.
-		if ($this->user == "guest" || $this->pass == "guest") {
-		    return FALSE;
-		} else {
-			#see if user entered the correct information.
-			if ($this->validateUser() && $this->validatePwd()) {
-				#see if user is an administrator.
-                $validateGroupPolicy = new groupPolicy($this->user);
-				if ($validateGroupPolicy->groupAccessLevel() == 1) {
-			    	return TRUE;
-				} else {
-			    	return FALSE;
-			    }//END group validation.
-			} else {
-				return FALSE;
-			}//END user validation.
-		}//END guest filtering.
-	}
-
-	/**
-	 * Validates current adminCP session.
-	 * @access Public
-	 * @return boolean
-	 * @version 07/25/2012
-	*/
-	public function validateAdministratorSession() {
-
-		//@TODO this is incorrect and needs to be rewritten. (07/25/12)
-		
-		#See if this is a guest account.
-		if ($this->user == "guest" || $this->pass == "guest") {
-		    return FALSE;
-		} else {
-			#see if user entered the correct information.
-			if ($this->validateUser() && $this->validatePwdEncrypted()) {
-				#see if user is an administrator.
-                $validateGroupPolicy = new groupPolicy($this->user);
-				if($validateGroupPolicy->groupAccessLevel() == 1){
-			    	return(true);
-				}else{
-			    	return(false);
-			    }//END group validation.
-			}else{
-				return(false);
-			}//END user validation.
-		}//END guest filtering.
-
-	}
-	
-    /**
-	 * Performs login process, creating any sessions or cookies needed for the ACP.
-	 * @param int $sessionLength The duration of the session.
-	 * @version 10/27/11
-	 * @access public
-	*/
-	public function acpLogOn($sessionLength){
-		
-		//@TODO this is incorrect and needs to be rewritten. (07/25/12)
-
-		#set session to a secure status.
-		//ini_get('session.cookie_secure',true);
-
-		#encrypt password.
-	    $encryptPwd = sha1($this->pass.$this->getPwdSalt());
-	    
-	    #create session marker for time limit.
-	    //@TODO: Add this value into a session table in the database, plan for RC 2.
-        $this->ci->session->set_userdata('ebbacptimer', $sessionLength);
-	
-		#user is an admin, let them log in. set to last as long as user selected.
-		//@todo: make this session value, NOT a cookie.
-        $ebbacpu = array(
-            'name'   => 'ebbacpu',
-            'value'  => $this->user,
-            'expire' => $expire,
-            'domain' => '.'.$this->ci->preference->getPreferenceValue("cookie_domain"),
-            'path'   => $this->ci->preference->getPreferenceValue("cookie_path"),
-            'secure' => $this->ci->preference->getPreferenceValue("cookie_secure")
-        );
-        $this->input->set_cookie($ebbacpu);
-
-        $ebbacpp = array(
-            'name'   => 'ebbacpp',
-            'value'  => $encryptPwd,
-            'expire' => $expire,
-            'domain' => '.'.$this->ci->preference->getPreferenceValue("cookie_domain"),
-            'path'   => $this->ci->preference->getPreferenceValue("cookie_path"),
-            'secure' => $this->ci->preference->getPreferenceValue("cookie_secure")
-        );
-        $this->input->set_cookie($ebbacpp);
-
-		#generate session-based validation.
-		$this->regenerateSession(true);
-	}
-
-    /**
-	 * Performs logout process, removing any sessions or cookies needed for the ACP.
-	 * @version 10/27/11
-	 * @access public
-	*/
-	public function acpLogOut(){
-		
-		//@TODO this is incorrect and needs to be rewritten. (07/25/12)
-
-   		#set session to a secure status.
-		//ini_get('session.cookie_secure',true);
-
-		#close out ACP cookies.
-		if (($this->input->cookie('ebbacpu', TRUE) == null) AND ($this->input->cookie('ebbacpp', TRUE) == null)){
-	        #encrypt password.
-		    $encryptPwd = sha1($this->pass.$this->getPwdSalt());
-
-		    #get session time.            
-	        $sessionLength = $this->ci->session->userdata('ebbacptimer');
-
-			#destroy cookies.
-            $ebbacpu = array(
-                'name'   => 'ebbacpu',
-                'value'  => $this->user,
-                'expire' => '',
-                'domain' => '.'.$this->ci->preference->getPreferenceValue("cookie_domain"),
-                'path'   => $this->ci->preference->getPreferenceValue("cookie_path"),
-                'secure' => $this->ci->preference->getPreferenceValue("cookie_secure")
-            );
-            $this->input->set_cookie($ebbacpu);
-
-            $ebbacpp = array(
-                'name'   => 'ebbacpp',
-                'value'  => $encryptPwd,
-                'expire' => '',
-                'domain' => '.'.$this->ci->preference->getPreferenceValue("cookie_domain"),
-                'path'   => $this->ci->preference->getPreferenceValue("cookie_path"),
-                'secure' => $this->ci->preference->getPreferenceValue("cookie_secure")
-            );
-            $this->input->set_cookie($ebbacpp);
-
-			#clear session data.
-			$this->ci->session->all_userdata();
-		}
-	}
-
-    /**
 	 * Performs login process, creating any sessions or cookies needed for the system.
 	 * @param boolean $remember keep user login info in tact?
 	 * @version 07/28/12
@@ -278,6 +130,9 @@ class auth {
 	*/
 	public function logOn($remember){
 	    
+		//@TODO work on handling case when browser is closed before logging off.
+		//@TODO work on persistent login handling.
+
 		#set session to a secure status.
 		//ini_get('session.cookie_secure',true);
 
@@ -493,5 +348,4 @@ class auth {
 			return FALSE;
 		}
 	}
-
-}//END CLASS
+}

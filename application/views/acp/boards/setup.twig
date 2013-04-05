@@ -16,7 +16,7 @@
 					<td width="40%"><i class=" icon-arrow-right icon-large"></i>&nbsp;{{b.Board}}</td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{b.id}}', 800);">{{LANG_EDIT}}</a></td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{b.id}}');">{{LANG_DELETE}}</a></td>
-					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/2/{{b.id}}');">{{LANG_REORDER}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/2/{{c.id}}');">{{LANG_REORDER}}</a></td>
 				</tr>
 				{% for sb in SubBoards %}
 				{# make sure we get the correct data in the right spots. #}
@@ -25,7 +25,7 @@
 					<td width="40%"><i class=" icon-arrow-right icon-large"></i>&nbsp;<i class=" icon-arrow-right icon-large"></i>&nbsp;{{sb.Board}}</td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{sb.id}}', 800);">{{LANG_EDIT}}</a></td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{sb.id}}');">{{LANG_DELETE}}</a></td>
-					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/3/{{sb.id}}');">{{LANG_REORDER}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/3/{{b.id}}');">{{LANG_REORDER}}</a></td>
 				</tr>
 				{%- endif -%}
 				{% endfor %}

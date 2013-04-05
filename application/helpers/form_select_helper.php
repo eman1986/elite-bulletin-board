@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/18/2013
+ * @version 04/04/2013
 */
 
 /**
@@ -619,8 +619,11 @@ function parentBoardSelection($type, $boardID="", $excludeId=NULL) {
 		$ci->db->select('id, Board')
 		  ->from('ebb_boards')
 		  ->where('type', 2)
-		  ->or_where('type',3)
-		  ->where('id !=', $excludeId);
+		  ->or_where('type',3);
+		
+		if (!is_null($excludeId)) {
+			$ci->db->where('id !=', $excludeId);
+		}
 	}
 
 	$query = $ci->db->get();

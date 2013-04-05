@@ -1,7 +1,7 @@
 /*
 ========================================
 Filename: style.css
-Last Modified: 02/08/2013
+Last Modified: 04/04/2013
 ClearBlue2 CSS template file for Elite Bulletin Board v3.0.0
 All formatting belongs here.
 CREDIT
@@ -166,6 +166,7 @@ NOTICIATION PANELS
 	border: 1px solid #163061;
     background: #C2C9D1;
 	font-size: 1.3em;
+	cursor: move;
 }
 
 /*

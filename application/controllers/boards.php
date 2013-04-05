@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/18/2013
+ * @version 04/04/2013
 */
 
 /**
@@ -622,7 +622,6 @@ class Boards extends EBB_Controller {
 				'SMILES' => form_smiles(),
 				'LANG_REPLY' => $this->lang->line('btnreply'),
 				'LANG_OPTIONS' => $this->lang->line('options'),
-				'LANG_DISABLERTF' => $this->lang->line('disablertf'),
 				'LANG_SMILES' => $this->lang->line('moresmiles'),
 				'LANG_NOTIFY' => $this->lang->line('notify'),
 				'LANG_DISABLESMILES' => $this->lang->line('disablesmiles'),
@@ -1152,7 +1151,6 @@ class Boards extends EBB_Controller {
 		  "LANG_CLEAR" => $this->lang->line("clearfile"),
 		  "LANG_ADDMOREFILES" => $this->lang->line("addMoreFiles"),
 		  "ATTACHMENTLIMIT" => $uploadLimit,
-		  "LANG_DISABLERTF" => $this->lang->line("disablertf"),
 		  "LANG_OPTIONS" => $this->lang->line("options"),
 		  "LANG_POSTTYPE" => $this->lang->line("type"),
 		  "GAC_IMPORTANT" => $CanImportant,
@@ -1503,7 +1501,6 @@ class Boards extends EBB_Controller {
 		  "LANG_CLEAR" => $this->lang->line("clearfile"),
 		  "LANG_ADDMOREFILES" => $this->lang->line("addMoreFiles"),
 		  "ATTACHMENTLIMIT" => $uploadLimit,
-		  "LANG_DISABLERTF" => $this->lang->line("disablertf"),
 		  "LANG_OPTIONS" => $this->lang->line("options"),
 		  "LANG_NOTIFY" => $this->lang->line("notify"),
 		  "LANG_DISABLESMILES" => $this->lang->line("disablesmiles"),
@@ -1895,7 +1892,6 @@ class Boards extends EBB_Controller {
 			  "LANG_CLEAR" => $this->lang->line("clearfile"),
 			  "LANG_VIEWFILES" => $this->lang->line("viewfiles"),
 			  "ATTACHMENTLIMIT" => $uploadLimit,
-			  "LANG_DISABLERTF" => $this->lang->line("disablertf"),
 			  "LANG_OPTIONS" => $this->lang->line("options"),
 			  "LANG_POSTTYPE" => $this->lang->line("type"),
 			  "POSTTYPE" => $this->Topicmodel->getImportant(),
@@ -2146,7 +2142,6 @@ class Boards extends EBB_Controller {
 			  "LANG_CLEAR" => $this->lang->line("clearfile"),
 			  "LANG_VIEWFILES" => $this->lang->line("viewfiles"),
 			  "ATTACHMENTLIMIT" => $uploadLimit,
-			  "LANG_DISABLERTF" => $this->lang->line("disablertf"),
 			  "LANG_OPTIONS" => $this->lang->line("options"),
 			  "LANG_NOTIFY" => $this->lang->line("notify"),
 			  "LANG_DISABLESMILES" => $this->lang->line("disablesmiles"),

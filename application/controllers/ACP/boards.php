@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/18/2013
+ * @version 04/04/2013
 */
 
 class Boards extends EBB_Controller{
@@ -387,7 +387,7 @@ class Boards extends EBB_Controller{
 			$editBoardData = array(
 			  'Board' => $this->input->post('board_name', TRUE),
 			  'Description' => $type == 2 || $type== 3 ? $this->input->post('description', TRUE) : NULL,
-			  'Category' => $type== 3 ? $this->input->post('category', TRUE) : 0,
+			  'Category' => $type == 2 || $type== 3 ? $this->input->post('category', TRUE) : 0,
 			  'Smiles' => $type == 2 || $type== 3 ? $this->input->post('smiles', TRUE) : 0,
 			  'BBcode' => $type == 2 || $type== 3 ? $this->input->post('bbcode', TRUE) : 0,
 			  'Post_Increment' => $type == 2 || $type== 3 ? $this->input->post('increment', TRUE) : 0,

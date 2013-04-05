@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 09/16/2012
+ * @version 04/04/2013
 */
 
 /**
@@ -190,7 +190,6 @@ class Groupmodel extends CI_Model {
 	/**
 	 * Populate properties with data.
 	 * @param integer $gid defined GroupID assigned to logged in user.
-	 * @version 04/12/12
 	 */
 	public function GetGroupData($gid) {
 
@@ -213,8 +212,8 @@ class Groupmodel extends CI_Model {
 			return TRUE;
 		} else {
 			//no record was found, throw an error.
-			return FALSE;
 			log_message('error', 'invalid GroupID was provided.'); //log error in error log.
+			return FALSE;
 		}
 
 	}
@@ -225,7 +224,6 @@ class Groupmodel extends CI_Model {
 	 * @param integer $page how many records to show per page.
 	 * @param integer $indx where to begin the data range.
 	 * @return array the data from ebb_users.
-	 * @version 09/16/12
 	*/
 	public function ListAll($order, $page, $indx) {
 		$groups = array();
@@ -256,7 +254,6 @@ class Groupmodel extends CI_Model {
 	/**
 	 * Get a total count of records for the ebb_groups table.
 	 * @return integer
-	 * @version 09/16/12
 	*/
 	public function countAll($showAll = false) {
 		$this->db->select('id')->from('ebb_groups');
@@ -272,15 +269,15 @@ class Groupmodel extends CI_Model {
 
 	/**
 	 * use to either promote or demote a user.
-	 * @version 02/15/12
 	 * @param integer $newGID new GID user is part of.
 	 * @access public
 	*/
 	public function changeGroupID($newGID){
 
 	    #see if user is guest, if so, exit without result.
-		if($this->IsGuest == TRUE){
-            show_error($this->lang->line('groupstatus'),500, $this->lang->line('error'));
+		if($this->IsGuest) {
+			log_message('error', $this->lang->line('groupstatus'));
+			return FALSE;
 		}else{
 			$this->db->where('Username', $this->user);
 			$this->db->update('ebb_users', array('gid' => $newGID));
@@ -289,16 +286,14 @@ class Groupmodel extends CI_Model {
 
 	/**
 	 * validate user's privileges.
-	 * @version 05/10/12
 	 * @param string $permissionAction action code being validated.
-	 * @return integer $permissionValue automatic deny return for guest account.
-	 * @return string filtered string to use in SQL query.
+	 * @return boolean
 	 * @access private
 	*/
 	private function accessVaildator($permissionAction){
 
 		#see if user is guest, if so, deny any requests.
-		if ($this->IsGuest == TRUE) {
+		if ($this->IsGuest) {
 			return FALSE;
 		} else {
 			#see if user ID is incorrect or Null.
@@ -309,7 +304,8 @@ class Groupmodel extends CI_Model {
                 $permissionActionChk = $this->db->count_all_results();
 
                 if ($permissionActionChk == 0) {
-                    show_error($this->lang->line('invalidaction').'<hr />File:'.__FILE__.'<br />Line:'.__LINE__,500, $this->lang->line('error'));
+					log_message('error', $this->lang->line('invalidaction'));
+					return FALSE;
                 } else {
                   	#see if user has correct permission to access requested permission.
                     $this->db->select('set_value')->from('ebb_permission_data')->where('profile', $this->permissionType)->where('permission', $permissionAction);
@@ -328,14 +324,14 @@ class Groupmodel extends CI_Model {
 					}
                 }
             } else {
-                show_error($this->lang->line('invalidprofile').'<hr />File:'.__FILE__.'<br />Line:'.__LINE__,500, $this->lang->line('error'));
+				log_message('error', $this->lang->line('invalidprofile'));
+				return FALSE;
 			}
 		}
 	}
 
 	/**
 	 * Validate to see if user can access the requested area.
-	 * @version 02/15/12
 	 * @param string $action action in check.
 	 * @return boolean
 	 * @access private
@@ -356,7 +352,7 @@ class Groupmodel extends CI_Model {
 				$permissionChk = false;
 			//} elseif(($action == 5) and ($checkgroup == 1) or ($this->groupAccessLevel() == 1) or ($checkmod == 1)) { //PRIVATE
 				//REBUILD THIS LOGIC
-				$permissionChk = true;
+				//$permissionChk = true;
 			} elseif($action == 0) { //EVERYONE
 				$permissionChk = true;
 			} else {
@@ -368,7 +364,6 @@ class Groupmodel extends CI_Model {
 
 	/**
 	 * Validate to see if user can access the requested area.
-	 * @version 3/22/10
 	 * @param int $type type of permission being checked (0=board, 1=group).
 	 * @param string $action The action being validated.
 	 * @return boolean
@@ -400,8 +395,7 @@ class Groupmodel extends CI_Model {
 	/**
 	 * Validates the entered group is valid.
 	 * @return boolean
-	 * @version 04/11/12
-	 */
+	*/
 	private function validateGroup(){
 
 		$this->db->select('id')->from('ebb_groups')->where('id', $this->gid)->limit(1);
