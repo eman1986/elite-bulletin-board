@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 12/24/2012
+ * @version 02/18/2013
 */
 
 /**
@@ -406,26 +406,16 @@ class Boards extends EBB_Controller {
 					$canSeeIP = FALSE;
 				}
 
-				#see if user can alter topic.
-				if ($this->Groupmodel->ValidateAccess(0, $this->Boardaccessmodel->getBEdit())) {
-					//see if we got any group-based permission overwritting the board-level permission.
-					if($this->Groupmodel->ValidateAccess(1, 40)){
-						$CanEdit = TRUE;
-					} else {
-						$CanEdit = FALSE;
-					}
+				//see if we got any group-based permission overwritting the board-level permission.
+				if($this->Groupmodel->ValidateAccess(1, 40)){
+					$CanEdit = TRUE;
 				} else {
 					$CanEdit = FALSE;
 				}
 
 				#see if user can delete topic.
-				if ($this->Groupmodel->ValidateAccess(0, $this->Boardaccessmodel->getBDelete())) {
-					//see if we got any group-based permission overwritting the board-level permission.
-					if($this->Groupmodel->ValidateAccess(1, 41)){
-						$CanDelete = TRUE;
-					} else {
-						$CanDelete = FALSE;
-					}
+				if($this->Groupmodel->ValidateAccess(1, 41)){
+					$CanDelete = TRUE;
 				} else {
 					$CanDelete = FALSE;
 				}
@@ -1997,13 +1987,8 @@ class Boards extends EBB_Controller {
 				}
 			} else {
 				//see if user can delete this topic.
-				if ($this->Groupmodel->ValidateAccess(0, $this->Boardaccessmodel->getBDelete())) {
-					//see if we got any group-based permission overwritting the board-level permission.
-					if($this->Groupmodel->ValidateAccess(1, 41)){
-						$CanDelete = TRUE;
-					} else {
-						$CanDelete = FALSE;
-					}
+				if($this->Groupmodel->ValidateAccess(1, 41)){
+					$CanDelete = TRUE;
 				} else {
 					$CanDelete = FALSE;
 				}
@@ -2247,13 +2232,8 @@ class Boards extends EBB_Controller {
 				}
 			} else {
 				//see if user can delete this topic.
-				if ($this->Groupmodel->ValidateAccess(0, $this->Boardaccessmodel->getBDelete())) {
-					//see if we got any group-based permission overwritting the board-level permission.
-					if($this->Groupmodel->ValidateAccess(1, 41)){
-						$CanDelete = TRUE;
-					} else {
-						$CanDelete = FALSE;
-					}
+				if($this->Groupmodel->ValidateAccess(1, 41)){
+					$CanDelete = TRUE;
 				} else {
 					$CanDelete = FALSE;
 				}

@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/15/2013
+ * @version 02/18/2013
 */
 
 class Boards extends EBB_Controller{
@@ -347,7 +347,7 @@ class Boards extends EBB_Controller{
 			  "LANG_POLLACCESS" => $this->lang->line('boardpoll'),
 			  "POLLACCESS_SELECT" => BoardPollAccessSelect($this->Boardaccessmodel->getBPoll()),
 			  "LANG_CATEGORY" => $this->lang->line('parentboard'),
-			  "CATEGORY_SELECT" => parentBoardSelection($this->Boardmodel->getType() == 2 ? "parent" : "child", $this->Boardmodel->getCategory()),
+			  "CATEGORY_SELECT" => parentBoardSelection($this->Boardmodel->getType() == 2 ? "parent" : "child", $this->Boardmodel->getCategory(), $id),
 			  "LANG_POSTINCREMENT" => $this->lang->line('postincrement'),
 			  "POSTINCREMENT_SELECT" => booleanSelect("question", "increment", $this->Boardmodel->getPostIncrement(), 'id="increment"'),
 			  "LANG_BBCODE" => $this->lang->line('bbcode'),

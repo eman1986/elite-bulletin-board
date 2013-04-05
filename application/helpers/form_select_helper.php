@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/13/2013
+ * @version 02/18/2013
 */
 
 /**
@@ -601,9 +601,10 @@ function booleanSelect($type, $fldName, $selectedValue=NULL, $attrib=NULL) {
  * Get a list of parent boards.
  * @param string $type The type of parent board to look for.
  * @param integer $boardID selected BoardID
+ * @param integer $excludeId define an id to exlude from the results
  * @return string HTML Select code.
 */
-function parentBoardSelection($type, $boardID="") {
+function parentBoardSelection($type, $boardID="", $excludeId=NULL) {
 	#obtain codeigniter object.
 	$ci =& get_instance();
 	
@@ -617,9 +618,9 @@ function parentBoardSelection($type, $boardID="") {
 	} else {
 		$ci->db->select('id, Board')
 		  ->from('ebb_boards')
-		  ->where('id !=', $boardID)
 		  ->where('type', 2)
-		  ->or_where('type',3);
+		  ->or_where('type',3)
+		  ->where('id !=', $excludeId);
 	}
 
 	$query = $ci->db->get();
