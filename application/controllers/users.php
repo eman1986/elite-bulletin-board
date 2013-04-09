@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 01/21/2013
+ * @version 04/08/2013
 */
 class Users extends EBB_Controller {
 	
@@ -41,7 +41,7 @@ class Users extends EBB_Controller {
 		
 		//add breadcrumbs
 		$this->breadcrumb->append_crumb($this->title, '/');
-		$this->breadcrumb->append_crumb($this->lang->line("members"), '/users/memberslist');
+		$this->breadcrumb->append_crumb($this->lang->line("uoptions"), '/users/');
 		
 		//render to HTML.
 		echo $this->twig->render(strtolower(__CLASS__), 'index', array (

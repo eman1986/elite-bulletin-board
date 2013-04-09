@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/15/2013
+ * @version 04/08/2013
 */
 
 #Common language tags.
@@ -205,8 +205,6 @@ $lang['usrsettingssuccess'] = 'Successfully Saved User Settings';
 $lang['usrmessengersuccess'] = 'Successfully Saved Messenger Settings';
 $lang['usrsigsuccess'] = 'Successfully Saved Signature';
 
-//$lang['joinedgroupsuccess'] = 'Successfully Joined Group';
-//$lang['unjoinedgroupsuccess'] = 'Successfully Unjoined Group';
 //$lang['clearavatarsuccess'] = 'Successfully Cleared Avatar';
 //$lang['savedavatarsuccess'] = 'Successfully Saved Avatar';
 $lang['removedattachmentsuccess'] = 'Successfully Deleted Attachment';
@@ -607,7 +605,8 @@ $lang['editboardsuccess'] = 'Board Updated Successfully';
 
 $lang['modifyboard'] = 'Modify Board';
 $lang['delboard'] = 'Delete Board';
-$lang['catdelwarning'] = 'PARENT BOARD NOTICE: if any boards are set-up to a parent board, they will get deleted as well!!!';
+$lang['catdelwarning'] = 'WARNING: anything associated with this board will get deleted as well!';
+$lang['successdeleteboard'] = 'Successfully Deleted Board';
 #group cp
 $lang['addgroup'] = 'Create a new group';
 $lang['manageprofile'] = 'Manage Group Profile';

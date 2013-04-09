@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/15/2013
+ * @version 04/07/2013
 */
 
 /**
@@ -431,8 +431,130 @@ class Boardmodel extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	/**
+	 * Delete boards.
+	 * @return boolean
+	*/
 	public function DeleteBoard() {
+		$this->db->select('tid')
+		  ->from('ebb_topics')
+		  ->where('bid', $this->getId());
+		$topicData = $this->db->get();
+		
+		//see if we have any records to delete.
+		if($topicData->num_rows() > 0) {
+			foreach ($topicData->result() as $topicRow) {
+				
+				// -------------------------------------------- /
+				// Delete post data
+				// -------------------------------------------- /
+				$this->db->select('pid')
+				  ->from('ebb_posts')
+				  ->where('tid', $topicRow->tid);
+				$rQuery = $this->db->get();
 
+				//see if we have any replies to delete.
+				if($rQuery->num_rows() > 0) {
+					//loop through data and clear attachments.
+					foreach ($rQuery->result() as $replyRow) {
+						$this->db->select('Filename')
+						  ->from('ebb_attachments')
+						  ->where('pid', $replyRow->pid);
+						$aQuery = $this->db->get();
+
+						//see if we have any records to delete.
+						if($aQuery->num_rows() > 0) {
+
+							foreach ($aQuery->result() as $rAttachRow) {
+								$success = unlink($this->config->item('upload_path').$rAttachRow->Filename);
+								//see if the file successfully deleted.
+								if ($success) {
+									//remove entry from db.
+									$this->db->where('pid', $replyRow->pid)
+									  ->where('Filename', $rAttachRow->Filename)
+									  ->delete('ebb_attachments');
+								}
+							}
+						}
+					}
+					//delete all replies tied to defined topic id.
+					$this->db->where('tid', $topicRow->tid)
+					  ->delete('ebb_posts');
+					return TRUE;
+				}
+				
+				// -------------------------------------------- /
+				// Delete topic subscriptions
+				// -------------------------------------------- /
+				$this->db->where('tid', $topicRow->tid)
+					  ->delete('ebb_topic_watch');
+				
+				// -------------------------------------------- /
+				// Delete topic read data
+				// -------------------------------------------- /
+				$this->db->where('Topic', $topicRow->tid)
+					  ->delete('ebb_read_topic');
+
+				// -------------------------------------------- /
+				// Delete polls & votes
+				// -------------------------------------------- /
+				$this->db->where('tid', $topicRow->tid)
+				  ->delete('ebb_poll');
+
+				$this->db->where('tid', $topicRow->tid)
+				  ->delete('ebb_votes');
+				
+				// -------------------------------------------- /
+				// Delete topic data
+				// -------------------------------------------- /
+				$this->db->select('Filename')
+				  ->from('ebb_attachments')
+				  ->where('tid', $topicRow->tid);
+				$topicAttachs = $this->db->get();
+				
+				//see if we have any records to delete.
+				if($topicAttachs->num_rows() > 0) {
+					foreach ($topicAttachs->result() as $tAttachRow) {
+						$tSuccess = unlink($this->config->item('upload_path').$tAttachRow->Filename);
+
+						//see if the file successfully deleted.
+						if ($tSuccess) {
+							//remove entry from db.
+							$this->db->where('tid', $topicRow->tid)
+							  ->where('Filename', $tAttachRow->Filename)
+							  ->delete('ebb_attachments');
+						} else {
+							//log this error.
+							log_message('error', 'Was unable to delete the file '.$this->config->item('upload_path').$tAttachRow->Filename); //log error in error log.
+						}
+					}
+
+					$this->db->where('tid', $topicRow->tid)
+					  ->delete('ebb_topics');
+
+					return TRUE;
+				} else {
+					//no attachments, so just delete the topic.
+					$this->db->where('tid', $topicRow->tid)
+					  ->delete('ebb_topics');
+					return TRUE;
+				}
+
+			}
+		}
+		
+		// -------------------------------------------- /
+		// Delete Board Access Rules.
+		// -------------------------------------------- /
+		$this->db->where('B_id', $this->getId())
+		  ->delete('ebb_board_access');
+		
+		// -------------------------------------------- /
+		// Delete Board.
+		// -------------------------------------------- /
+		$this->db->where('id', $this->getId())
+		  ->delete('ebb_boards');
+		return TRUE;
 	}
 	
 	/**

@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/04/2013
+ * @version 04/08/2013
 */
 
 class Boards extends EBB_Controller{
@@ -123,6 +123,8 @@ class Boards extends EBB_Controller{
 			'LANG_EDIT' => $this->lang->line('modifyboard'),
 			'LANG_DELETE' => $this->lang->line('delboard'),
 			'LANG_REORDER' => $this->lang->line('reorder'),
+			'LANG_CONFIRM_DELETION' => $this->lang->line('condel'),
+			'LANG_DELETE_CATEGORY_WARNING' => $this->lang->line('catdelwarning'),
 			'Category' => $bInx['Parent_Boards'],
 			'Boards' => $bInx['Child_Boards'],
 			'SubBoards' => $bInx['SubChild_Boards']
@@ -202,6 +204,10 @@ class Boards extends EBB_Controller{
 	 * @example index.php/ACP/boards/create/1
 	*/
 	public function create($type) {
+		if (!IS_AJAX) {
+			exit(show_error($this->lang->line('ajaxerror'), 403, $this->lang->line('error')));
+		}
+		
 		// LOAD LIBRARIES
         $this->load->library(array('encrypt', 'form_validation'));
         $this->load->helper(array('form', 'form_select'));
@@ -243,6 +249,10 @@ class Boards extends EBB_Controller{
 	 * @example index.php/ACP/boards/createSubmit
 	*/
 	public function createSubmit() {
+		if (!IS_AJAX) {
+			exit(show_error($this->lang->line('ajaxerror'), 403, $this->lang->line('error')));
+		}
+
 		$data = array();
 	
 		// LOAD LIBRARIES
@@ -316,7 +326,16 @@ class Boards extends EBB_Controller{
         echo json_encode($data); //return results in JSON format.
 	}
 	
+	/**
+	 * edit board form
+	 * @param integer $id Board ID
+	 * @example index.php/ACP/boards/edit
+	*/
 	public function edit($id) {
+		if (!IS_AJAX) {
+			exit(show_error($this->lang->line('ajaxerror'), 403, $this->lang->line('error')));
+		}
+
 		// LOAD LIBRARIES
         $this->load->library(array('encrypt', 'form_validation'));
         $this->load->helper(array('form', 'form_select'));
@@ -364,7 +383,15 @@ class Boards extends EBB_Controller{
 		}
 	}
 	
+	/**
+	 * process edit form.
+	 * @example index.php/ACP/boards/editSubmit
+	*/
 	public function editSubmit() {
+		if (!IS_AJAX) {
+			exit(show_error($this->lang->line('ajaxerror'), 403, $this->lang->line('error')));
+		}
+
 		$data = array();
 	
 		// LOAD LIBRARIES
@@ -442,8 +469,29 @@ class Boards extends EBB_Controller{
         echo json_encode($data); //return results in JSON format.
 	}
 	
+	/**
+	 * Delete board & associated data.
+	 * @param integer $id Board ID
+	 * @example index.php/ACP/boards/delete
+	*/
 	public function delete($id) {
+		$this->Boardmodel->setId($id);
+
+		#delete board & associated data.
+		$this->Boardmodel->DeleteBoard();
 		
+		#log this into our audit system.
+		$this->Cplogmodel->setUser($this->userID);
+		$this->Cplogmodel->setAction("Deleted Board");
+		$this->Cplogmodel->setDate(time());
+		$this->Cplogmodel->setIp(detectProxy());
+		$this->Cplogmodel->logAction();
+		
+		//display success message.
+		$this->notifications('success', $this->lang->line('successdeleteboard'));
+
+		#direct user to login page.
+		redirect($this->boardUrl.'/ACP/boards/setup', 'location');
 	}
 	
 }

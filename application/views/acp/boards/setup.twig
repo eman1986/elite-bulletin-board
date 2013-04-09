@@ -6,7 +6,7 @@
 		<tr>
 			<td width="40%">{{c.Board}}</td>
 			<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{c.id}}');">{{LANG_EDIT}}</a></td>
-			<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{c.id}}');">{{LANG_DELETE}}</a></td>
+			<td width="20%" class="centerText"><a href="#" onclick="confirmDlg('{{LANG_CONFIRM_DELETION}}<br /><br /><strong>{{LANG_DELETE_CATEGORY_WARNING}}</strong>', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{c.id}}');">{{LANG_DELETE}}</a></td>
 			<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/1/{{c.id}}');">{{LANG_REORDER}}</a></td>
 		</tr>
 		{% for b in Boards %}
@@ -15,7 +15,7 @@
 				<tr>
 					<td width="40%"><i class=" icon-arrow-right icon-large"></i>&nbsp;{{b.Board}}</td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{b.id}}', 800);">{{LANG_EDIT}}</a></td>
-					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{b.id}}');">{{LANG_DELETE}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="confirmDlg('{{LANG_CONFIRM_DELETION}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{b.id}}');">{{LANG_DELETE}}</a></td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/2/{{c.id}}');">{{LANG_REORDER}}</a></td>
 				</tr>
 				{% for sb in SubBoards %}
@@ -24,7 +24,7 @@
 				<tr>
 					<td width="40%"><i class=" icon-arrow-right icon-large"></i>&nbsp;<i class=" icon-arrow-right icon-large"></i>&nbsp;{{sb.Board}}</td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_EDIT}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/edit/{{sb.id}}', 800);">{{LANG_EDIT}}</a></td>
-					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_DELETE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{sb.id}}');">{{LANG_DELETE}}</a></td>
+					<td width="20%" class="centerText"><a href="#" onclick="confirmDlg('{{LANG_CONFIRM_DELETION}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/delete/{{sb.id}}');">{{LANG_DELETE}}</a></td>
 					<td width="20%" class="centerText"><a href="#" onclick="buildModal('acpFrm', '{{LANG_REORDER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/boards/reorder/3/{{b.id}}');">{{LANG_REORDER}}</a></td>
 				</tr>
 				{%- endif -%}

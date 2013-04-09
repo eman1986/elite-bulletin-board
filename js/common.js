@@ -4,12 +4,13 @@
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/06/2013
+ * @version 04/08/2013
 */
 
 /**
  * Used to redirect a user to a location within the program's directory.
- * @param addr[str] - the url to direct user to.
+ * @param {string} addr the url to direct user to.
+ * @returns {object}
 */
 function gotoUrl(addr){
 	window.location = addr;
@@ -17,23 +18,25 @@ function gotoUrl(addr){
 
 /**
  * Used to display a confirmation dialog to the user.
- * @param msg[str] - the message displayed to the user.
- * @param addr[str] - the url to direct user to.
+ * @param {string} msg the message displayed to the user.
+ * @param {string} addr the url to direct user to.
+ * @returns {object}
 */
-function confirmDlg(msg, addr){
-	if (confirm(msg)){
-		gotoUrl(addr);
-	}
+function confirmDlg(msg, addr) {
+	bootbox.confirm(msg, lang.No, lang.Yes, function(result) {
+		if (result) {
+			gotoUrl(addr);
+		}
+	});
 }
 
 /**
  * runs a check to see if the server has the correct extensions to use the uploader.
-*/
+ * @returns {object}
+ */
 function validateUploadAPI() {
 
 	//call .ajax to call server.	
-	//
-	//index.php/ajax/PrefCheck/
 	$.ajax({
         method: "get", url:boardUrl+"index.php/ajax/PrefCheck/attachment",
 		success: function(html){
@@ -55,18 +58,18 @@ function validateUploadAPI() {
 
 /**
  * Reload iframe element.
- * @param ele[str] the iframe element to capture
- * @param src[str] the URL to execute.
- * @version 06/01/12
-**/
+ * @param {string} ele the iframe element to capture.
+ * @param {string} src the URL to execute.
+ * @returns {object}
+*/
 function loadIframe(ele, src){
 	$('#'+ ele).attr('src', src);
 }
 
 /**
  * Unselect a selected record.
- * @params string ele element id to look for.
- * @version 09/07/12
+ * @param {string} ele element id to look for.
+ * @returns {object}
 */
 function jTableClearSelection(ele) {
 	$('#'+ele).find(".jtable").find("tr").find("input").attr("checked", false);
@@ -134,42 +137,16 @@ $(document).ready(function() {
 }); //END (document).ready
 
 /**
- * viewRoster
- * AJAX call to load Group Roster list.
-**/
-function viewRoster(){
-	$('#viewGroupRoster').live('click', function() {
-		//call .ajax to call server.
-		$.ajax({
-        	method: "get", url: "quicktools/viewgrouproster.php", data: "groupid=" + $(this).attr("title"),
-			beforeSend: function(xhr){
-				$("#smloading").show();
-			},
-			complete: function(xhr, tStat){
-				$("#smloading").hide();
-			},
-			success: function(html){
-				$("#groupRoster").show();
-				$("#groupRoster").html(html).removeClass("ui-state-error");
-			},
-			error: function(xhr, tStat, err){
-				var msg = lang.jsError + ": ";
-	    		$("#groupRoster").html(msg + xhr.status + " " + xhr.statusText).addClass("ui-state-error");
-			}
-		}); //END $.ajax(
-	}); //END .live
-}
-
-/** 
  * Builds a dialog box
- * @params string ele the element ID to assign to the dialog.
- * @params string title the title of the dialog.
- * @params string route the path to the partial view to load up.
- * @version 10/08/12
-*/
+ * @param {string} ele the element ID to assign to the dialog.
+ * @param {string} title the title of the dialog.
+ * @param {string} route the path to the partial view to load up.
+ * @param {integer} width the width of the modal.
+ * @returns {buildModal}
+ */
 function buildModal(ele, title, route, width) {
 
-	if (width == undefined || isNaN(width)) {
+	if (width === undefined || isNaN(width)) {
 		width = 520;
 	}
 
@@ -210,10 +187,11 @@ function buildModal(ele, title, route, width) {
 
 /**
  * Process form via AJAX.
- * @param formID The ID of the form. 
- * @param onSuccess callback when successful.
- * @param onError callback when an error occurs.
-*/
+ * @param {string} formID The ID of the form. 
+ * @param {object} onSuccess callback when successful.
+ * @param {object} onError callback when an error occurs.
+ * @returns {object}
+ */
 function processForm(formID, onSuccess, onError) {
 	//call .ajax to call server.
 	$.post($('#'+formID).attr('action'), $('#'+formID).serialize(), function(frmData) {
@@ -242,10 +220,11 @@ function processForm(formID, onSuccess, onError) {
 
 /**
  * Process GET request.
- * @param url The URL to execute.
- * @param onSuccess callback when successful.
- * @param onError callback when an error occurs.
-*/
+ * @param {string} url The ID of the form. 
+ * @param {object} onSuccess callback when successful.
+ * @param {object} onError callback when an error occurs.
+ * @returns {object}
+ */
 function processGetRequest(url, onSuccess, onError) {
 	//call .ajax to call server.
 	$.get(url, function(res) {
@@ -267,15 +246,3 @@ function processGetRequest(url, onSuccess, onError) {
 	    }
 	}); //END $.get(
 }
-
-//900,000 = 15 minutes
-/*function updateOnline(){
-
-	$("#online").load("quicktools/online.php", function(response, status, xhr) {
-		if (status == "error") {
-	    	var msg = lang.jsError + ": ";
-	    	$("#online").html(msg + xhr.status + " " + xhr.statusText).addClass("ui-state-error");
-	  	}
-	}); //END $.load
-}*/
-//setInterval( "updateOnline()", 300000);
