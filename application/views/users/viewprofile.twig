@@ -80,87 +80,76 @@
 	});
 </script>
 
-<div id="contentwrapper">
-	<div id="contentcolumn">
-		<div class="innertube">&nbsp;
-
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">{{LANG_UOPTIONS}}</li>				
+					<li><a href="#" id="addfriend">{{LANG_ADDFRIEND}}</a></li>
+					<li><a href="#" id="blockuser">{{LANG_BLOCKUSER}}</a></li>
+					{#<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_MANAGEATTACHMENTS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/attachments/', 700);">{{LANG_MANAGEATTACHMENTS}}</a></li> {# Report User #}
+				</ul>
+			</div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+			<div id="tabs">
+				<ul>
+					<li><a href="#bio">About Me</a></li>
+					<li><a href="#comments">Comments/Status</a></li>
+					<li><a href="#notes">Notes/Blog</a></li>
+					<li><a href="#friends">{{LANG_FRIENDSLIST}}</a></li>
+				</ul>
+				<div id="bio">
+					<!-- START UsrMenu -->
+					<strong>{{LANG_BTNVIEWPROFILE}} - {{USERNAME}}</strong>
+					<hr />
+					<a href="{{BOARD_URL}}{{INDEX_PAGE}}search/searchpostbyuser/{{USERNAME}}">{{LANG_FINDTOPICS}}</a> -
+					<a href="{{BOARD_URL}}{{INDEX_PAGE}}search/searchtopicbyuser/{{USERNAME}}">{{LANG_FINDPOSTS}}</a> -
+					<a href="#" onclick="buildModal('newPM', '{{LANG_POSTPM}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/newpm/{{USER_ID}}',720);">PM {{USERNAME}}</a>
+					<hr />
+					<!-- END UsrMenu -->
+					<img src="{{AVATAR}}" alt="{{USERNAME}}'s Avatar" title="{{USERNAME}}'s Avatar" class="avatar" />
+					<p>{{LANG_RANK}}:&nbsp;{{RANK}}</p>
+					<p>{{LANG_POSTCOUNT}}: {{POSTCOUNT}}</p>
+					<p>{{LANG_EMAIL}}: {{EMAIL}}</p>
+					<p>{{LANG_JOINDATE}}: {{JOINED|PostedDate(TimeFormat, TimeZone)}}</p>
+					{% if MSN != "" %}
+					<p>{{LANG_MSN}}: {{MSN}}</p>
+					{% endif %}
+					{% if AOL != "" %}
+					<p>{{LANG_AOL}}: {{AOL}}</p>
+					{% endif %}
+					{% if ICQ != "" %}
+					<p>{{LANG_ICQ}}: {{ICQ}}</p>
+					{% endif %}
+					{% if YAHOO != "" %}
+					<p>{{LANG_YAHOO}}: {{YAHOO}}</p>
+					{% endif %}
+					{% if WWW != "" %}
+					<p>{{LANG_WWW}}: <a href="{{WWW}}" target="_blank">{{WWW}}</a></p>
+					{% endif %}
+					{% if LOCATION != "" %}
+					<p>{{LANG_LOCATION}}: {{LOCATION}}</p>
+					{% endif %}
+				</div>
+				<div id="comments">
+					<p>Comment box system coming v3.0.0 RC2.</p>
+				</div>
+				<div id="notes">
+					<p>note/blog system coming v3.0.0 RC2.</p>
+				</div>
+				<div id="friends">
+					<p>Friends List coming v3.0.0 RC2.</p>
+				</div>
+			</div><!-- END Tab UI -->
+		</div><!--/span-->
+	</div><!--/row-->
+</div><!--/.fluid-container-->
 <script type="text/javascript">
 $(function(){
 	//user profile tabbing.
 	$("#tabs").tabs();
 });
 </script>
-
-<div id="tabs">
-	<ul>
-		<li><a href="#bio">About Me</a></li>
-		<li><a href="#comments">Comments/Status</a></li>
-		<li><a href="#notes">Notes/Blog</a></li>
-		<li><a href="#friends">{{LANG_FRIENDSLIST}}</a></li>
-	</ul>
-	<div id="bio">
-		<!-- START UsrMenu -->
-		<strong>{{LANG_BTNVIEWPROFILE}} - {{USERNAME}}</strong>
-		<hr />
-		<a href="{{BOARD_URL}}{{INDEX_PAGE}}search/searchpostbyuser/{{USERNAME}}">{{LANG_FINDTOPICS}}</a> -
-		<a href="{{BOARD_URL}}{{INDEX_PAGE}}search/searchtopicbyuser/{{USERNAME}}">{{LANG_FINDPOSTS}}</a> -
-		<a href="#" onclick="buildModal('newPM', '{{LANG_POSTPM}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/newpm/{{USER_ID}}',720);">PM {{USERNAME}}</a>
-		<hr />
-		<!-- END UsrMenu -->
-		<img src="{{AVATAR}}" alt="{{USERNAME}}'s Avatar" title="{{USERNAME}}'s Avatar" class="avatar" />
-		<p>{{LANG_RANK}}:&nbsp;{{RANK}}</p>
-		<p>{{LANG_POSTCOUNT}}: {{POSTCOUNT}}</p>
-		<p>{{LANG_EMAIL}}: {{EMAIL}}</p>
-		<p>{{LANG_JOINDATE}}: {{JOINED|PostedDate(TimeFormat, TimeZone)}}</p>
-		{% if MSN != "" %}
-		<p>{{LANG_MSN}}: {{MSN}}</p>
-		{% endif %}
-		{% if AOL != "" %}
-		<p>{{LANG_AOL}}: {{AOL}}</p>
-		{% endif %}
-		{% if ICQ != "" %}
-		<p>{{LANG_ICQ}}: {{ICQ}}</p>
-		{% endif %}
-		{% if YAHOO != "" %}
-		<p>{{LANG_YAHOO}}: {{YAHOO}}</p>
-		{% endif %}
-		{% if WWW != "" %}
-		<p>{{LANG_WWW}}: <a href="{{WWW}}" target="_blank">{{WWW}}</a></p>
-		{% endif %}
-		{% if LOCATION != "" %}
-		<p>{{LANG_LOCATION}}: {{LOCATION}}</p>
-		{% endif %}
-	</div>
-	<div id="comments">
-		<p>Comment box system coming v3.0.0 RC2.</p>
-	</div>
-	<div id="notes">
-		<p>note/blog system coming v3.0.0 RC2.</p>
-	</div>
-	<div id="friends">
-		<p>Friends List coming v3.0.0 RC2.</p>
-	</div>
-</div><!-- END Tab UI -->
-			
-		</div><!-- END content wrapper -->
-	</div><!-- END Content Column -->
-</div><!-- END Column wrapper -->
-
-<div id="leftcolumn">
-	<div class="innertube">&nbsp;
-		<div id="ucpMenu">
-			<div>
-				<h3><a href="#">{{LANG_UOPTIONS}}</a></h3>
-				<div>
-					<ul>
-						<li><a href="#" id="addfriend">{{LANG_ADDFRIEND}}</a></li>
-						<li><a href="#" id="blockuser">{{LANG_BLOCKUSER}}</a></li>
-						{#<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_MANAGEATTACHMENTS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/attachments/', 700);">{{LANG_MANAGEATTACHMENTS}}</a></li> {# Report User #}
-					</ul>
-				</div>
-			</div>
-		</div><!-- END ucpMenu -->
-	</div><!-- END Content Wrapper -->
-</div><!-- END Left Column -->
-
 {% endblock %}

@@ -40,7 +40,7 @@
 
 		//setup dialog.
 		$("#confirmDlg").dialog({
-			title: '<span class="ui-icon ui-icon-alert" style="float: left;margin-right: 4px;"></span>Under Work',
+			title: 'Under Work',
 			width: 460
 		});
 
@@ -53,9 +53,68 @@
 	
 	</script>
 
-<div id="contentwrapper">
-	<div id="contentcolumn">
-		<div class="innertube">&nbsp;
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">{{LANG_ACCTMENU}}</li>				
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_UPDATEEMAIL}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/email/');return false;">{{LANG_UPDATEEMAIL}}</a></li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_CHANGEPASSWORD}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/password/');">{{LANG_CHANGEPASSWORD}}</a></li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_MANAGEATTACHMENTS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/attachments/', 700);">{{LANG_MANAGEATTACHMENTS}}</a></li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_MANAGESUBSCRIPTIONS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/subscriptions/', 700);">{{LANG_MANAGESUBSCRIPTIONS}}</a></li>
+					<li class="nav-header">{{LANG_PROFILEMENU}}</li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITPROFILE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/profile/');">{{LANG_EDITPROFILE}}</a></li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITUSERSETTINGS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/settings/');">{{LANG_EDITUSERSETTINGS}}</a></li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITMESSENGER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/messenger/');">{{LANG_EDITMESSENGER}}</a></li>
+					<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITSIG}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/signature/', 735);">{{LANG_EDITSIG}}</a></li>
+					<li class="nav-header">{{LANG_PRIVACYMENU}}</li>
+					<li><a href="#" class="brkn">{{LANG_FRIENDSLIST}}</a></li>
+					<li><a href="#" class="brkn">{{PROFILESETTINGS}}</a></li>
+				</ul>
+			</div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+			<div id="tabs">
+				<ul>
+					<li><a href="#bio">About Me</a></li>
+					<li><a href="#friends">{{LANG_FRIENDSLIST}}</a></li>
+				</ul>
+				<div id="bio">
+					<!-- START UsrMenu -->
+					<strong>{{LANG_BTNVIEWPROFILE}} - {{LOGGEDUSER}}</strong>
+					<!-- END UsrMenu -->
+					<img src="{{AVATAR}}" alt="{{LOGGEDUSER}}'s Avatar" title="{{LOGGEDUSER}}'s Avatar" class="avatar" />
+					<p>{{LANG_RANK}}:&nbsp;{{RANK}}</p>
+					<p>{{LANG_POSTCOUNT}}: {{POSTCOUNT}}</p>
+					<p>{{LANG_EMAIL}}: {{EMAIL}}</p>
+					<p>{{LANG_JOINDATE}}: {{JOINED|PostedDate(TimeFormat, TimeZone)}}</p>
+					{% if MSN != "" %}
+					<p>{{LANG_MSN}}: {{MSN}}</p>
+					{% endif %}
+					{% if AOL != "" %}
+					<p>{{LANG_AOL}}: {{AOL}}</p>
+					{% endif %}
+					{% if ICQ != "" %}
+					<p>{{LANG_ICQ}}: {{ICQ}}</p>
+					{% endif %}
+					{% if YAHOO != "" %}
+					<p>{{LANG_YAHOO}}: {{YAHOO}}</p>
+					{% endif %}
+					{% if WWW != "" %}
+					<p>{{LANG_WWW}}: <a href="{{WWW}}" target="_blank">{{WWW}}</a></p>
+					{% endif %}
+					{% if LOCATION != "" %}
+					<p>{{LANG_LOCATION}}: {{LOCATION}}</p>
+					{% endif %}
+				</div>
+				<div id="friends">
+					<p>Friends List coming v3.0.0 RC3.</p>
+				</div>
+			</div><!-- END Tab UI -->
+		</div><!--/span-->
+	</div><!--/row-->
+</div><!--/.fluid-container-->
 
 <script type="text/javascript">
 $(function(){
@@ -63,103 +122,4 @@ $(function(){
 	$("#tabs").tabs();
 });
 </script>
-
-<div id="tabs">
-	<ul>
-		<li><a href="#bio">About Me</a></li>
-		<li><a href="#comments">Comments/Status</a></li>
-		<li><a href="#notes">Notes/Blog</a></li>
-		<li><a href="#friends">{{LANG_FRIENDSLIST}}</a></li>
-	</ul>
-	<div id="bio">
-		<!-- START UsrMenu -->
-		<strong>{{LANG_BTNVIEWPROFILE}} - {{LOGGEDUSER}}</strong>
-		<!-- END UsrMenu -->
-		<img src="{{AVATAR}}" alt="{{LOGGEDUSER}}'s Avatar" title="{{LOGGEDUSER}}'s Avatar" class="avatar" />
-		<p>{{LANG_RANK}}:&nbsp;{{RANK}}</p>
-		<p>{{LANG_POSTCOUNT}}: {{POSTCOUNT}}</p>
-		<p>{{LANG_EMAIL}}: {{EMAIL}}</p>
-		<p>{{LANG_JOINDATE}}: {{JOINED|PostedDate(TimeFormat, TimeZone)}}</p>
-		{% if MSN != "" %}
-		<p>{{LANG_MSN}}: {{MSN}}</p>
-		{% endif %}
-		{% if AOL != "" %}
-		<p>{{LANG_AOL}}: {{AOL}}</p>
-		{% endif %}
-		{% if ICQ != "" %}
-		<p>{{LANG_ICQ}}: {{ICQ}}</p>
-		{% endif %}
-		{% if YAHOO != "" %}
-		<p>{{LANG_YAHOO}}: {{YAHOO}}</p>
-		{% endif %}
-		{% if WWW != "" %}
-		<p>{{LANG_WWW}}: <a href="{{WWW}}" target="_blank">{{WWW}}</a></p>
-		{% endif %}
-		{% if LOCATION != "" %}
-		<p>{{LANG_LOCATION}}: {{LOCATION}}</p>
-		{% endif %}
-	</div>
-	<div id="comments">
-		<p>Comment box system coming v3.0.0 RC2.</p>
-	</div>
-	<div id="notes">
-		<p>note/blog system coming v3.0.0 RC2.</p>
-	</div>
-	<div id="friends">
-		<p>Friends List coming v3.0.0 RC2.</p>
-	</div>
-</div><!-- END Tab UI -->
-			
-		</div><!-- END content wrapper -->
-	</div><!-- END Content Column -->
-</div><!-- END Column wrapper -->
-
-<div id="leftcolumn">
-	<div class="innertube">&nbsp;
-		<div id="ucpMenu">
-			<div>
-				<h3><a href="#">{{LANG_ACCTMENU}}</a></h3>
-				<div>
-					<ul>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_UPDATEEMAIL}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/email/');return false;">{{LANG_UPDATEEMAIL}}</a></li>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_CHANGEPASSWORD}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/password/');">{{LANG_CHANGEPASSWORD}}</a></li>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_MANAGEATTACHMENTS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/attachments/', 700);">{{LANG_MANAGEATTACHMENTS}}</a></li>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_MANAGESUBSCRIPTIONS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/subscriptions/', 700);">{{LANG_MANAGESUBSCRIPTIONS}}</a></li>
-					</ul>
-				</div>
-			</div>
-			<div>
-				<h3><a href="#">{{LANG_PROFILEMENU}}</a></h3>
-				<div>
-					<ul>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITPROFILE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/profile/');">{{LANG_EDITPROFILE}}</a></li>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITUSERSETTINGS}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/settings/');">{{LANG_EDITUSERSETTINGS}}</a></li>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITMESSENGER}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/messenger/');">{{LANG_EDITMESSENGER}}</a></li>
-						<li><a href="#" onclick="buildModal('ucpFrm', '{{LANG_EDITSIG}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/signature/', 735);">{{LANG_EDITSIG}}</a></li>
-					</ul>
-				</div>
-			</div>
-			<div>
-				<h3><a href="#">{{LANG_NOTESMENU}}</a></h3>
-				<div>
-					<ul>
-						<li><a href="#" class="brkn">{{LANG_NEWNOTES}}</a></li>
-						<li><a href="#" class="brkn">{{LANG_MANAGENOTES}}</a></li>
-						<li><a href="#" class="brkn">{{LANG_NOTESSETTINGS}}</a></li>
-					</ul>
-				</div>
-			</div>
-			<div>
-				<h3><a href="#">{{LANG_PRIVACYMENU}}</a></h3>
-				<div>
-					<ul>
-						<li><a href="#" class="brkn">{{LANG_FRIENDSLIST}}</a></li>
-						<li><a href="#" class="brkn">{{PROFILESETTINGS}}</a></li>
-					</ul>
-				</div>
-			</div>
-		</div><!-- END ucpMenu -->
-	</div><!-- END Content Wrapper -->
-</div><!-- END Left Column -->
-
 {% endblock %}

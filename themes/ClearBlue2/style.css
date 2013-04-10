@@ -1,7 +1,7 @@
 /*
 ========================================
 Filename: style.css
-Last Modified: 04/04/2013
+Last Modified: 04/09/2013
 ClearBlue2 CSS template file for Elite Bulletin Board v3.0.0
 All formatting belongs here.
 CREDIT
@@ -704,76 +704,9 @@ NEWS TICKER CSS
 	margin: 0;
 }
 
-/*
-==============================
-USER PORTAL CSS
-==============================
-*/
-.innertube{
-	margin: 10px; /*Margins for inner DIV inside each column (to provide padding)*/
-	margin-top: 0;
-}
-#contentwrapper{
-	float: left;
-	width: 100%;
-}
-
-#contentcolumn{
-	margin-left: 260px; /*Set left margin to LeftColumnWidth*/
-}
-
-#leftcolumn{
-	float: left;
-	width: 260px; /*Width of left column in percentage*/
-	margin-left: -100%;
-}
-
 .avatar{
 	float:right;
 	border: 0px;
-}
-
-/*
-==============================
-PM CSS
-==============================
-*/
-
-#pmList{
-	overflow: auto;
-	height: 250px;
-}
-
-#PM-messages{
-	overflow: auto;
-	height: 250px;
-}
-
-.PM-MsgList{
-	margin:0px;
-	padding:1px;
-}
-.PM-MsgList {	/* General layout article in list */
-	border:1px solid #1A3077;
-	background-color:#C3C9D5;
-	margin:1px;
-	padding:2px;
-	color:#333;
-	font-size:1.5em;
-}
-.PM-MsgList:hover {
-	border:1px solid #1A3077;
-	background-color:#8494B4;
-	margin:1px;
-	padding:2px;
-	color:#333;
-	font-size:1.5em;
-}
-.PM-MsgList a {	/* list links */
-	color:#3C4049;
-}
-.PM-MsgList a:hover {	/* list hover links */
-	color:#fff;
 }
 
 /*
@@ -976,38 +909,6 @@ BBCODE TAG CSS
 	font-weight: bold;
 	font-size: x-small;
 	line-height: 1.2em;
-}
-
-/*
-==============================
-ACP MENU CSS
-==============================
-*/
-
-.anylinkcss{
-	position:absolute;
-	visibility: hidden;
-	border:1px solid black;
-	border-bottom-width: 0;
-	font:normal 12px Verdana, Arial, Helvetica, sans-serif;
-	line-height: 18px;
-	z-index: 100;
-	background-color: #8494B4;
-	width: 205px;
-	text-align: left;
-}
-.anylinkcss a{
-	width: 100%;
-	display: block;
-	text-indent: 3px;
-	border-bottom: 1px solid black;
-	padding: 1px 0;
-	text-decoration: none;
-	font-weight: bold;
-	text-indent: 5px;
-}
-.anylinkcss a:hover{ /*hover background color*/
-	background-color: #C3C9D5;
 }
 
 /*
