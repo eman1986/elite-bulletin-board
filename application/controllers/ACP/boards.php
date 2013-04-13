@@ -1,15 +1,15 @@
 <?php
 if (!defined('BASEPATH')) {exit('No direct script access allowed');}
 /**
- * main.php
+ * boards.php
  * @package Elite Bulletin Board v3
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/08/2013
+ * @version 04/12/2013
 */
 
-class Boards extends EBB_Controller{
+class Boards extends EBB_Controller {
 
 	function __construct() {
  		parent::__construct();
@@ -100,7 +100,7 @@ class Boards extends EBB_Controller{
 			'LANG_GENERALMENU' => $this->lang->line('generalmenu'),
 			'LANG_MANAGESTYLES' => $this->lang->line('managestyles'),
 			'LANG_NEWSLETTER' => $this->lang->line('newsletter'),
-			'LANG_SMILES' => $this->lang->line('smiles'),
+			'LANG_SPAMLIST' => $this->lang->line('spamlist'),
 			'LANG_CENSOR' => $this->lang->line('censor'),
 			'LANG_GROUPMENU' => $this->lang->line('groupmenu'),
 			'LANG_GROUPSETUP' => $this->lang->line('groupsetup'),

@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 01/07/2013
+ * @version 04/11/2013
 */
 
 /**
@@ -105,7 +105,7 @@ class Grid extends EBB_Controller {
 	/**
 	 * Get a list of ACP audits.
 	 * @example index.php/grid/listacpaudit
-	*/	
+	*/
 	public function listacpaudit() {
 		//load Pmmodel
 		$this->load->model('Cplogmodel');
@@ -115,7 +115,23 @@ class Grid extends EBB_Controller {
 		$jTableResult['Result'] = "OK";
 		$jTableResult['TotalRecordCount'] = $this->Cplogmodel->countAll();
 		$jTableResult['Records'] = $this->Cplogmodel->listAll($this->timeZone, $this->dateTimeFormat, $this->input->get('jtSorting', TRUE), $this->input->get('jtPageSize', TRUE), $this->input->get('jtStartIndex', TRUE));
-		print json_encode($jTableResult);			
+		print json_encode($jTableResult);
+	}
+	
+	/**
+	 * Get a list of installed styles.
+	 * @example index.php/grid/liststyles
+	*/
+	public function liststyles() {
+		//load Pmmodel
+		$this->load->model('Stylemodel');
+		
+		//Return result to jTable
+		$jTableResult = array();
+		$jTableResult['Result'] = "OK";
+		$jTableResult['TotalRecordCount'] = $this->Stylemodel->countAll();
+		$jTableResult['Records'] = $this->Stylemodel->listAll($this->input->get('jtSorting', TRUE), $this->input->get('jtPageSize', TRUE), $this->input->get('jtStartIndex', TRUE));
+		print json_encode($jTableResult);		
 	}
 	
 }

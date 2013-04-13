@@ -1,5 +1,5 @@
 -- Elite Bulletin Board v3.0.0 RC2 SQL Dump
--- Date: 01/20/2013
+-- Date: 04/12/2013
 -- http://elite-board.us
 
 --
@@ -352,7 +352,6 @@ INSERT INTO `ebb_permission_actions` (`id`, `permission`, `type`) VALUES
 (3, 'MANAGE_GROUPS', 1),
 (4, 'MASS_EMAIL', 1),
 (5, 'WORD_CENSOR', 1),
-(6, 'MANAGE_SMILES', 1),
 (7, 'MODIFY_SETTINGS', 1),
 (8, 'MANAGE_STYLES', 1),
 (9, 'VIEW_PHPINFO', 1),
@@ -412,7 +411,6 @@ INSERT INTO `ebb_permission_data` (`id`, `profile`, `permission`, `set_value`) V
 (3, 1, 3, 1),
 (4, 1, 4, 1),
 (5, 1, 5, 1),
-(6, 1, 6, 1),
 (7, 1, 7, 1),
 (8, 1, 8, 1),
 (9, 1, 9, 1),
@@ -450,7 +448,6 @@ INSERT INTO `ebb_permission_data` (`id`, `profile`, `permission`, `set_value`) V
 (42, 2, 3, 1),
 (43, 2, 4, 0),
 (44, 2, 5, 1),
-(45, 2, 6, 0),
 (46, 2, 7, 0),
 (47, 2, 8, 0),
 (48, 2, 9, 0),
@@ -711,50 +708,6 @@ CREATE TABLE IF NOT EXISTS `ebb_sessions` (
   PRIMARY KEY (`session_id`),
   KEY `last_activity_idx` (`last_activity`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ebb_smiles`
---
-
-CREATE TABLE IF NOT EXISTS `ebb_smiles` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `code` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `img_name` varchar(80) COLLATE utf8_bin NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=26 ;
-
---
--- Dumping data for table `ebb_smiles`
---
-
-INSERT INTO `ebb_smiles` (`id`, `code`, `img_name`) VALUES
-(1, ':?', 'smiley-confuse.png'),
-(2, '8)', 'smiley-cool.png'),
-(3, ':D', 'smiley-grin.png'),
-(4, ':angry:', 'smiley-mad.png'),
-(5, ':|', 'smiley-neutral.png'),
-(6, ':oops:', 'smiley-red.png'),
-(7, ':(', 'smiley-sad.png'),
-(8, '8O', 'smiley-surprise.png'),
-(9, ':)', 'smiley.png'),
-(10, ':P', 'smiley-razz.png'),
-(11, ';)', 'smiley-wink.png'),
-(12, ':cry:', 'smiley-cry.png'),
-(13, ':''(', 'smiley-cry.png'),
-(14, ':eek:', 'smiley-eek.png'),
-(15, ':evil:', 'smiley-evil.png'),
-(16, ':kiss:', 'smiley-kiss.png'),
-(17, ':lol:', 'smiley-lol.png'),
-(18, ':mrgreen:', 'smiley-mr-green.png'),
-(19, ':roll:', 'smiley-roll.png'),
-(20, ':stressed:', 'smiley-roll-sweat.png'),
-(21, ':zzz:', 'smiley-sleep.png'),
-(22, ':sweat:', 'smiley-sweat.png'),
-(23, ':twisted:', 'smiley-twist.png'),
-(24, ':yell:', 'smiley-yell.png'),
-(25, ':%', 'smiley-zipper.png');
 
 -- --------------------------------------------------------
 

@@ -1,7 +1,7 @@
 /*
 ========================================
 Filename: style.css
-Last Modified: 04/09/2013
+Last Modified: 04/11/2013
 ClearBlue2 CSS template file for Elite Bulletin Board v3.0.0
 All formatting belongs here.
 CREDIT
@@ -909,41 +909,6 @@ BBCODE TAG CSS
 	font-weight: bold;
 	font-size: x-small;
 	line-height: 1.2em;
-}
-
-/*
-==============================
-HINT CSS
-==============================
-*/
-
-a.hint{
-	font-weight: bold;
-	font-size: 11px;
-	margin: 3px 8px;
-	cursor: help;
-}
-a.hint span {
-	display:none;
-	padding:2px 3px;
-	margin-left:8px;
-	width:130px;
-}
-a.hint:hover span{
-	display:inline;
-	position:absolute;
-	background-color: #4b6c9e;
-	color: #fff;
-	width: 150px;
-	border:1px solid #163061;
-	font-weight: normal;
-	font-size: x-small;
-	line-height:18px;
-	z-index:100;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px; /* no longer used as of firefox 12; use border-radius and equiv. */
-	border-radius: 10px;
-	padding: 0px 10px 0px 10px;
 }
 
 /*

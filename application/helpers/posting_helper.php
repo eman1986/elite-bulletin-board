@@ -4,44 +4,35 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * posting_helper.php
  * @package Elite Bulletin Board v3
  * @author Elite Bulletin Board Team <http://elite-board.us>
- * @copyright  (c) 2006-2011
+ * @copyright  (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/08/2013
+ * @version 04/12/2013
 */
 
 /**
  * converts text-based smiles into graphical ones.
- * @param string $string - the smile code we're trying to make into an image.
+ * @param string $string the string to search for emoticons.
  * @version 11/30/2011
  * @return mixed
 */
 function smiles($string) {
-
 	#obtain codeigniter object.
 	$ci =& get_instance();
-
- 	#SQL to get info data.
- 	$ci->db->select('code, img_name')->from('ebb_smiles');
-	$smilesQ = $ci->db->get();
-
-	//loop through data and format.
-	foreach ($smilesQ->result() as $smileRes) {
-		$string = str_replace($smileRes->code, img('images/smiles/'.$smileRes->img_name), $string);
-	}
-
-	return ($string);
+	$ci->load->helper('smiley');
+	return parse_smileys($string, $ci->config->item('base_url')."images/smiles/");
 }
 
 /**
  * Outputs the list of smiles available(up to 30).
  * @param int $boardPref_smiles Does the board allow smiles?
- * @version 12/01/11
- * @return mixed
+ * @return string HTML displaying smiles.
 */
-function form_smiles($boardPref_smiles = 1){
-
+function form_smiles($boardPref_smiles = 1) {
 	#obtain codeigniter object.
 	$ci =& get_instance();
+	
+	//get smileys array.
+	include(APPPATH.'config/smileys.php');
 
 	if ($boardPref_smiles == 0){
 		$smile = '';
@@ -49,33 +40,28 @@ function form_smiles($boardPref_smiles = 1){
 		$smile = '';
 		$x = 0;
 
-		#SQL to get info data.
-		$ci->db->distinct('img_name, code')->from('ebb_smiles')->limit(30);
-		$smilesQ = $ci->db->get();
-
 		//loop through to build a list of smiles.
-		foreach ($smilesQ->result() as $smileRes) {
+		foreach ($smileys as $emoticon=>$attrib) {
 			if (($x % 30) == 0) {
-				//line break once we've reached our number per row assigned.
-				$smile .= "<br />";
-
-				//reset counter for next row.
-				$x = 0;
+				$smile .= "<br />"; //line break once we've reached our number per row assigned.
+				$x = 0; //reset counter for next row.
 			}
 
 			//setup image properties.
 			$image_properties = array(
-			  'src' => 'images/smiles/'.$smileRes->img_name,
-			  'alt' => $smileRes->code,
-			  'title' => $smileRes->code
+			  'src' => $ci->config->item('base_url').'images/smiles/'.$attrib[0],
+			  'width' => $attrib[1],
+			  'height' => $attrib[2],
+			  'alt' => $attrib[3],
+			  'title' => $emoticon
 			);
 
 			//output smiles and increment counter.
-			$smile .= '<a href="#smiles" title="'.$smileRes->code.'">'.img($image_properties).'</a>';
-			$x++;
+			$smile .= '<a href="#smiles" title="'.$emoticon.'">'.img($image_properties).'</a>';
+			$x++; //increment counter.
 		}
 	}
-	return ($smile);
+	return $smile;
 }
 
 /**

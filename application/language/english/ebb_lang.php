@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/08/2013
+ * @version 04/12/2013
 */
 
 #Common language tags.
@@ -552,6 +552,12 @@ $lang['createstyle'] = 'Create';
 $lang['managestyles'] = 'Manage Styles';
 $lang['manageusers'] = 'Manage Users';
 
+$lang['installstyle'] = 'Install Style';
+$lang['uninstallstyle'] = 'Uninstall Style';
+$lang['uninstallstyleconfirm'] = 'Are you sure you want to uninstall this style?';
+$lang['uninstallstylesuccess'] = 'Style Uninstalled Successfully';
+$lang['styleinuse'] = 'Style is still used by at least one user.';
+
 $lang['banlist'] = 'Ban List';
 $lang['blacklist'] = 'Blacklisted Usernames';
 $lang['activateacct'] = 'Activate an account';
@@ -655,7 +661,6 @@ $lang['prune_boards'] = 'User can Prune boards';
 $lang['manage_groups'] = 'User can manage all group operations';
 $lang['mass_email'] = 'User can send out a newsletter to all users';
 $lang['word_censor'] = 'User can add words to censor list';
-$lang['manage_smiles'] = 'User can Add/Edit/Delete smiles';
 $lang['modify_settings'] = 'User can modify board settings';
 $lang['manage_styles'] = 'User can Add/Edit/Delete styles';
 $lang['view_phpinfo'] = 'User can view PHP Information page';
@@ -698,15 +703,9 @@ $lang['noprofileid'] = 'No profile ID was defined.';
 $lang['deleteprofile'] = 'Delete Group Profile';
 $lang['inuseprofile'] = 'One or more groups use the profile you wish to delete.';
 $lang['reservedprofile'] = 'The profile you wish to delete is reserved and cannot be deleted.';
-$lang['smileinstall'] = 'A Smile Installer allows you to easily add new smiles to your board. If the smile install file was uploaded into the install folder, the link to it will appear below.';
-$lang['addsmiles'] = 'Add Smiles';
-$lang['smiletbl'] = 'Smile';
-$lang['codetbl'] = 'Code';
-$lang['smilecode'] = 'Smile Code';
-$lang['smilefile'] = 'Smile Filename';
-$lang['modifysmiles'] = 'Modify Smiles';
-$lang['delsmiles'] = 'Delete Smiles';
-$lang['smilenotexist'] = 'Smile does not exist.';
+
+$lang['spamlist'] = 'Spam List';
+
 $lang['newslettertxt'] = 'Email your users with updates about your board.';
 $lang['sendnewsletter'] = 'Send Newsletter';
 $lang['sitelink'] = 'Site Address';

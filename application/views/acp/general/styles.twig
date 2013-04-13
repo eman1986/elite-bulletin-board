@@ -1,0 +1,77 @@
+{% extends "acp-master.twig" %}
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+{% block acpbodyRender %}
+<script type="text/javascript" src="{{BOARD_URL}}js/jquery.jtable.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {        
+	   $('#styleList').jtable({
+			messages: lang,
+			title: '{{LANG_MANAGESTYLES}}', //title of grid.
+			paging: true, //allow paging
+			pageSize: '{{PER_PAGE}}', //indicates number of rows in a page.
+			sorting: true, //allow sorting
+			defaultSorting: 'Name ASC', //sets the default column to sort by and how.
+			columnResizable: true, //allows user to resize data columns by dragging.
+			columnSelectable: false, //allows user to show/hide data columns by right clicking table header.
+			selecting: false, //Enable selecting
+			multiselect: false, //Allow multiple selecting
+			selectingCheckboxes: false, //Show checkboxes on first column
+			selectOnRowClick: false, //Enable this to only select using checkboxes
+			ajaxSettings: { type: 'GET' },
+			actions: {
+				listAction: '{{BOARD_URL}}grid/liststyles'
+			},
+			fields: {
+				id: {
+					key: true,
+					create: false,
+					edit: false,
+					list: false
+				},
+				Name: {
+					title: '{{LANG_STYLE_NAME}}',
+					width: '98%'
+				},
+				CmdUninstallStyle: {
+					title: '',
+					width: '2%',
+					sorting: false,
+					edit: false,
+					create: false,
+					display: function (data) {
+						var $img = $('<div class="icon-remove icon-2x" style="cursor: pointer;" title="{{LANG_UNINSTALL_STYLE}}"></div>');
+						//delete selected record when user clicks the image.
+						$img.click(function (e) {
+							e.stopPropagation(); //prevent the select event from bubbling up.
+							bootbox.confirm('{{LANG_CONFIRM_STYLE_UNINSTALL}}', lang.No, lang.Yes, function(result) {
+								if (result) {
+									$.get('{{BOARD_URL}}{{INDEX_PAGE}}ACP/general/uninstallstyle/'+data.record.id, function(res) {
+										//render JSON.
+										var json = $.parseJSON(res);
+										if (json.status == "success") {
+											//reload grid.
+											$('#styleList').jtable('load');
+										}
+										FormResults(json.status, json.msg);
+									}).error(function(res) {
+										//render JSON.
+										var json = $.parseJSON(res);
+										FormResults(json.status, json.msg);
+									});
+								}
+							});
+						});
+						//Return image to show on the row.
+						return $img;
+					}
+				}
+			}
+		});    
+
+		//Load style list from server
+		$('#styleList').jtable('load');
+	});
+</script>
+<button type="button" class="btn btn-primary" onclick="buildModal('acpFrm', '{{LANG_INSTALL_STYLE}}', '{{BOARD_URL}}{{INDEX_PAGE}}ACP/installer/styles', 800);"><span class="icon-wrench"></span>&nbsp;{{LANG_INSTALL_STYLE}}</button><br /><br />
+<div id="styleList"></div>
+{% endblock %}

@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 01/09/2013
+ * @version 04/12/2013
 */
 
 class Main extends EBB_Controller {
@@ -153,21 +153,17 @@ class Main extends EBB_Controller {
 			'LANG_GENERALMENU' => $this->lang->line('generalmenu'),
 			'LANG_MANAGESTYLES' => $this->lang->line('managestyles'),
 			'LANG_NEWSLETTER' => $this->lang->line('newsletter'),
-			'LANG_SMILES' => $this->lang->line('smiles'),
+			'LANG_SPAMLIST' => $this->lang->line('spamlist'),
 			'LANG_CENSOR' => $this->lang->line('censor'),
 			'LANG_GROUPMENU' => $this->lang->line('groupmenu'),
-		  
 			'LANG_GROUPSETUP' => $this->lang->line('groupsetup'),
 			'LANG_MANAGEPROFILE' => $this->lang->line('manageprofile'),
 			'LANG_NEWGROUP' => $this->lang->line('addgroup'),
-		  
-		  
 			'LANG_USERSETTINGS' => $this->lang->line('usersettings'),
 			'LANG_BOARDSETTINGS' => $this->lang->line('boardsettings'),
 			'LANG_ANNOUNCEMENTSETTINGS' => $this->lang->line('announcementsettings'),
 			'LANG_MAILSETTINGS' => $this->lang->line('mailsettings'),
 			'LANG_ATTACHMENTSETTINGS' => $this->lang->line('attachmentsettings'),
-		  
 			'LANG_USERMENU' => $this->lang->line('usermenu'),
 			'LANG_BANLIST' => $this->lang->line('banlist'),
 			'LANG_BLACKLIST' => $this->lang->line('blacklist'),
@@ -274,6 +270,32 @@ class Main extends EBB_Controller {
 		    'LANG_CHANGETHEME' => $this->lang->line('changetheme'),
             'LANG_POWERED' => $this->lang->line('poweredby'),
             'LANG_POSTEDBY' => $this->lang->line('Postedby'),
+			'LANG_BOARDMENU' => $this->lang->line('boardmenu'),
+			'LANG_BOARDSETUP' => $this->lang->line('boardsetup'),
+			'LANG_NEWBOARD' => $this->lang->line('newboard'),
+			'LANG_NEWPARENTBOARD' => $this->lang->line('newparentboard'),
+			'LANG_NEWSUBBOARD' => $this->lang->line('newsubboard'),
+			'LANG_GENERALMENU' => $this->lang->line('generalmenu'),
+			'LANG_MANAGESTYLES' => $this->lang->line('managestyles'),
+			'LANG_NEWSLETTER' => $this->lang->line('newsletter'),
+			'LANG_SPAMLIST' => $this->lang->line('spamlist'),
+			'LANG_CENSOR' => $this->lang->line('censor'),
+			'LANG_GROUPMENU' => $this->lang->line('groupmenu'),
+			'LANG_GROUPSETUP' => $this->lang->line('groupsetup'),
+			'LANG_MANAGEPROFILE' => $this->lang->line('manageprofile'),
+			'LANG_NEWGROUP' => $this->lang->line('addgroup'),'LANG_USERSETTINGS' => $this->lang->line('usersettings'),
+			'LANG_BOARDSETTINGS' => $this->lang->line('boardsettings'),
+			'LANG_ANNOUNCEMENTSETTINGS' => $this->lang->line('announcementsettings'),
+			'LANG_MAILSETTINGS' => $this->lang->line('mailsettings'),
+			'LANG_ATTACHMENTSETTINGS' => $this->lang->line('attachmentsettings'),
+			'LANG_USERMENU' => $this->lang->line('usermenu'),
+			'LANG_BANLIST' => $this->lang->line('banlist'),
+			'LANG_BLACKLIST' => $this->lang->line('blacklist'),
+			'LANG_USERPRUNE' => $this->lang->line('userprune'),
+			'LANG_ACTIVATE' => $this->lang->line('activateacct'),
+			'LANG_WARNLOG' => $this->lang->line('warninglist'),
+			'LANG_USERMGR' => $this->lang->line('manageusers'),
+			'LANG_SETTINGS' => $this->lang->line('settings'),
             'groupAccess' => $this->groupAccess,
 			'BREADCRUMB' => $this->breadcrumb->output(),
 			'PHPINFO' => $string

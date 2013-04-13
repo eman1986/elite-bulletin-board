@@ -4,14 +4,14 @@
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 09/14/2012
+ * @version 04/11/2013
 */
 
 /**
- * Displays results of AJAX calls.
- * @param type str "type of message (Error, Success, Notice)."
- * @param message str "The Message to display to the user."
- * @version 5/31/2011
+ * Display notification message to user.
+ * @param {string} type type of message (Error, Success, Notice).
+ * @param {string} message The Message to display to the user.
+ * @returns {object}
 */
 function FormResults(type, message) {
 	$(function(){
@@ -25,9 +25,9 @@ function FormResults(type, message) {
 }
 
 /**
- * Highlight fields
- * @params array fields an array of fields and any errors associated with them.
- * @version 09/14/12
+ * Show fields that failed validation.
+ * @param {array} fields an array of fields and any errors associated with them.
+ * @returns {object}
 */
 function formValidation(fields) {
 

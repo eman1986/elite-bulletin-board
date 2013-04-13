@@ -199,5 +199,22 @@ class Stylemodel extends CI_Model {
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
-
+	
+	/**
+	 * Uninstall style from board.
+	 * @return boolean TRUE, style uninstalled successfully; FALSE, it failed to uninstall.
+	*/
+	public function deleteStyle() {
+		$this->db->select('id')->from('ebb_users')->where('Style', $this->getId());
+		$styleinUseQuery = $this->db->get();
+		
+		if ($styleinUseQuery->num_rows() > 0) { //see if the selected style is still being used by someone.
+			return FALSE;
+		} else if ($this->countAll() == 1) { //see if the selected style is the only installed style.
+			return FALSE;
+		} else {
+			$this->db->where('id', $this->getId())->delete('ebb_style');
+			return TRUE;
+		}
+	}
 }
