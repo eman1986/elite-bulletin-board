@@ -15,7 +15,7 @@
 			<strong>{{LANG_POSTED}}:</strong> {{TOPIC_POSTEDON|PostedDate(TimeFormat, TimeZone)}}
 		</dt>
 		<dd class="postbody">
-			{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, TOPIC_BODY, TRUE),1))|raw}}
+			{{nl_2_br(CensorFilter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, TOPIC_BODY, TRUE)))|raw}}
 		</dd>
 	</dl>
 	
@@ -27,7 +27,7 @@
 			<strong>{{LANG_POSTED}}:</strong> {{r.Original_Date|PostedDate(TimeFormat, TimeZone)}}
 		</dt>
 		<dd class="postbody">
-			{{nl_2_br(Spam_Filter(FormatMsg(r.disable_smiles, BOARDPREF_SMILES, r.disable_bbcode, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Body, TRUE),1))|raw}}
+			{{nl_2_br(CensorFilter(FormatMsg(r.disable_smiles, BOARDPREF_SMILES, r.disable_bbcode, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Body, TRUE)))|raw}}
 		</dd>
 	</dl>
 	{% endfor %}

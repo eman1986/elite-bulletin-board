@@ -108,7 +108,6 @@ class Boards extends EBB_Controller {
 			'LANG_NEWGROUP' => $this->lang->line('addgroup'),'LANG_USERSETTINGS' => $this->lang->line('usersettings'),
 			'LANG_BOARDSETTINGS' => $this->lang->line('boardsettings'),
 			'LANG_ANNOUNCEMENTSETTINGS' => $this->lang->line('announcementsettings'),
-			'LANG_MAILSETTINGS' => $this->lang->line('mailsettings'),
 			'LANG_ATTACHMENTSETTINGS' => $this->lang->line('attachmentsettings'),
 			'LANG_USERMENU' => $this->lang->line('usermenu'),
 			'LANG_BANLIST' => $this->lang->line('banlist'),

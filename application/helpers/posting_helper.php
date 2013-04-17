@@ -4,15 +4,14 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * posting_helper.php
  * @package Elite Bulletin Board v3
  * @author Elite Bulletin Board Team <http://elite-board.us>
- * @copyright  (c) 2006-2013
+ * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/12/2013
+ * @version 04/17/2013
 */
 
 /**
  * converts text-based smiles into graphical ones.
  * @param string $string the string to search for emoticons.
- * @version 11/30/2011
  * @return mixed
 */
 function smiles($string) {
@@ -66,46 +65,110 @@ function form_smiles($boardPref_smiles = 1) {
 
 /**
  * Formats our messages converting over BBCode tags into HTML content.
- * @param string $string the string to check for our BBCode tags.
+ * @param string $str the string to check for our BBCode tags.
  * @param boolean $allowimgs allow parsing of image tags?
- * @version 06/20/12
- * @return mixed
+ * @return string
 */
-function BBCode($string, $allowimgs = false) {
+function BBCode($str, $allowimgs = FALSE) {
+	$ci =& get_instance();
 
-	$string = preg_replace('~\[i\](.*?)\[\/i\]~is', '<em>\\1</em>', $string);
-    $string = preg_replace('~\[b\](.*?)\[\/b\]~is', '<strong>\\1</strong>', $string);
-    $string = preg_replace('~\[u\](.*?)\[\/u\]~is', '<u>\\1</u>', $string);
-    $string = preg_replace('~\[url\="?(.*?)"?\](.*?)\[\/url\]~is', '<a href="\1" target="_blank">\2</a>', $string);
-	//get back to this task later...
-	$string = preg_replace('#([^\'"=\]]|^)(http[s]?|ftp[s]?|gopher|irc){1}://([:a-z_\-\\./0-9%~]+){1}(\?[a-z=0-9\-_&;]*)?(\#[a-z0-9]+)?#mi', '\1<a href="\2://\3\4\5" target="_blank">\2://\3\4\5</a>', $string);
-	$string = preg_replace('~\[list\](.*?)\[\/list\]~is', '<ul>\1</ul>', $string);
-    $string = preg_replace('~\[list\=(.*?)\](.*?)\[\/list\]~is', '<ol start="\1">\2</ol>', $string);
-	$string = preg_replace('/\[\*\]\s?(.*?)\n/ms', '<li>\\1</li>', $string);
-	$string = preg_replace('~\[size\="?(.*?)"?\](.*?)\[\/size\]~is', '<span style="font-size:\1%">\2</span>', $string);
-	$string = preg_replace('~\[center\](.*?)\[\/center\]~is', '<div align="center">\\1</div>', $string);
-    $string = preg_replace('~\[right\](.*?)\[\/right\]~is', '<div align="right">\\1</div>', $string);
-    $string = preg_replace('~\[left\](.*?)\[\/left\]~is', '<div align="left">\\1</div>', $string);
-    $string = preg_replace('~\[sub\](.*?)\[\/sub\]~is', '<sub>\\1</sub>', $string);
-    $string = preg_replace('~\[sup\](.*?)\[\/sup\]~is', '<sup>\\1</sup>', $string);
-    $string = preg_replace('~\[color=(.*?)\](.*?)\[\/color\]~is', '<span style="color: \\1">\\2</span>', $string);
-    $string = preg_replace('~\[quote\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\">Quote:</div><blockquote class=\"quote\">\\1</blockquote>", $string);
-    $string = preg_replace('~\[quote=(.*?)\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\">\\1 Wrote:</div><blockquote class=\"quote\">\\2</blockquote>", $string);
-    $string = preg_replace('~\[code\](.*?)\[\/code\]~is', "<div class=\"codeheader\">Code:</div><div class=\"code\"><pre style=\"display: inline;\">\\1</pre></div>", $string);
-    $string = preg_replace("/\\[youtube(=([0-9]+),([0-9]+))?\\](.+?)\\[\\/youtube\\]/se","youtubeParse('\\4')", $string);
+	//ensure we sanitised the string first!
+	$str = $ci->security->xss_clean($str);
+	$str = auto_link($str, 'both', TRUE);
+		
+    //see if we're able to parse the img tag.
+    if ($allowimgs) {
+		$find = array(
+		  '~\[b\](.*?)\[/b\]~is',
+		  '~\[i\](.*?)\[/i\]~is',
+		  '~\[u\](.*?)\[\/u\]~is',
+		  '~\[img\](.*?)\[\/img\]~is',
+		  '~\[url\="?(.*?)"?\](.*?)\[\/url\]~is',
+		  '~\[list\](.*?)\[\/list\]~is',
+		  '~\[list\=(.*?)\](.*?)\[\/list\]~is',
+		  '/\[\*\]\s?(.*?)\n/ms',
+		  '~\[size\="?(.*?)"?\](.*?)\[\/size\]~is',
+		  '~\[center\](.*?)\[\/center\]~is',
+		  '~\[right\](.*?)\[\/right\]~is',
+		  '~\[left\](.*?)\[\/left\]~is',
+		  '~\[sub\](.*?)\[\/sub\]~is',
+		  '~\[sup\](.*?)\[\/sup\]~is',
+		  '~\[color=(.*?)\](.*?)\[\/color\]~is',
+		  '~\[quote\](.*?)\[\/quote\]~is',
+		  '~\[quote=(.*?)\](.*?)\[\/quote\]~is',
+		  '~\[code\](.*?)\[\/code\]~is',
+		  "/\\[youtube(=([0-9]+),([0-9]+))?\\](.+?)\\[\\/youtube\\]/se",
+		);
+		$replace = array(
+		  '<b>\1</b>',
+		  '<i>\1</i>',
+		  '<u>\\1</u>',
+		  '<img src="\\1" alt="" />',
+		  '<a href="\1" target="_blank">\2</a>',
+		  '<ul>\1</ul>',
+		  '<ol start="\1">\2</ol>',
+		  '<li>\\1</li>',
+		  '<span style="font-size:\1%">\2</span>',
+		  '<div align="center">\\1</div>',
+		  '<div align="right">\\1</div>',
+		  '<div align="left">\\1</div>',
+		  '<sub>\\1</sub>',
+		  '<sup>\\1</sup>',
+		  '<span style="color: \\1">\\2</span>',
+		  '<div class="quoteheader">Quote:</div><blockquote class="quote">\\1</blockquote>',
+		  '<div class="quoteheader">\\1 Wrote:</div><blockquote class="quote">\\2</blockquote>',
+		  '<div class="codeheader">Code:</div><div class="code"><pre style="display: inline;">\\1</pre></div>',
+		  "youtubeParse('\\4')"
+		);
+    } else {
+		$find = array(
+		  '~\[b\](.*?)\[/b\]~is',
+		  '~\[i\](.*?)\[/i\]~is',
+		  '~\[u\](.*?)\[\/u\]~is',
+		  '~\[url\="?(.*?)"?\](.*?)\[\/url\]~is',
+		  '~\[list\](.*?)\[\/list\]~is',
+		  '~\[list\=(.*?)\](.*?)\[\/list\]~is',
+		  '/\[\*\]\s?(.*?)\n/ms',
+		  '~\[size\="?(.*?)"?\](.*?)\[\/size\]~is',
+		  '~\[center\](.*?)\[\/center\]~is',
+		  '~\[right\](.*?)\[\/right\]~is',
+		  '~\[left\](.*?)\[\/left\]~is',
+		  '~\[sub\](.*?)\[\/sub\]~is',
+		  '~\[sup\](.*?)\[\/sup\]~is',
+		  '~\[color=(.*?)\](.*?)\[\/color\]~is',
+		  '~\[quote\](.*?)\[\/quote\]~is',
+		  '~\[quote=(.*?)\](.*?)\[\/quote\]~is',
+		  '~\[code\](.*?)\[\/code\]~is',
+		  "/\\[youtube(=([0-9]+),([0-9]+))?\\](.+?)\\[\\/youtube\\]/se",
+		);
+		$replace = array(
+		  '<b>\1</b>',
+		  '<i>\1</i>',
+		  '<u>\\1</u>',
+		  '<a href="\1" target="_blank">\2</a>',
+		  '<ul>\1</ul>',
+		  '<ol start="\1">\2</ol>',
+		  '<li>\\1</li>',
+		  '<span style="font-size:\1%">\2</span>',
+		  '<div align="center">\\1</div>',
+		  '<div align="right">\\1</div>',
+		  '<div align="left">\\1</div>',
+		  '<sub>\\1</sub>',
+		  '<sup>\\1</sup>',
+		  '<span style="color: \\1">\\2</span>',
+		  '<div class="quoteheader">Quote:</div><blockquote class="quote">\\1</blockquote>',
+		  '<div class="quoteheader">\\1 Wrote:</div><blockquote class="quote">\\2</blockquote>',
+		  '<div class="codeheader">Code:</div><div class="code"><pre style="display: inline;">\\1</pre></div>',
+		  "youtubeParse('\\4')"
+		);
+	}
 
-
-    //we don't want to allow imgs all the time!
-    if ($allowimgs == true) {
-		$string = preg_replace('~\[img\](.*?)\[\/img\]~is', '<img src="\\1" alt="" />', $string);
-    }
-    return ($string);
+	return preg_replace($find, $replace, $str);
 }
 
 /**
  * This is a helper function for the you tube BBCode.
  * @param vCode [str] - the vcode assigned by youtube.
- * @version 12/12/10
  * @return mixed
 */
 function youtubeParse($vCode) {
@@ -114,100 +177,82 @@ function youtubeParse($vCode) {
 
 /**
  * Same functionality as BBcode, only used for printer-friendly pages and has a limited number of things it'll parse.
- * @param string [str] - string to check for BBCode tags.
- * @version 06/20/12
- * @return mixed
-*/
-function BBCode_print($string) {
+ * @param string $str the string to check for our BBCode tags.
+ * @return string
+ */
+function BBCode_print($str) {
+	$ci =& get_instance();
 
-	$string = preg_replace('~\[i\](.*?)\[\/i\]~is', '<i>\\1</i>', $string);
-    $string = preg_replace('~\[b\](.*?)\[\/b\]~is', '<b>\\1</b>', $string);
-    $string = preg_replace('~\[u\](.*?)\[\/u\]~is', '<u>\\1</u>', $string);
-    $string = preg_replace('~\[url\](.*?)\[\/url\]~is', '<a href="\\1">\\1</a>', $string);
-    $string = preg_replace('#([^\'"=\]]|^)(http[s]?|ftp[s]?|gopher|irc){1}://([:a-z_\-\\./0-9%~]+){1}(\?[a-z=0-9\-_&;]*)?(\#[a-z0-9]+)?#mi', '\1<a href="\2://\3\4\5" target="_blank">\2://\3\4\5</a>', $string);
-    $string = preg_replace('~\[list\](.*?)\[\/list\]~is', '<li>\\1</li>', $string);
-    $string = preg_replace('~\[center\](.*?)\[\/center\]~is', '<div align="center">\\1</div>', $string);
-    $string = preg_replace('~\[right\](.*?)\[\/right\]~is', '<div align="right">\\1</div>', $string);
-    $string = preg_replace('~\[left\](.*?)\[\/left\]~is', '<div align="left">\\1</div>', $string);
-    $string = preg_replace('~\[sub\](.*?)\[\/sub\]~is', '<sub>\\1</sub>', $string);
-    $string = preg_replace('~\[sup\](.*?)\[\/sup\]~is', '<sup>\\1</sup>', $string);
-    $string = preg_replace('~\[quote\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\">Quote:</div><blockquote>\\1</blockquote>", $string);
-    $string = preg_replace('~\[quote=(.*?)\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\">\\1 Wrote:</div><blockquote>\\2</blockquote>", $string);
-    $string = preg_replace('~\[code\](.*?)\[\/code\]~is', "<div class=\"codeheader\">Code:</div><code><pre style=\"display: inline;\">\\1</pre></code>", $string);
+	//ensure we sanitised the string first!
+	$str = $ci->security->xss_clean($str);
+	$str = auto_link($str, 'both', TRUE);
 
-	return ($string);
+	$find = array(
+	  '~\[b\](.*?)\[/b\]~is',
+	  '~\[i\](.*?)\[/i\]~is',
+	  '~\[u\](.*?)\[\/u\]~is',
+	  '~\[url\="?(.*?)"?\](.*?)\[\/url\]~is',
+	  '~\[list\](.*?)\[\/list\]~is',
+	  '~\[list\=(.*?)\](.*?)\[\/list\]~is',
+	  '/\[\*\]\s?(.*?)\n/ms',
+	  '~\[size\="?(.*?)"?\](.*?)\[\/size\]~is',
+	  '~\[center\](.*?)\[\/center\]~is',
+	  '~\[right\](.*?)\[\/right\]~is',
+	  '~\[left\](.*?)\[\/left\]~is',
+	  '~\[sub\](.*?)\[\/sub\]~is',
+	  '~\[sup\](.*?)\[\/sup\]~is',
+	  '~\[color=(.*?)\](.*?)\[\/color\]~is',
+	  '~\[quote\](.*?)\[\/quote\]~is',
+	  '~\[quote=(.*?)\](.*?)\[\/quote\]~is',
+	  '~\[code\](.*?)\[\/code\]~is'
+	);
+	$replace = array(
+	  '<b>\1</b>',
+	  '<i>\1</i>',
+	  '<u>\\1</u>',
+	  '<a href="\1" target="_blank">\2</a>',
+	  '<ul>\1</ul>',
+	  '<ol start="\1">\2</ol>',
+	  '<li>\\1</li>',
+	  '<span style="font-size:\1%">\2</span>',
+	  '<div align="center">\\1</div>',
+	  '<div align="right">\\1</div>',
+	  '<div align="left">\\1</div>',
+	  '<sub>\\1</sub>',
+	  '<sup>\\1</sup>',
+	  '<span style="color: \\1">\\2</span>',
+	  '<div class="quoteheader">Quote:</div><blockquote class="quote">\\1</blockquote>',
+	  '<div class="quoteheader">\\1 Wrote:</div><blockquote class="quote">\\2</blockquote>',
+	  '<div class="codeheader">Code:</div><div class="code"><pre style="display: inline;">\\1</pre></div>'
+	);
+
+	return preg_replace($find, $replace, $str);
 }
 
 /**
- * Checks for foul language and spam-ish words.
- * @param string [str] item to look for on banlist.
- * @param type [int] (1=foul language;2=spam check)
- * @return mixed
- * @TODO rebuild this to use ebb_spam_list.
-*/
-function language_filter($string, $type) {
+ * See if a censored word was used in a string.
+ * @param string $string The string we wish to validate.
+ * @return string The string with the censored word(s) starred out.
+ */
+function censorFilter($string) {
 
 	#obtain codeigniter object.
 	$ci =& get_instance();
 
 	#see if an invalid operation was set.
-	if((!isset($string)) or (empty($string))){
-		return null; //nothing entered, then just return null.
+	if (!isset($string) || empty($string)) {
+		return NULL; //nothing entered, then just return null.
 	}
 
-	#see if anything was entered.
-	if((!isset($type)) or (empty($type))){
-		show_error($ci->lang->line('nullspam'), 500, $ci->lang->line('error'));
-	}
+	$ci->load->model('Censormodel');
 
-	#grab our banned words..
-	$ci->db->select('Original_Word')->from('ebb_censor')->where('action', $type);
-	$wordsQ = $ci->db->get();
-
-	#determine type action.
-   	if($type == 1){
-		#
-		# BAD WORD FILTER.
-		#
-
-		$stars = '';
-
-		//go through the list and clean-up any bad-words
-		foreach ($wordsQ->result() as $wordsRes) {
-
-			if (stristr(trim($string), $wordsRes->Original_Word)) {
-				$length = strlen($wordsRes->Original_Word);
-				for ($i = 1; $i <= $length; $i++) {
-					$stars .= "*";
-				}
-				$string = eregi_replace($wordsRes->Original_Word,$stars,trim($string));
-				$stars = "";
-			}
-			
-		}
-	}else{
-		#
-		# SPAM WORD FILTER.
-		#
-
-		//go through the list and stop any attempt to post spam.
-		foreach ($wordsQ->result() as $wordsRes) {
-
-			//see if anything matches the spam word list.
-			if (preg_match("/\b".$wordsRes->Original_Word."\b/i", $string)) {
-				show_error($ci->lang->line('spamwarn'), 500, $ci->lang->line('error'));
-			}
-
-		}
-	}
-   return ($string);
+   return $ci->Censormodel->searchCensorList($string);
 }
 
 /**
  * Prevent users from performing an action too soon from another action.
  * @param string $type (posting;search).
  * @param string $LastActivity DB entry for last post time.
- * @version 05/23/12
  * @return boolean
 */
 function flood_check($type, $LastActivity){
@@ -243,6 +288,7 @@ function flood_check($type, $LastActivity){
 /**
  * increments the user's post count.
  * @param string $user user to increment count.
+ * @TODO add logic to Usermodel
 */
 function post_count($user){
 
@@ -273,6 +319,7 @@ function post_count($user){
  * @param string $time UNIX Timestamp
  * @param string $postedUser the new posted by user.
  * @param integer $page the current page to direct user to (NULL by default)
+ * @TODO add logic to Boardmodel
 */
 function update_board($bid, $newTid, $time, $postedUser, $page = null) {
 	#obtain codeigniter object.
@@ -296,7 +343,7 @@ function update_board($bid, $newTid, $time, $postedUser, $page = null) {
  * @param string $postedUser the new posted by user.
  * @param string $newPid new post id. (NULL by default)
  * @param integer $page the current page to direct user to. (NULL by default)
- * @version 05/25/12
+ * @TODO add logic to Topicmodel
 */
 function update_topic($tid, $time, $postedUser, $newPid = null, $page = null) {
 	

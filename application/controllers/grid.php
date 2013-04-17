@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/11/2013
+ * @version 04/16/2013
 */
 
 /**
@@ -123,7 +123,7 @@ class Grid extends EBB_Controller {
 	 * @example index.php/grid/liststyles
 	*/
 	public function liststyles() {
-		//load Pmmodel
+		//load Stylemodel
 		$this->load->model('Stylemodel');
 		
 		//Return result to jTable
@@ -131,7 +131,39 @@ class Grid extends EBB_Controller {
 		$jTableResult['Result'] = "OK";
 		$jTableResult['TotalRecordCount'] = $this->Stylemodel->countAll();
 		$jTableResult['Records'] = $this->Stylemodel->listAll($this->input->get('jtSorting', TRUE), $this->input->get('jtPageSize', TRUE), $this->input->get('jtStartIndex', TRUE));
-		print json_encode($jTableResult);		
+		print json_encode($jTableResult);
+	}
+	
+	/**
+	 * Get a list of spam words.
+	 * @example index.php/grid/listspamwords
+	*/
+	public function listspamwords() {
+		//load Spamlistmodel
+		$this->load->model('Spamlistmodel');
+		
+		//Return result to jTable
+		$jTableResult = array();
+		$jTableResult['Result'] = "OK";
+		$jTableResult['TotalRecordCount'] = $this->Spamlistmodel->countAll();
+		$jTableResult['Records'] = $this->Spamlistmodel->listAll($this->input->get('jtSorting', TRUE), $this->input->get('jtPageSize', TRUE), $this->input->get('jtStartIndex', TRUE));
+		print json_encode($jTableResult);
+	}
+	
+	/**
+	 * Get a list of censor words.
+	 * @example index.php/grid/listcensorwords
+	*/
+	public function listcensorwords() {
+		//load Censormodel
+		$this->load->model('Censormodel');
+		
+		//Return result to jTable
+		$jTableResult = array();
+		$jTableResult['Result'] = "OK";
+		$jTableResult['TotalRecordCount'] = $this->Censormodel->countAll();
+		$jTableResult['Records'] = $this->Censormodel->listAll($this->input->get('jtSorting', TRUE), $this->input->get('jtPageSize', TRUE), $this->input->get('jtStartIndex', TRUE));
+		print json_encode($jTableResult);
 	}
 	
 }

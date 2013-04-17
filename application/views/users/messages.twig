@@ -61,7 +61,7 @@
 					edit: false,
 					create: false,
 					display: function (data) {
-						var $img = $('<div class="board-grid-icons btn-achieve" title="{{LANG_ARCHIVE_MESSAGE}}"></div>');
+						var $img = $('<div class="icon-folder-close icon-2x" style="cursor: pointer;" title="{{LANG_ARCHIVE_MESSAGE}}"></div>');
 						//delete selected record when user clicks the image.
 						$img.click(function (e) {
 							e.stopPropagation(); //prevent the select event from bubbling up.
@@ -93,7 +93,7 @@
 								height: '125',
 								title:  '{{LANG_ARCHIVE_MESSAGE}}?',
 								closeOnEscape: true,
-								buttons: btnDelete
+								buttons: btnArchive
 							});
 						});
 						//Return image to show on the row.
@@ -107,7 +107,7 @@
 					edit: false,
 					create: false,
 					display: function (data) {
-						var $img = $('<div class="board-grid-icons btn-delete" title="{{LANG_DELETE_PM}}"></div>');
+						var $img = $('<div class="icon-remove icon-2x" style="cursor: pointer;" title="{{LANG_DELETE_PM}}"></div>');
 						//delete selected record when user clicks the image.
 						$img.click(function (e) {
 							e.stopPropagation(); //prevent the select event from bubbling up.

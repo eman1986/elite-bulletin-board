@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 12/19/2012
+ * @version 04/15/2013
 */
 
 class EBB_Controller extends CI_Controller {
@@ -142,20 +142,17 @@ class EBB_Controller extends CI_Controller {
 		#grab any notification messages.
 		$this->notifyType = $this->session->flashdata('NotifyType');
 		$this->notifyMsg = $this->session->flashdata('NotifyMsg');
-		
-		#load user helper.
-		$this->load->helper('user');
-		
+
 		//delete any online data from the last 3 minutes.
 		$this->db->delete('ebb_online', array('time <' => SESSION_TIMEOUT));
 
 		#login setup
-		if ($this->session->userdata('ebbUserID') <> FALSE) {
+		if ($this->session->userdata('ebbUserID') != FALSE) {
 
 			//see if user is logged in via cookies.
-			if ($this->input->cookie('ebbUserID', TRUE) <> FALSE) {
+			if ($this->input->cookie('ebbUserID', TRUE) != FALSE) {
 				$ebbuserid = $this->input->cookie('ebbUserID', TRUE);
-			} elseif ($this->session->userdata('ebbUserID') <> FALSE) {
+			} elseif ($this->session->userdata('ebbUserID') != FALSE) {
 				$ebbuserid = $this->session->userdata('ebbUserID');
 			} else {
 				exit(show_error($this->lang->line('invalidlogin'), 500, $this->lang->line('error')));
@@ -449,19 +446,15 @@ class EBB_Controller extends CI_Controller {
 	 * @return boolean TRUE, validation passes; FALSE, validation failed.
 	*/
 	public function SpamFilter($str) {
-		
-		#grab our banned words..
-		$this->db->select('id')->from('ebb_spam_list')->like('spam_word', $str);
-		$spamQ = $this->db->get();
+		$this->load->model('Spamlistmodel');
 		
 		//see if anything is listed as spam.
-		if ($spamQ->num_rows() > 0) {
+		if ($this->Spamlistmodel->searchSpamList($str)) {
 			$this->form_validation->set_message('SpamFilter', $this->lang->line('spamwarn'));
 			return FALSE;
 		} else {
 			return TRUE;
 		}
-		
 	}
 	
 	/**

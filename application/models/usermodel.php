@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 10/15/2012
+ * @version 04/15/2013
 */
 
 /**
@@ -1006,6 +1006,25 @@ class Usermodel extends CI_Model {
 		if($query->num_rows() > 0) {
 			$userData = $query->row();
 			return $userData->Username;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	public function getEmailList() {
+		$this->db->select('Username, Email')
+		  ->from('ebb_users')
+		  ->where('active', 1);
+		$query = $this->db->get();
+		
+		//see if we have any records to show.
+		if($query->num_rows() > 0) {
+			//loop through data and bind to an array.
+			foreach ($query->result() as $row) {
+				$users[] = $row;
+			}
+
+			return $users;
 		} else {
 			return FALSE;
 		}

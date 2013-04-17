@@ -6,8 +6,8 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @package Elite Bulletin Board v3
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright  (c) 2006-2011
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version 07/30/2012
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
+ * @version 04/14/2013
  * CREDIT
  * @author Bennet Matschullat <bennet.matschullat@giantmedia.de>
  * @since 07.03.2011 - 12:00:39

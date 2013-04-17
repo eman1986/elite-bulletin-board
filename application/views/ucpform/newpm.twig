@@ -86,27 +86,18 @@
 
 	});
 
-	$("#sendto").autocomplete({
-		source: function(req, res) {
-			$.getJSON("{{BOARD_URL}}{{INDEX_PAGE}}/ajax/searchusernames/"+req.term, function(data) {
+	$('#sendto').typeahead({
+		source: function(query, process) {
+			$.getJSON("{{BOARD_URL}}{{INDEX_PAGE}}/ajax/searchusernames/"+query, function(data) {
 				var suggestions = []; //create array for response objects
 
 				//process response
 				$.each(data, function(i, val) {
 					suggestions.push(val.Username);
 				});
-				res(suggestions); //pass array to callback
+				process(suggestions); //pass array to callback
 			});
 		},
 		minLength: 2,
-		select: function( event, ui ) {
-			$(this).val(ui.item ? ui.item.label : this.value);
-		},
-		open: function() {
-			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-		},
-		close: function() {
-			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-		}
 	});
 </script>

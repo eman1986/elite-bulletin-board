@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/08/2013
+ * @version 04/17/2013
 */
 class Users extends EBB_Controller {
 	
@@ -411,7 +411,7 @@ class Users extends EBB_Controller {
 			
 			//render to HTML.
 			$this->twig->_twig_env->addFunction('FormatMsg', new Twig_Function_Function('FormatTopicBody'));
-			$this->twig->_twig_env->addFunction('Spam_Filter', new Twig_Function_Function('language_filter'));
+			$this->twig->_twig_env->addFunction('CensorFilter', new Twig_Function_Function('censorFilter'));
 			echo $this->twig->render(strtolower(__CLASS__), 'viewmessage', array (
 			  'boardName' => $this->title,
 			  'pageTitle'=> $this->lang->line("pm"),

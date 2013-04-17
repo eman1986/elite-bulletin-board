@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/06/2013
+ * @version 04/17/2013
 */
 class Ucpform extends EBB_Controller {
 
@@ -554,7 +554,7 @@ class Ucpform extends EBB_Controller {
 		
 		//render to HTML.
 		$this->twig->_twig_env->addFunction('FormatMsg', new Twig_Function_Function('FormatTopicBody'));
-		$this->twig->_twig_env->addFunction('Spam_Filter', new Twig_Function_Function('language_filter'));
+		$this->twig->_twig_env->addFunction('CensorFilter', new Twig_Function_Function('censorFilter'));
 		echo $this->twig->render(strtolower(__CLASS__), 'signature', array (
 		  'BOARD_URL' => $this->boardUrl,
 		  'THEME_NAME' => $this->getStyleName(),
@@ -582,7 +582,7 @@ class Ucpform extends EBB_Controller {
 		$this->load->model('Usermodel');
         $this->load->helper('form');
 
-		$this->form_validation->set_rules('signature', $this->lang->line('sig'), 'max_length[255]|xss_clean');
+		$this->form_validation->set_rules('signature', $this->lang->line('sig'), 'max_length[255]|callback_SpamFilter|xss_clean');
         $this->form_validation->set_error_delimiters('', '');
 
 		//see if the form processed correctly without problems.
@@ -683,7 +683,6 @@ class Ucpform extends EBB_Controller {
 		
 		//render to HTML.
 		$this->twig->_twig_env->addFunction('FormatMsg', new Twig_Function_Function('FormatTopicBody'));
-		$this->twig->_twig_env->addFunction('Spam_Filter', new Twig_Function_Function('language_filter'));
 		echo $this->twig->render(strtolower(__CLASS__), 'newpm', array (
 		  'BOARD_URL' => $this->boardUrl,
 		  'THEME_NAME' => $this->getStyleName(),
@@ -709,7 +708,7 @@ class Ucpform extends EBB_Controller {
 
 		$this->form_validation->set_rules('subject', $this->lang->line('subject'), 'required|max_length[50]|xss_clean');
 		$this->form_validation->set_rules('sendto', $this->lang->line('send'), 'required|alpha_numeric|max_length[25]|callback_validatePMSender|xss_clean');
-		$this->form_validation->set_rules('pmMsg', $this->lang->line('pmmsg'), 'required|max_length[255]|xss_clean');
+		$this->form_validation->set_rules('pmMsg', $this->lang->line('pmmsg'), 'required|max_length[255]|callback_SpamFilter|xss_clean');
         $this->form_validation->set_error_delimiters('', '');
 
 		//see if the form processed correctly without problems.
@@ -754,22 +753,6 @@ class Ucpform extends EBB_Controller {
 					
 					//see if user wants to be notified about a new PM.
 					if ($pmSettings['notify'] == 1) {
-						#email user.
-						$config = array();
-						if ($this->preference->getPreferenceValue("mail_type") == 2) {
-							$config['protocol'] = 'sendmail';
-							$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-							$this->email->initialize($config);
-						} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-							$config['protocol'] = 'smtp';
-							$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-							$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-							$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-							$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-							$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-							$this->email->initialize($config);
-						}
-
 						//send out email.        	
 						$this->email->to($pmSettings['email']);
 						$this->email->from($this->preference->getPreferenceValue("board_email"), $this->title);
@@ -849,7 +832,6 @@ class Ucpform extends EBB_Controller {
 		
 		//render to HTML.
 		$this->twig->_twig_env->addFunction('FormatMsg', new Twig_Function_Function('FormatTopicBody'));
-		$this->twig->_twig_env->addFunction('Spam_Filter', new Twig_Function_Function('language_filter'));
 		echo $this->twig->render(strtolower(__CLASS__), 'replypm', array (
 		  'BOARD_URL' => $this->boardUrl,
 		  'THEME_NAME' => $this->getStyleName(),
@@ -878,7 +860,7 @@ class Ucpform extends EBB_Controller {
 
 		$this->form_validation->set_rules('subject', $this->lang->line('subject'), 'required|max_length[50]|xss_clean');
 		$this->form_validation->set_rules('sendto', $this->lang->line('send'), 'required|alpha_numeric|max_length[25]|callback_validatePMSender|xss_clean');
-		$this->form_validation->set_rules('pmMsg', $this->lang->line('pmmsg'), 'required|max_length[255]|xss_clean');
+		$this->form_validation->set_rules('pmMsg', $this->lang->line('pmmsg'), 'required|max_length[255]|callback_SpamFilter|xss_clean');
         $this->form_validation->set_error_delimiters('', '');
 
 		//see if the form processed correctly without problems.
@@ -919,22 +901,6 @@ class Ucpform extends EBB_Controller {
 					
 					//see if user wants to be notified about a new PM.
 					if ($pmSettings['notify'] == 1) {
-						#email user.
-						$config = array();
-						if ($this->preference->getPreferenceValue("mail_type") == 2) {
-							$config['protocol'] = 'sendmail';
-							$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-							$this->email->initialize($config);
-						} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-							$config['protocol'] = 'smtp';
-							$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-							$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-							$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-							$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-							$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-							$this->email->initialize($config);
-						}
-
 						//send out email.        	
 						$this->email->to($pmSettings['email']);
 						$this->email->from($this->preference->getPreferenceValue("board_email"), $this->title);
@@ -987,22 +953,6 @@ class Ucpform extends EBB_Controller {
 		$this->Relationshipmodel->setUId($this->userID);
 		$this->Relationshipmodel->setStatus(0);
 		$rid = $this->Relationshipmodel->CreateRelationship();
-		
-		//send out friend request.
-		$config = array();
-		if ($this->preference->getPreferenceValue("mail_type") == 2) {
-			$config['protocol'] = 'sendmail';
-			$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-			$this->email->initialize($config);
-		} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-			$config['protocol'] = 'smtp';
-			$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-			$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-			$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-			$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-			$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-			$this->email->initialize($config);
-		}
 		
 		//get some basic info about user.
 		$usrBasics = $this->Usermodel->getPMNotifyData($id);

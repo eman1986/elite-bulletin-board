@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 12/24/2012
+ * @version 04/17/2013
 */
 
 /**
@@ -114,7 +114,7 @@ class Ajax extends EBB_Controller {
 			exit($this->lang->line('notopicbody'));
 		}else{
 			#format string.
-			$formatMsg = nl2br(smiles(BBCode(language_filter($previewPost, 1), true)));
+			$formatMsg = nl2br(smiles(BBCode(censorFilter($previewPost), true)));
 
 			#output formatted data.
 			echo $formatMsg;

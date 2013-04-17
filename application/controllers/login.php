@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/08/2013
+ * @version 04/14/2013
 */
 
 /**
@@ -368,23 +368,7 @@ class Login extends EBB_Controller {
 			
 			#update user.
 			$this->Usermodel->UpdateUser($data);
-			
-			#email user.
-			$config = array();
-			if ($this->preference->getPreferenceValue("mail_type") == 2) {
-				$config['protocol'] = 'sendmail';
-				$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-				$this->email->initialize($config);
-			} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-				$config['protocol'] = 'smtp';
-				$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-				$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-				$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-				$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-				$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-				$this->email->initialize($config);
-			}
-			
+
 			//send out email.
 			$this->email->to($userData->Email);
 			$this->email->from($this->preference->getPreferenceValue("board_email"), $this->title);
@@ -617,23 +601,7 @@ class Login extends EBB_Controller {
 			
 			#insert user to DB and get User ID generated for new user.
 			$newUID = $this->Usermodel->CreateUser();
-			
-			#email user.
-			$config = array();
-			if ($this->preference->getPreferenceValue("mail_type") == 2) {
-				$config['protocol'] = 'sendmail';
-				$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-				$this->email->initialize($config);
-			} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-				$config['protocol'] = 'smtp';
-				$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-				$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-				$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-				$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-				$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-				$this->email->initialize($config);
-			}
-			
+
 			if ($this->preference->getPreferenceValue("activation") == "None") {
 				//send out email.        	
 				$this->email->to($email);

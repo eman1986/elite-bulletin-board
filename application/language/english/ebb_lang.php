@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/12/2013
+ * @version 04/17/2013
 */
 
 #Common language tags.
@@ -391,7 +391,7 @@ $lang['fightpost'] = 'Fight Post';
 $lang['advert'] = 'Post is only an advertisement';
 $lang['userproblems'] = 'Author of topic harassing others';
 $lang['other'] = 'Other(please specify)';
-$lang['message'] = 'Message';
+$lang['message'] = 'Message'; //@TODO is an exact duplicate of pmmsg!
 $lang['submitreport'] = 'Submit Report';
 $lang['reportsubject'] = 'Reported Post Alert';
 $lang['reportsent'] = 'Report has been sent to the moderators.';
@@ -556,8 +556,9 @@ $lang['installstyle'] = 'Install Style';
 $lang['uninstallstyle'] = 'Uninstall Style';
 $lang['uninstallstyleconfirm'] = 'Are you sure you want to uninstall this style?';
 $lang['uninstallstylesuccess'] = 'Style Uninstalled Successfully';
+$lang['uninstallstylefailure'] = 'Style Uninstall Failed';
 $lang['styleinuse'] = 'Style is still used by at least one user.';
-
+$lang['onestyleinstalled'] = 'Only one style is installed.';
 $lang['banlist'] = 'Ban List';
 $lang['blacklist'] = 'Blacklisted Usernames';
 $lang['activateacct'] = 'Activate an account';
@@ -569,7 +570,6 @@ $lang['pendinglist'] = 'Pending List';
 $lang['usersettings'] = 'User Settings';
 $lang['boardsettings'] = 'Board Settings';
 $lang['announcementsettings'] = 'Announcement Settings';
-$lang['mailsettings'] = 'Mail Settings';
 $lang['attachmentsettings'] = 'Attachment Settings';
 $lang['userprune'] = 'User-Pruning';
 $lang['modinstalltxt'] = 'Below you will see any Add-ons that are available to install.';
@@ -705,9 +705,19 @@ $lang['inuseprofile'] = 'One or more groups use the profile you wish to delete.'
 $lang['reservedprofile'] = 'The profile you wish to delete is reserved and cannot be deleted.';
 
 $lang['spamlist'] = 'Spam List';
-
-$lang['newslettertxt'] = 'Email your users with updates about your board.';
+$lang['addspamword']= 'Add Spam Word';
+$lang['editspamword']= 'Edit Spam Word';
+$lang['deletespamword']= 'Delete Spam Word';
+$lang['spamword']= 'Spam Word';
+$lang['confirmdeletespamword']= 'Are you sure you want to delete this spam word?';
+$lang['spamwordaddsuccess'] = 'Spam word added successfully';
+$lang['spamwordupdatesuccess'] = 'Spam word updated successfully';
+$lang['spamworddeletesuccess'] = 'Spam word deleted successfully';
+$lang['spamworddeletefailed'] = 'Failed to delete spam word';
 $lang['sendnewsletter'] = 'Send Newsletter';
+$lang['failedloadingemaillist'] = 'Failed to get user email list';
+$lang['newslettersentsuccess'] = 'Successfully Sent out Newsletter';
+$lang['newslettersentfailure'] = 'Failed to Send out Newsletter';
 $lang['sitelink'] = 'Site Address';
 $lang['sitelink_txt'] = 'example: http://mysite.com';
 $lang['perpg'] = 'Entries Per Page';
@@ -746,22 +756,6 @@ $lang['warnthreshold'] = 'Warning Threshold';
 $lang['warnthresholdhint'] = 'Set the number that will determine an automatic ban from the board.';
 $lang['mxcheck'] = 'Check e-mail domain for valid MX record';
 $lang['mxcheckhint'] = 'This checks for valid email domains.';
-$lang['mailtype'] = 'Mail Type';
-$lang['mailsmtp'] = 'SMTP';
-$lang['sendmail'] = 'Sendmail';
-$lang['mailreg'] = 'Mail() method';
-$lang['smtphost'] = 'SMTP Host';
-$lang['smtpport'] = 'SMTP Port';
-$lang['smtpuser'] = 'SMTP Username';
-$lang['smtppass'] = 'SMTP Password';
-$lang['sendmailPath'] = 'Sendmail Path';
-
-$lang['mailantiflood'] = 'Mailer Anti-Flood Length (In Seconds)';
-$lang['smtpencrption'] = 'SMTP Encryption';
-$lang['smtpencrption_hint'] = 'For SSL or TLS encryption to work your PHP installation must have appropriate OpenSSL transports wrappers.';
-$lang['smtpencrption_ssl'] = 'SSL';
-$lang['smtpencrption_tls'] = 'TLS';
-$lang['smtpencrption_na'] = 'Plaintext';
 
 $lang['attachmentquota'] = 'Maximum Size user can upload.';
 $lang['attachmentquotahint'] = 'Enter this amount in bytes.';
@@ -784,7 +778,6 @@ $lang['banuser'] = 'Ban this User';
 $lang['tickban'] = 'Tick this box to ban this user; this action can be undone later on if needed.';
 $lang['deluser'] = 'Delete This User';
 $lang['tickdel'] = 'Tick this box to delete this user; this action cannot be undone!';
-$lang['banrss'] = 'Ban User from Altering RSS Feed URL;This action can be revoked later.';
 $lang['notbanned'] = 'User is not banned.';
 $lang['warnlogtxt'] = 'Here is where you can see and revoke the warning actions performed.';
 $lang['warnperformed'] = 'Authorized By';
@@ -822,15 +815,15 @@ $lang['blacklistusername'] = 'Blacklisting a Username';
 $lang['blackedusername'] = 'Username to blacklist';
 $lang['blacklisttype'] = 'Select if this username your blacklisting is an exact match(admin) or a wildcard(*admin).';
 $lang['whitelistingusername'] ='Un-Blacklisting a Username';
-$lang['emptycensorlist'] = 'Censor List is currently empty';
-$lang['addcensor'] = 'Add a word to censor';
-$lang['censoractionhint'] = '<b>Ban Use of Word</b> will just block the word. <b>Mark As Spam</b> will kill the form from processing.';
-$lang['censorban'] = 'Ban Use of Word';
-$lang['censorspam'] = 'Mark as Spam';
-$lang['censoraction'] = 'Desired Action';
-$lang['nocensoraction'] = 'You did not select a desired action.';
+$lang['addcensor'] = 'Add Censored Word';
+$lang['editcensor'] = 'Edit Censored Word';
+$lang['deletecensor'] = 'Delete Censored Word';
+$lang['confirmdeletecensorword'] = 'Are you sure you want to delete this censored word?';
+$lang['censoraddsuccess'] = 'Censored word added successfully';
+$lang['censorupdatesuccess'] = 'Censored word updated successfully';
+$lang['censordeletesuccess'] = 'Censored word deleted successfully';
+$lang['censordeletefailed'] = 'Failed to delete censored word';
 $lang['originalword'] = 'Original Word';
-$lang['censornotfound'] = 'The word requested does not exist.';
 $lang['userprunetext'] = 'This will delete any user who has posted nothing. Just click on the link below to process the pruning. It could take a while depending on the number of 0 posters on your userlist.';
 $lang['beginuserprune'] = 'Begin User Pruning';
 $lang['userprunewarning'] = 'NOTE: This will delete new users who have been here longer than a week and posted nothing, please let them know before doing this!';

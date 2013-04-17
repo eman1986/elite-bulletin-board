@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/12/2013
+ * @version 04/14/2013
 */
 
 class Main extends EBB_Controller {
@@ -162,7 +162,6 @@ class Main extends EBB_Controller {
 			'LANG_USERSETTINGS' => $this->lang->line('usersettings'),
 			'LANG_BOARDSETTINGS' => $this->lang->line('boardsettings'),
 			'LANG_ANNOUNCEMENTSETTINGS' => $this->lang->line('announcementsettings'),
-			'LANG_MAILSETTINGS' => $this->lang->line('mailsettings'),
 			'LANG_ATTACHMENTSETTINGS' => $this->lang->line('attachmentsettings'),
 			'LANG_USERMENU' => $this->lang->line('usermenu'),
 			'LANG_BANLIST' => $this->lang->line('banlist'),
@@ -286,7 +285,6 @@ class Main extends EBB_Controller {
 			'LANG_NEWGROUP' => $this->lang->line('addgroup'),'LANG_USERSETTINGS' => $this->lang->line('usersettings'),
 			'LANG_BOARDSETTINGS' => $this->lang->line('boardsettings'),
 			'LANG_ANNOUNCEMENTSETTINGS' => $this->lang->line('announcementsettings'),
-			'LANG_MAILSETTINGS' => $this->lang->line('mailsettings'),
 			'LANG_ATTACHMENTSETTINGS' => $this->lang->line('attachmentsettings'),
 			'LANG_USERMENU' => $this->lang->line('usermenu'),
 			'LANG_BANLIST' => $this->lang->line('banlist'),

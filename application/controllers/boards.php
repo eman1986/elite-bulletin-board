@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/04/2013
+ * @version 04/17/2013
 */
 
 /**
@@ -475,7 +475,7 @@ class Boards extends EBB_Controller {
 				$this->twig->_twig_env->addFilter('counter', new Twig_Filter_Function('GetCount'));
 				$this->twig->_twig_env->addFilter('TopicReadStat', new Twig_Filter_Function('readTopicStat'));
 				$this->twig->_twig_env->addFunction('FormatMsg', new Twig_Function_Function('FormatTopicBody'));
-				$this->twig->_twig_env->addFunction('Spam_Filter', new Twig_Function_Function('language_filter'));
+				$this->twig->_twig_env->addFunction('CensorFilter', new Twig_Function_Function('censorFilter'));
 				$this->twig->_twig_env->addFunction('ATTACH_BAR', new Twig_Function_Function('GetAttachments'));
 				$this->twig->_twig_env->addFunction('MATH_ROUND', new Twig_Function_Function('Round'));
 				$this->twig->_twig_env->addFunction('CALC_VOTE', new Twig_Function_Function('CalcVotes'));
@@ -721,7 +721,7 @@ class Boards extends EBB_Controller {
 
 				#setup filters.
 				$this->twig->_twig_env->addFunction('FormatMsg', new Twig_Function_Function('FormatTopicBody'));
-				$this->twig->_twig_env->addFunction('Spam_Filter', new Twig_Function_Function('language_filter'));
+				$this->twig->_twig_env->addFunction('CensorFilter', new Twig_Function_Function('censorFilter'));
 
 				//Grab some settings.
 				$disable_bbcode = $this->Topicmodel->getDisableBbCode();
@@ -1320,23 +1320,7 @@ class Boards extends EBB_Controller {
 			$notificationQ = $this->db->get();
 			
 			//see if we have any subscribers.
-			if($notificationQ->num_rows() > 0) {
-				#email user.
-				$config = array();
-				if ($this->preference->getPreferenceValue("mail_type") == 2) {
-					$config['protocol'] = 'sendmail';
-					$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-					$this->email->initialize($config);
-				} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-					$config['protocol'] = 'smtp';
-					$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-					$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-					$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-					$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-					$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-					$this->email->initialize($config);
-				}
-
+			if ($notificationQ->num_rows() > 0) {
 				//loop through data and bind to an array.
 				foreach ($notificationQ->result() as $notify) {
 					$this->email->clear(); //reset email setting
@@ -1692,22 +1676,6 @@ class Boards extends EBB_Controller {
 
 				//see if we have any subscribers.
 				if($notificationQ->num_rows() > 0) {
-					#email user.
-					$config = array();
-					if ($this->preference->getPreferenceValue("mail_type") == 2) {
-						$config['protocol'] = 'sendmail';
-						$config['mailpath'] = $this->preference->getPreferenceValue("sendmail_path");
-						$this->email->initialize($config);
-					} elseif ($this->preference->getPreferenceValue("mail_type") == 0) {
-						$config['protocol'] = 'smtp';
-						$config['smtp_host'] = $this->preference->getPreferenceValue("smtp_host");
-						$config['smtp_user'] = $this->preference->getPreferenceValue("smtp_user");
-						$config['smtp_pass'] = $this->preference->getPreferenceValue("smtp_pwd");
-						$config['smtp_port'] = $this->preference->getPreferenceValue("smtp_port");
-						$config['smtp_timeout'] = $this->preference->getPreferenceValue("smtp_timeout");
-						$this->email->initialize($config);
-					}
-
 					//loop through data and bind to an array.
 					foreach ($notificationQ->result() as $notify) {
 						$this->email->clear(); //reset email setting

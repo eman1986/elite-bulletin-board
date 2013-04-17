@@ -209,8 +209,10 @@ class Stylemodel extends CI_Model {
 		$styleinUseQuery = $this->db->get();
 		
 		if ($styleinUseQuery->num_rows() > 0) { //see if the selected style is still being used by someone.
+			log_message('error', $this->lang->line('styleinuse')); //log error in error log.
 			return FALSE;
 		} else if ($this->countAll() == 1) { //see if the selected style is the only installed style.
+			log_message('error', $this->lang->line('onestyleinstalled')); //log error in error log.
 			return FALSE;
 		} else {
 			$this->db->where('id', $this->getId())->delete('ebb_style');

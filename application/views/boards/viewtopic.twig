@@ -125,7 +125,7 @@
             <div class="commentbox">
 				
 				<div id="topic">
-				{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, TOPIC_BODY),1))|raw}}
+				{{nl_2_br(CensorFilter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, TOPIC_BODY)))|raw}}
 				</div><br />
 
 				{# grab a list of attachments, if logged in. #}
@@ -139,7 +139,7 @@
 				{% endif %}
 				<br />
 				_________________<br />
-				{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, AUTHOR_SIG),1))|raw}}
+				{{nl_2_br(CensorFilter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, AUTHOR_SIG)))|raw}}
 				
             </div>
             <div class="commentfooter">
@@ -251,7 +251,7 @@
 			{% for r in REPLYDATA %}
 			<div class="commentbox">
                 <div id="edit">
-					{{nl_2_br(Spam_Filter(FormatMsg(r.disable_smiles, BOARDPREF_SMILES, r.disable_bbcode, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Body),1))|raw}}
+					{{nl_2_br(CensorFilter(FormatMsg(r.disable_smiles, BOARDPREF_SMILES, r.disable_bbcode, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Body)))|raw}}
 
 					{# grab a list of attachments #}
 					{% if LOGGEDUSER != "guest" and ATTACH_BAR("post", r.author, r.pid) != FALSE %}
@@ -264,7 +264,7 @@
 					{% endif %}
 					<br />
 					_________________<br />
-					{{nl_2_br(Spam_Filter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Sig),1))|raw}}
+					{{nl_2_br(CensorFilter(FormatMsg(DISABLE_SMILES, BOARDPREF_SMILES, DISABLE_BBCODE, BOARDPREF_BBCODE, BOARDPREF_IMAGE, r.Sig)))|raw}}
 				</div>
             </div>
             <div class="commentfooter">

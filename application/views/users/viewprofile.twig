@@ -23,18 +23,6 @@
 			$(this).hide();
 		}); //END .ajaxStart
 		
-		//User Menu
-		var icons = {
-			header: "ui-icon-circle-arrow-e",
-			headerSelected: "ui-icon-circle-arrow-s"
-		};
-
-		$("#ucpMenu").accordion({
-		header: "h3",
-		icons: icons,
-		autoHeight: false,
-		collapsible: true });
-
 		//setup coming soon message dialog.
 		$('#confirmMsg').html("Sorry, this section is under work. This should be working by v3.0.0 RC 2.<br /><br />I apologize for the inconvenience.<br /><br />~Elite Bulletin Board Development Team");
 
@@ -96,8 +84,6 @@
 			<div id="tabs">
 				<ul>
 					<li><a href="#bio">About Me</a></li>
-					<li><a href="#comments">Comments/Status</a></li>
-					<li><a href="#notes">Notes/Blog</a></li>
 					<li><a href="#friends">{{LANG_FRIENDSLIST}}</a></li>
 				</ul>
 				<div id="bio">
@@ -132,12 +118,6 @@
 					{% if LOCATION != "" %}
 					<p>{{LANG_LOCATION}}: {{LOCATION}}</p>
 					{% endif %}
-				</div>
-				<div id="comments">
-					<p>Comment box system coming v3.0.0 RC2.</p>
-				</div>
-				<div id="notes">
-					<p>note/blog system coming v3.0.0 RC2.</p>
 				</div>
 				<div id="friends">
 					<p>Friends List coming v3.0.0 RC2.</p>

@@ -1,0 +1,53 @@
+<div class="block" id="block-forms">
+    <div class="content">
+        <div class="inner">
+			<!-- validation box. -->
+			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 60%;">
+				<strong>{{LANG_ERROR}}: </strong><br />
+				<span id="validateRes"></span>
+			</div>
+
+			{{ACPADDSPAMWORDFORM|raw}}
+			<div class="group">
+				<label class="label">{{LANG_SPAM_WORD}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_spam_word" class="error"></span>
+					<input type="text" name="spam_word" class="text_field" id="spam_word" />
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+				  <span class="icon-plus-sign"></span>&nbsp;{{LANG_ADD_SPAM_WORD}}
+				</button>
+			</div>
+			</form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$('#spam_word').focus();
+new FormValidator('frmAddSpamWord', [{
+    name: 'spam_word',
+    display: '{{LANG_SPAM_WORD}}',
+    rules: 'required|max_length[255]'
+}], function(errors, event) {
+    if (errors.length > 0) {
+        $('#validateRes').empty();
+        $('#validateRes').append(errors.join('<br />'));
+        $('#div_ErrMsg').show();
+    } else if (event != undefined && errors.length == 0) {
+		event.preventDefault(); //stay on page.
+		processForm('frmAddSpamWord', function() {
+			$('#acpFrm').dialog('close');
+			
+			//reload grid.
+			$('#spamList').jtable('load');
+		}, function() { 
+			FormResults("error", "{{LANG_FORMFAILURE}}");
+			$('#frmAddSpamWord')[0].reset();
+			$('#frmAddSpamWord').removeClass('ui-state-error');
+		});
+    }
+    
+});
+</script>

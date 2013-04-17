@@ -1,7 +1,7 @@
 /*
 ========================================
 Filename: style.css
-Last Modified: 04/11/2013
+Last Modified: 04/16/2013
 ClearBlue2 CSS template file for Elite Bulletin Board v3.0.0
 All formatting belongs here.
 CREDIT
@@ -679,19 +679,6 @@ Common Sprite
 .board-common-icons.reload { background-position: 0 -133px; width: 14px; height: 15px; }
 .board-common-icons.rss { background-position: 0 -163px; width: 12px; height: 12px; cursor: pointer; }
 .board-common-icons.logo { background-position: 0 -190px; width: 250px; height: 100px; }
-
-/*
-==============================
-Grid Sprite
-==============================
-*/
-.board-grid-icons { width: 18px; height: 134px; background-image:url(images/grid-sprite.png); background-position:0 0; }
-.board-grid-icons.btn-achieve { background-position: 0 0; width: 16px; height: 16px; }
-.board-grid-icons.btn-delete { background-position: 0 -24px; width: 14px; height: 13px; }
-.board-grid-icons.sort-asc { background-position: 0 -45px; width: 12px; height: 16px; }
-.board-grid-icons.sort-desc { background-position: 0 -69px; width: 12px; height: 16px; }
-.board-grid-icons.sort-none { background-position: 0 -93px; width: 12px; height: 16px; }
-.board-grid-icons.btn-edit { background-position: 0 -118px; width: 16px; height: 16px; }
 
 /*
 ==============================
