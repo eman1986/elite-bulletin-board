@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/14/2013
+ * @version 04/21/2013
 */
 
 /**
@@ -427,6 +427,14 @@ class Login extends EBB_Controller {
 	 * @example index.php/login/register
 	*/
 	public function register() {
+		//see if registration is disabled.
+		if ($this->preference->getPreferenceValue("allow_newusers") == 0) {
+			//show warning message.
+			$this->notifications('warning', $this->lang->line('alertdisablednewuser'));
+
+			#direct user to home page.
+			redirect('/', 'location');
+		}
 		
 		//@todo add dateFormatSelect & timeFormatSelect to form
 
