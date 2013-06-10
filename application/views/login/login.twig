@@ -6,42 +6,25 @@
 
 {{BREADCRUMB|raw}}<br />
 
-<div id="box">
-	<div class="block" id="block-login">
-		<h2>{{LANG_LOGIN}}</h2>
-        <div class="content login">
-			
+<div class="row">
+	<div class="span5 offset6">
+		<div class="well">
 			<!-- validation box. -->
-			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsgLogin" style="width: 60%;">
+			<div class="hideElement alert alert-error" id="div_ErrMsgLogin" style="width: 60%;">
 				<strong>{{LANG_ERROR}}: </strong><br />
 				<span id="validateLogin"></span>
-			</div><br />
-
+			</div>
+			<legend>{{LANG_LOGIN}}</legend>	
 			{{LOGINFORM_FULL|raw}}
-				<div class="group buffer">
-					<div class="left">
-						<label class="label right">{{LANG_USERNAME}}</label>
-					</div>
-					<div class="right">
-						<input type="text" name="username" class="text_field" tabindex="1" id="usr" />
-						<span class="description">{{URL_TAG("/register", LANG_REGISTER)|raw}}</span>
-					</div>
-				</div>
-				<div class="group buffer">
-					<div class="left">
-						<label class="label right">{{LANG_PASSWORD}}</label>
-					</div>
-					<div class="right">
-						<input type="password" name="password" class="text_field" tabindex="2" id="pwd" />
-						<span class="description">{{URL_TAG("/resetpassword", LANG_FORGOT)|raw}}</span>
-					</div>
-				</div>
-				<div class="group navform buffer">
-					<button class="button" type="submit">
-						<span class="icon-signin"></span>&nbsp;{{LANG_LOGIN}}
-					</button>
-				</div>
-			</form>
+				<input class="span3" placeholder="{{LANG_USERNAME}}" type="text" name="username" tabindex="1" id="usr" />
+				<input class="span3" placeholder="{{LANG_PASSWORD}}" type="password" name="password" tabindex="2" id="pwd" />
+				<label class="checkbox">
+				<input type="checkbox" name="remember" value="1" /> {{LANG_REMEMBERTXT}}
+				</label>
+				<button class="btn-primary btn icon-signin" type="submit"> {{LANG_LOGIN}}</button>
+				<button class="btn-primary btn icon-user" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/register');return false;"> {{LANG_REGISTER}}</button>
+				<button class="btn-primary btn icon-lock" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/resetpassword');return false;"> {{LANG_FORGOT}}</button>
+			</form>    
 		</div>
 	</div>
 </div>

@@ -8,27 +8,8 @@
 
 
 {%if PREF_RULES == 1%}
-    <div id="DlgTOS" class="hideElement">
-        {{RULES}}
-    </div>
     <script type="text/javascript">
-		var btnTOS = {};
-		 btnTOS['{{LANG_AGREE}}'] = function() {
-			 $(this).dialog('close');
-		 };
-
-		$("#DlgTOS").dialog({
-			title: "{{LANG_TOSTITLE}}",
-			modal: true,
-			resizable: false,
-			draggable: false,
-			width: '400',
-			height: '200',
-			buttons: btnTOS,
-			open: function(event, ui) {
-				$(".ui-dialog-titlebar-close", ui.dialog).hide();
-			}
-		});
+	bootbox.alert("{{RULES}}", '{{LANG_AGREE}}');
     </script>
 {%endif%}
 
@@ -62,98 +43,80 @@
 	});
 //});
 </script>
-<div id="box">
-	<div class="block" id="block-signup">
-        <h2>{{LANG_REGISTER}}</h2>
-        <div class="content">
-			
+
+<div class="row">
+	<div class="span5 offset6">
+		<div class="well">
 			<!-- validation box. -->
-			<div class="hideElement centerContainer alert alert-error" id="div_ErrMsg" style="width: 60%;">
+			<div class="hideElement alert alert-error" id="div_ErrMsg" style="width: 60%;">
 				<strong>{{LANG_ERROR}}: </strong><br />
 				<span id="validateRes"></span>
-			</div><br />	
-			
+			</div>
+			<legend>{{LANG_REGISTER}}</legend>	
 			{{REGISTERFORM|raw}}
-            <div class="group buffer">
-				<div class="left">
-					<label class="label">{{LANG_EMAIL}}</label>
-				</div>
-				<div class="right">
-					<div class="fieldWithErrors">
-						<span class="error">{{VALIDATION_EMAIL}}</span>
-						<input type="text" name="email" maxlength="255" class="text_field" id="email" />
+				<div class="control-group">
+					<div class="controls">
+						<span class="text-error">{{VALIDATION_EMAIL}}</span>
+						<label class="control-label" for="email">{{LANG_EMAIL}}</label>
+						<input type="text" name="email" id="email" />
 					</div>
 				</div>
-            </div>
-            <div class="group buffer">
-				<div class="left">
-					<label class="label">{{LANG_USERNAME}}</label>
-				</div>
-				<div class="right">
-					<div class="fieldWithErrors">
-						<span class="error">{{VALIDATION_USERNAME}}</span>
-						<input name="username" type="text" maxlength="25" class="text_field" id="username" />
-						<span class="description">{{LANG_RULE}}</span>
+				<div class="control-group">
+					<div class="controls">
+						<span class="text-error">{{VALIDATION_USERNAME}}</span>
+						<label class="control-label" for="username">{{LANG_USERNAME}}</label>
+						<input type="text" name="username" id="username" />
+						<span class="help-inline">{{LANG_RULE}}</span>
 					</div>
 				</div>
-            </div>
-            <div class="group buffer">
-				<div class="left">
-					<label class="label">{{LANG_PASSWORD}}</label>
-				</div>
-				<div class="right">
-					<div class="fieldWithErrors">
-						<span class="error">{{VALIDATION_PASSWORD}}</span>
-						<input name="password" type="password" class="text_field" id="password" />
-						<div class="PwdStrengthBox"><span class="password-strength"></span> <span class="strength-text">Type Password</span></div>
+				<div class="control-group">
+					<div class="controls">
+						<span class="text-error">{{VALIDATION_PASSWORD}}</span>
+						<label class="control-label" for="password">{{LANG_PASSWORD}}</label>
+						<input type="password" name="password" id="password" />
+						<span class="help-inline">
+							<div class="PwdStrengthBox"><span class="password-strength"></span> <span class="strength-text">Type Password</span></div>
+						</span>
 					</div>
 				</div>
-            </div>
-            <div class="group buffer">
-				<div class="left">
-					<label class="label">{{LANG_LANGUAGE}}</label>
-				</div>
-				<div class="right">
-					<div class="fieldWithErrors">
-						<span class="error">{{VALIDATION_LANGUAGE}}</span><br />
+				<div class="control-group">
+					<div class="controls">
+						<span class="text-error">{{VALIDATION_LANGUAGE}}</span>
+						<label class="control-label" for="language">{{LANG_LANGUAGE}}</label>
 						{{LANGUAGE|raw}}
 					</div>
 				</div>
-            </div>
-			{%if PREF_CAPTCHA == 1%}
-            <div class="group buffer">
-				<div class="left">
-					<label class="label">{{LANG_CAPTCHA}}</label>
-				</div>
-				<div class="right">
-					<div class="fieldWithErrors">
-						<span class="error">{{VALIDATION_CAPTCHA}}</span><br />
-						<strong>{{CAPTCHA}}</strong>
-						<input type="text" name="captcha" maxlength="2" class="text_field" id="captcha" />
+				{%if PREF_CAPTCHA == 1%}
+				<div class="control-group">
+					<div class="controls">
+						<span class="text-error">{{VALIDATION_CAPTCHA}}</span>
+						<label class="control-label" for="captcha">{{LANG_CAPTCHA}} <strong>{{CAPTCHA}}</strong></label>
+						<input type="text" name="captcha" maxlength="2" id="captcha" />
 					</div>
 				</div>
-            </div>
-			{%endif%}
-			{%if PREF_COPPA == 13 or PREF_COPPA == 16 or PREF_COPPA == 18 or PREF_COPPA == 21%}
-            <div class="group">
-				<input name="coppavalid" id="coppavalid" type="checkbox" value="yes" />
-				{%if PREF_COPPA == 13%}
-					<strong>{{COPPA_13}}</strong>
-				{%elseif PREF_COPPA == 16%}
-					<strong>{{COPPA_16}}</strong>
-				{%elseif PREF_COPPA == 18%}
-					<strong>{{COPPA_18}}</strong>
-				{%elseif PREF_COPPA == 21%}
-					<strong>{{COPPA_21}}</strong>
 				{%endif%}
-			</div>
-			{%endif%}
-            <div class="group navform buffer">
-				<button class="button" type="submit">
-					<span class="icon-user"></span>&nbsp;{{LANG_REGISTER}}
-				</button>
-			</div>
-			</form>
+				{%if PREF_COPPA == 13 or PREF_COPPA == 16 or PREF_COPPA == 18 or PREF_COPPA == 21%}
+				<div class="control-group">
+					<div class="controls">
+						<span class="text-error">{{VALIDATION_CAPTCHA}}</span>
+						<label class="checkbox">
+							<input type="checkbox" name="coppavalid" id="coppavalid" value="yes" />
+							{%if PREF_COPPA == 13%}
+								<strong>{{COPPA_13}}</strong>
+							{%elseif PREF_COPPA == 16%}
+								<strong>{{COPPA_16}}</strong>
+							{%elseif PREF_COPPA == 18%}
+								<strong>{{COPPA_18}}</strong>
+							{%elseif PREF_COPPA == 21%}
+								<strong>{{COPPA_21}}</strong>
+							{%endif%}
+						</label>
+					</div>
+				</div>
+				{%endif%}
+				<button class="btn-primary btn icon-user"  type="submit"> {{LANG_REGISTER}}</button>
+				<button class="btn-primary btn icon-signin" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/login');return false;"> {{LANG_LOGIN}}</button>
+			</form>    
 		</div>
 	</div>
 </div>
