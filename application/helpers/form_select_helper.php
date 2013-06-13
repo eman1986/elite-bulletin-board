@@ -6,21 +6,20 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/04/2013
+ * @version 05/10/2013
 */
 
 /**
  * Builds a list of boards & sub-boards.
  * @params integer $boardID Board ID to select.
  * @return string
- * @version 08/26/12
 */
 function boardListSelect($boardID="") {
 	
 	#obtain codeigniter object.
 	$ci =& get_instance();
 	
-	$data = array('' => "Select Board");
+	$data = array('' => $ci->lang->line('selboard'));
 	
 	$ci->db->select('id, Board')->from('ebb_boards')->where('type', 2)->or_where('type',3)->order_by("B_Order", "asc");
 	$query = $ci->db->get();
@@ -37,7 +36,6 @@ function boardListSelect($boardID="") {
  * Build HTML for the Date Format select element.
  * @param string $selVal The selected value.
  * @return string HTML Select code.
- * @version 10/09/12
  */
 function dateFormatSelect($selVal) {
 	$data = array(
@@ -67,7 +65,6 @@ function dateFormatSelect($selVal) {
  * Build HTML for the Time Format select element.
  * @param string $selVal The selected value.
  * @return string HTML Select code.
- * @version 10/09/12
  */
 function timeFormatSelect($selVal) {
 	$data = array(
@@ -83,7 +80,6 @@ function timeFormatSelect($selVal) {
 /**
  * Used to auto-select a value already setup by the user.
  * @param string $tzone The current time zone defined by the user.
- * @version 08/26/12
 */
 function TimeZoneList($tzone){
 
@@ -511,7 +507,6 @@ function TimeZoneList($tzone){
 /**
  * Used to auto-select a value already setup by the user.
  * @param string $theme The current theme defined by the user.
- * @version 08/26/12
 */
 function ThemeList($theme){
 
@@ -537,7 +532,6 @@ function ThemeList($theme){
 /**
  * Used to auto-select a value already setup by the user.
  * @param string $language The current language defined by the user.
- * @version 08/26/12
 */
 function LanguageList($language){
 
@@ -608,7 +602,7 @@ function parentBoardSelection($type, $boardID="", $excludeId=NULL) {
 	#obtain codeigniter object.
 	$ci =& get_instance();
 	
-	$data = array('' => "Select Board");
+	$data = array('' => $ci->lang->line('selparent'));
 	
 	#see what type of board to look for.
 	if ($type == "parent") {
@@ -759,4 +753,88 @@ function BoardAttachmentAccessSelect($selectedValue="") {
 	  );
 	
 	return form_dropdown('attachaccess', $data, $selectedValue, 'id="attachaccess"');	
+}
+
+/**
+ * Get a list of groups to list for new user registration field.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function newUserGroupSelect($selectedValue="") {
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array();
+	
+	$ci->db->select('id, Name')
+	  ->from('ebb_groups')
+	  ->where('Level !=', 0);
+
+	$query = $ci->db->get();
+	foreach ($query->result_array() as $row) {
+			$data[$row['id']] = $row['Name'];
+	}
+	
+	//setup form based on user's selection.
+	return form_dropdown('newuser_status', $data, $selectedValue, 'id="newuser_status"');
+}
+
+/**
+ * Get a list of COPPA age requirements.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function coppaSelect($selectedValue="") {
+	
+	#obtain codeigniter object.
+	$ci =& get_instance();
+	
+	$data = array(
+	  0 => $ci->lang->line('none'),
+	  13 => $ci->lang->line('cpcoppa13'),
+	  16 => $ci->lang->line('cpcoppa16'),
+	  18 => $ci->lang->line('cpcoppa18'),
+	  21 => $ci->lang->line('cpcoppa21')
+	  );
+	
+	return form_dropdown('coppa', $data, $selectedValue, 'id="coppa"');	
+}
+
+/**
+ * Builds a warning threshold select box.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function warningThresholdSelect($selectedValue="") {
+	$data = array(
+	  30 => 30,
+	  40 => 40,
+	  50 => 50,
+	  60 => 60,
+	  70 => 70,
+	  80 => 80,
+	  90 => 90,
+	  100 => 100
+	  );
+	
+	return form_dropdown('warning_threshold', $data, $selectedValue, 'id="warning_threshold"');	
+}
+
+/**
+ * Builds the per page select box.
+ * @param string $selectedValue The selected value.
+ * @return string HTML Select code.
+*/
+function perPageDropDown($selectedValue="") {
+	$data = array(
+	  10 => 10,
+	  25 => 25,
+	  50 => 50,
+	  100 => 100,
+	  70 => 70,
+	  250 => 250,
+	  500 => 500
+	  );
+	
+	return form_dropdown('per_page', $data, $selectedValue, 'id="per_page"');
 }

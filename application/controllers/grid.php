@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/16/2013
+ * @version 06/04/2013
 */
 
 /**
@@ -166,4 +166,19 @@ class Grid extends EBB_Controller {
 		print json_encode($jTableResult);
 	}
 	
+	/**
+	 * Get a list of censor words.
+	 * @example index.php/grid/listcensorwords
+	*/
+	public function listannouncements() {
+		//load Censormodel
+		$this->load->model('Informationtickermodel');
+		
+		//Return result to jTable
+		$jTableResult = array();
+		$jTableResult['Result'] = "OK";
+		$jTableResult['TotalRecordCount'] = $this->Informationtickermodel->countAll();
+		$jTableResult['Records'] = $this->Informationtickermodel->listAll(null, $this->input->get('jtPageSize', TRUE), $this->input->get('jtStartIndex', TRUE));
+		print json_encode($jTableResult);
+	}
 }

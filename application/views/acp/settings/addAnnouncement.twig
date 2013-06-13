@@ -1,0 +1,58 @@
+<div class="block" id="block-forms">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div style="display:none;" id="div_ErrMsg">
+				<div class="ui-widget centerContainer" style="width: 75%;">
+					<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;text-align:left;">
+						<span style="float: right;font-weight:bold;"><a href="#close" onclick="$('#div_ErrMsg').hide('blind', {}, 500);" class="ui-icon ui-icon-circle-close">&nbsp;</a></span>
+						<p id="validateRes"></p>
+					</div>
+				</div>
+			</div>
+
+			{{ANNOUNCMENTFORM|raw}}
+			<div class="group">
+				<label class="label">{{LANG_ANNOUNCMENT_MESSAGE}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_board_name" class="error"></span>
+					<input type="text" name="announcement_message" class="text_field" id="announcement_message" />
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-plus-sign"></span>&nbsp;{{LANG_ADDANNOUNCEMENT}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#curemail').focus();
+new FormValidator('frmAddAnnouncment', [{
+    name: 'announcement_message',
+    display: '{{LANG_ANNOUNCMENT_MESSAGE}}',
+    rules: 'required|max_length[50]'
+}], function(errors, event) {
+    if (errors.length > 0) {
+        $('#validateRes').empty();
+        $('#validateRes').append(errors.join('<br />'));
+        $('#div_ErrMsg').show();
+    } else if (event != undefined && errors.length == 0) {
+        event.preventDefault(); //stay on page.
+		processForm('frmAddAnnouncment', function() {
+			$('#acpFrm').dialog('close');
+			
+			//reload grid.
+			$('#announcementList').jtable('load');
+		}, function() { 
+			FormResults("error", "{{LANG_FORMFAILURE}}");
+			$('#frmAddAnnouncment')[0].reset();
+			$('#frmAddAnnouncment').removeClass('ui-state-error');
+		});
+    }
+    
+});
+</script>

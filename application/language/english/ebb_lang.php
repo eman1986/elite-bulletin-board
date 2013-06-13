@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 04/21/2013
+ * @version 06/12/2013
 */
 
 #Common language tags.
@@ -585,7 +585,6 @@ $lang['reorderfail'] = 'Fail to Reorder Board.';
 
 $lang['boardname'] = 'Board Name';
 $lang['description'] = 'Description';
-$lang['boardsettings'] = 'Board Settings';
 $lang['boardpermissions'] = 'Board Permissions';
 $lang['boardread'] = 'Who can Read this Board?';
 $lang['boardwrite'] = 'Who can Post in this Board?';
@@ -718,59 +717,64 @@ $lang['sendnewsletter'] = 'Send Newsletter';
 $lang['failedloadingemaillist'] = 'Failed to get user email list';
 $lang['newslettersentsuccess'] = 'Successfully Sent out Newsletter';
 $lang['newslettersentfailure'] = 'Failed to Send out Newsletter';
-$lang['sitelink'] = 'Site Address';
-$lang['sitelink_txt'] = 'example: http://mysite.com';
+
 $lang['perpg'] = 'Entries Per Page';
 $lang['perpghint'] = 'how many entries to display per page.';
-$lang['boardoffmsg'] = 'Board off Message';
-$lang['boardlink'] = 'Board Address';
-$lang['boardlink_txt'] = 'example: http://mysite.com/board';
+
 $lang['boardemail'] = 'Board Email';
 $lang['announcestat'] = 'Announcement Status';
 $lang['announce'] = 'Announcement Message';
 $lang['addannouncement'] = 'Create Announcement';
+$lang['createannouncementsuccess'] = 'Announcement Added Successfully';
+$lang['deleteannouncement'] = 'Delete Announcement';
+$lang['confirmdeleteannouncement'] = 'Are you sure you want to delete this announcement?';
+$lang['deleteannouncementsuccess'] = 'Announcement Deleted Successfully';
+$lang['announcementlist'] = 'Announcement List';
 
 $lang['defaultstyle'] = 'Default Style';
 $lang['defaultlangacp'] = 'Default Language'; //@todo rename this later.
-$lang['tosstat'] = 'Term Status';
-$lang['tos'] = 'Terms';
-$lang['securityimage'] = 'CAPTCHA Image';
-$lang['gdreq'] = 'Requires GD Extension';
-$lang['pmquota'] = 'PM Quota';
+
+$lang['tosstat'] = 'Registration Rules Status';
+$lang['tos'] = 'Registration Rules';
+$lang['cpcaptcha'] = 'CAPTCHA';
+$lang['pminboxquota'] = 'PM Inbox Quota';
+$lang['pmarchivequota'] = 'PM Archive Quota';
 $lang['activation'] = 'Activation Type';
 $lang['activeusers'] = 'User';
 $lang['activeadmin'] = 'Admin';
 $lang['none'] = 'None';
 $lang['autogroupsel'] = 'New user should be ranked as';
 $lang['copparule'] = 'COPPA Validation';
-$lang['al13'] = 'At Least 13';
-$lang['al16'] = 'At Least 16';
-$lang['al18'] = 'At Least 18';
-$lang['al21'] = 'At Least 21';
+$lang['cpcoppa13'] = 'At Least 13';
+$lang['cpcoppa16'] = 'At Least 16';
+$lang['cpcoppa18'] = 'At Least 18';
+$lang['cpcoppa21'] = 'At Least 21';
 $lang['defaulttimezone'] = 'Default Time Zone';
 $lang['defaultimtformat'] = 'Default Time format';
 $lang['ssl'] = 'Must have an SSL certificate to use this.';
 $lang['access_options'] = 'User Access Options';
-$lang['registerstat'] = 'Registration Status';
+$lang['registerstat'] = 'Allow New Users?';
 $lang['warnthreshold'] = 'Warning Threshold';
 $lang['warnthresholdhint'] = 'Set the number that will determine an automatic ban from the board.';
-$lang['mxcheck'] = 'Check e-mail domain for valid MX record';
+$lang['mxcheck'] = 'Validate Email Domain MX record';
 $lang['mxcheckhint'] = 'This checks for valid email domains.';
-
+$lang['boardsettingssuccess'] = 'Board Settings Saved Successfully';
 $lang['attachmentquota'] = 'Maximum Size user can upload.';
-$lang['attachmentquotahint'] = 'Enter this amount in bytes.';
+$lang['attachmentquotahint'] = 'Enter this amount in kilobytes.';
 $lang['guestdownload'] = 'Can Guest Download the attachments?';
-$lang['attachmentwhitelist'] = 'Attachment Whitelist';
-$lang['attachmentwhitelisthint'] = 'Here you can list what extensions to allow for attachments';
-$lang['extensionhint'] = 'do not include dot(.) (Example: pdf)';
-$lang['addextension'] = 'Add Extension';
-$lang['removeattachwhitelist'] = 'Remove Extension from Whitelist';
-$lang['removeattachwhitelisthint'] = 'Removing an extension from this list will mean banning the removed extension.';
-$lang['removeextension'] = 'Remove Extension';
+$lang['attachmentsettingssuccess'] = 'Attachment Settings Saved Successfully';
+
+//$lang['attachmentwhitelist'] = 'Attachment Whitelist';
+//$lang['attachmentwhitelisthint'] = 'Here you can list what extensions to allow for attachments';
+//$lang['extensionhint'] = 'do not include dot(.) (Example: pdf)';
+//$lang['addextension'] = 'Add Extension';
+//$lang['removeattachwhitelist'] = 'Remove Extension from Whitelist';
+//$lang['removeattachwhitelisthint'] = 'Removing an extension from this list will mean banning the removed extension.';
+//$lang['removeextension'] = 'Remove Extension';
+
 $lang['savesettings'] = 'Save Settings';
 $lang['nocmdid'] = 'No cmd ID was located.';
-$lang['extexist'] = 'The extension your adding already is on the list.';
-$lang['extlow'] = 'You have to have at least five extensions listed.';
+
 $lang['seluser'] = 'Select User';
 $lang['admintools'] = 'Admin-Only Tools';
 $lang['activeuser'] = 'User is active';

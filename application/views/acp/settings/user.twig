@@ -1,0 +1,163 @@
+<div class="block" id="block-forms-2">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div style="display:none;" id="div_ErrMsg">
+				<div class="ui-widget centerContainer" style="width: 75%;">
+					<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;text-align:left;">
+						<span style="float: right;font-weight:bold;"><a href="#close" onclick="$('#div_ErrMsg').hide('blind', {}, 500);" class="ui-icon ui-icon-circle-close">&nbsp;</a></span>
+						<p id="validateRes"></p>
+					</div>
+				</div>
+			</div>
+			
+			{{USERSSETTINGSFORM|raw}}
+			<div class="columns buffer">
+				<div class="column left">
+					<div class="group">				
+						<label class="label">{{LANG_ENABLE_REGISTER_RULES}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_enable_register_rules" class="error"></span>
+							<div>							
+								<input type="radio" name="enable_register_rules" id="rules_on" value="1" class="checkbox" {{ ENABLE_REGISTER_RULES == 1 ? "checked=checked`" : "" }} /> <label for="rules_on" class="radio inline">{{LANG_ON}}</label>
+							</div>
+							<div>
+								<input type="radio" name="enable_register_rules" id="rules_off" value="0" class="checkbox" {{ ENABLE_REGISTER_RULES == 0 ? "checked=checked`" : "" }} /> <label for="rules_off" class="radio inline">{{LANG_OFF}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="group">
+						<label class="label">{{LANG_REGISTER_RULES}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_register_rules" class="error"></span>
+							<textarea id="register_rules" name="register_rules" class="textarea_medium">{{REGISTER_RULES}}</textarea>
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_REGISTER_STATUS}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_register_status" class="error"></span>
+							<div>							
+								<input type="radio" name="register_status" id="register_on" value="1" class="checkbox" {{ REGISTER_STATUS == 1 ? "checked=checked`" : "" }} /> <label for="register_on" class="radio inline">{{LANG_ON}}</label>
+							</div>
+							<div>
+								<input type="radio" name="register_status" id="register_off" value="0" class="checkbox" {{ REGISTER_STATUS == 0 ? "checked=checked`" : "" }} /> <label for="register_off" class="radio inline">{{LANG_OFF}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_ACTIVATION_TYPE}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_subject" class="error"></span>
+							<div>							
+								<input type="radio" name="activation_type" id="activation_none" value="None" class="checkbox" {{ ACTIVATION_TYPE == "None" ? "checked=checked`" : "" }} /> <label for="activation_none" class="radio inline">{{ACTIVATION_TYPE_NONE}}</label>
+							</div>
+							<div>
+								<input type="radio" name="activation_type" id="activation_user" value="User" class="checkbox" {{ ACTIVATION_TYPE == "User" ? "checked=checked`" : "" }} /> <label for="activation_user" class="radio inline">{{ACTIVATION_TYPE_USER}}</label>
+							</div>
+							<div>
+								<input type="radio" name="activation_type" id="activation_admin" value="Admin" class="checkbox" {{ ACTIVATION_TYPE == "Admin" ? "checked=checked`" : "" }} /> <label for="activation_admin" class="radio inline">{{ACTIVATION_TYPE_ADMIN}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_NEWUSER_STATUS}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_newuser_status" class="error"></span>
+							{{NEWUSER_GROUP_SELECT|raw}}
+						</div>
+					</div>
+				</div>
+				<div class="column right">
+					<div class="group">				
+						<label class="label">{{LANG_COPPA_STATUS}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_coppa" class="error"></span>
+							{{COPPA_SELECT|raw}}
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_CAPTCHA_STATUS}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_capcha_status" class="error"></span>
+							<div>							
+								<input type="radio" name="capcha_status" id="capcha_on" value="1" class="checkbox" {{ CAPTCHA_STATUS == 1 ? "checked=checked`" : "" }} /> <label for="capcha_on" class="radio inline">{{LANG_ON}}</label>
+							</div>
+							<div>
+								<input type="radio" name="captcha_status" id="capcha_off" value="0" class="checkbox" {{ CAPTCHA_STATUS == 0 ? "checked=checked`" : "" }} /> <label for="capcha_off" class="radio inline">{{LANG_OFF}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_MX_VALIDATION}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_mx_validation" class="error"></span>
+							<div>							
+								<input type="radio" name="mx_validation" id="mx_yes" value="1" class="checkbox" {{ MX_VALIDATION == 1 ? "checked=checked`" : "" }} /> <label for="mx_yes" class="radio inline">{{LANG_YES}}</label>
+							</div>
+							<div>
+								<input type="radio" name="mx_validation" id="mx_no" value="0" class="checkbox" {{ CMX_VALIDATION == 0 ? "checked=checked`" : "" }} /> <label for="mx_no" class="radio inline">{{LANG_NO}}</label>
+							</div>
+							<span class="description">{{LANG_MX_HINT}}</span>
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_WARNING_THRESHOLD}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_warning_threshold" class="error"></span>
+							{{WARNING_THRESHOLD_SELECT|raw}}<br />
+							<span class="description">{{LANG_WARNING_HINT}}</span>
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_PM_INBOX_QUOTA}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_pm_inbox_quota" class="error"></span>
+							<input type="text" name="pm_inbox_quota" class="text_field" id="pm_inbox_quota" maxlength="3" value="{{PM_INBOX_QUOTA}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_PM_ARCHIVE_QUOTA}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_pm_archive_quota" class="error"></span>
+							<input type="text" name="pm_archive_quota" class="text_field" id="pm_archive_quota" maxlength="3" value="{{PM_ARCHIVE_QUOTA}}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-cogs"></span>&nbsp;{{LANG_SAVESETTINGS}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	new FormValidator('frmUserSettings', [{
+		name: 'pm_inbox_quota',
+		display: '{{LANG_SUBJECT}}',
+		rules: 'required|numeric|max_length[3]'
+	}, {
+		name: 'pm_archive_quota',
+		display: '{{LANG_MSG}}',
+		rules: 'required|numeric|max_length[3]'
+	}], function(errors, event) {
+		if (errors.length > 0) {
+			$('#validateRes').empty();
+			$('#validateRes').append(errors.join('<br />'));
+			$('#div_ErrMsg').show();
+		} else if (event != undefined && errors.length == 0) {
+			event.preventDefault(); //stay on page.
+			processForm('frmUserSettings', function() {
+				$('#acpFrm').dialog('close');
+			}, function() { 
+				FormResults("error", "{{LANG_FORMFAILURE}}");
+				$('#frmUserSettings')[0].reset();
+				$('#frmUserSettings').removeClass('ui-state-error');
+			});
+		}
+	});
+</script>

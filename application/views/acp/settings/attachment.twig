@@ -1,0 +1,72 @@
+<div class="block" id="block-forms">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div style="display:none;" id="div_ErrMsg">
+				<div class="ui-widget centerContainer" style="width: 75%;">
+					<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;text-align:left;">
+						<span style="float: right;font-weight:bold;"><a href="#close" onclick="$('#div_ErrMsg').hide('blind', {}, 500);" class="ui-icon ui-icon-circle-close">&nbsp;</a></span>
+						<p id="validateRes"></p>
+					</div>
+				</div>
+			</div>
+
+			{{ATTACHMENTFORM|raw}}
+			<div class="group">
+				<label class="label">{{LANG_MAX_UPLOAD}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_max_upload" class="error"></span>
+					<input type="text" name="max_upload" class="text_field" id="max_upload" value="{{MAX_UPLOAD}}" />
+					<span class="description">{{LANG_SIZE_HINT}}</span>
+				</div>
+			</div>
+			<div class="group">
+				<label class="label">{{LANG_GUEST_DOWNLOADS}}</label>
+				<div class="fieldWithErrors">
+					<span id="error_guest_downloads" class="error"></span>
+					<div>							
+						<input type="radio" name="guest_downloads" id="gd_on" value="1" class="checkbox" {{ GUEST_DOWNLOADS == 1 ? "checked=checked`" : "" }} /> <label for="gd_on" class="radio inline">{{LANG_YES}}</label>
+					</div>
+					<div>
+						<input type="radio" name="guest_downloads" id="gd_off" value="0" class="checkbox" {{ GUEST_DOWNLOADS == 0 ? "checked=checked`" : "" }} /> <label for="gd_off" class="radio inline">{{LANG_NO}}</label>
+					</div>
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-plus-sign"></span>&nbsp;{{LANG_SAVESETTINGS}}
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#max_upload').focus();
+new FormValidator('frmAttachmentSettings', [{
+    name: 'max_upload',
+    display: '{{LANG_MAX_UPLOAD}}',
+    rules: 'required|numeric'
+}, {
+    name: 'guest_downloads',
+    display: '{{LANG_GUEST_DOWNLOADS}}',
+    rules: 'required'
+}], function(errors, event) {
+    if (errors.length > 0) {
+        $('#validateRes').empty();
+        $('#validateRes').append(errors.join('<br />'));
+        $('#div_ErrMsg').show();
+    } else if (event != undefined && errors.length == 0) {
+        event.preventDefault(); //stay on page.
+		processForm('frmAttachmentSettings', function() {
+			$('#acpFrm').dialog('close');
+		}, function() { 
+			FormResults("error", "{{LANG_FORMFAILURE}}");
+			$('#frmAttachmentSettings')[0].reset();
+			$('#frmAttachmentSettings').removeClass('ui-state-error');
+		});
+    }
+    
+});
+</script>

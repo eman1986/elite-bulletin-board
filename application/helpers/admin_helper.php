@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 02/15/2013
+ * @version 04/27/2013
 */
 
 /**
@@ -49,13 +49,7 @@ function versionCheck() {
         }
     } else {
 		//@TODO turn on allow_url_fopen to test file_get_contents() method of connecting to update server.
-		$context = stream_context_create(array(
-		  'http' => array(
-			'timeout' => $connectionTimeout),
-			'header' => "Content-type: application/json"
-			)
-		 );
-		$data = @file_get_contents($url, null, $context);
+		$data = @file_get_contents($url);
 		if ($data === false) {
 			log_message('error', 'failure to connect to update server.'); //log error in error log.
 			return array(
