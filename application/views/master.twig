@@ -97,43 +97,6 @@
 
 	{# toggle login panel based on rank. #}
 	{% if groupAccess == 1 or groupAccess == 2 or groupAccess == 3 %}
-    <!-- Modal -->
-    <div id="inactivePrompt" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-		<h3 id="myModalLabel">{{LANG_INACTIVETITLE}}</h3>
-		</div>
-		<div class="modal-body">
-			<p>
-				<span class="icon-exclamation-sign icon-2x"></span>
-				{{LANG_INACTIVENOTICE}} <span id="dialog-countdown" style="font-weight:bold"></span> {{LANG_SECONDS}}.
-			</p>
-			<p>{{LANG_CONTINUESESSION}}</p>
-		</div>
-		<div class="modal-footer">
-			<button class="btn" onclick="$.idleTimeout.options.onTimeout.call(this);">{{LANG_NO}}</button>
-			<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">{{LANG_YES}}</button>
-		</div>
-    </div>
-	<script src="{{BOARD_URL}}js/jquery.idletimer.js" type="text/javascript"></script>
-	<script src="{{BOARD_URL}}js/jquery.idletimeout.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		var $countdown = $("#dialog-countdown");
-		$.idleTimeout('#inactivePrompt', '#inactivePrompt  .modal-footer', { //div.ui-dialog-buttonpane button:first
-			idleAfter: 230, //warn user if they haven't done anything for four and a half minutes.
-			pollingInterval: 120, //keep sesion alive every two minutes.
-			keepAliveURL: '{{BOARD_URL}}ajax/keepalive',
-			serverResponseEquals: 'OK',
-			onTimeout: function(){
-				window.location = "{{BOARD_URL}}logout";
-			},
-			onIdle: function(){
-				$(this).modal('show');
-			},
-			onCountdown: function(counter){
-				$countdown.html(counter); // update the counter
-			}
-		});
-	</script>
     <div id="topTab">
         <ul>
             <li>
