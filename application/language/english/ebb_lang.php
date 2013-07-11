@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 06/12/2013
+ * @version 07/10/2013
 */
 
 #Common language tags.
@@ -18,10 +18,10 @@ $lang['loggedinas'] = 'Logged In As:';
 $lang['welcomeguest'] = 'Not Logged In';
 $lang['yes'] = 'Yes';
 $lang['no'] = 'No';
-$lang['del'] = 'delete';
-$lang['edit'] = 'Edit';
-$lang['delete'] = 'Delete';
-$lang['modify'] = 'Modify';
+$lang['del'] = 'delete'; //@TODO either delete this language tag or delete the copy "delete".
+$lang['edit'] = 'Edit'; //@TODO either delete this language tag or delete the copy "modify".
+$lang['delete'] = 'Delete'; //@TODO either delete this language tag or delete the copy "del".
+$lang['modify'] = 'Modify'; //@TODO either delete this language tag or delete the copy "edit".
 $lang['enable'] = 'Enable';
 $lang['disable'] = 'Disable';
 $lang['on'] = 'On';
@@ -86,6 +86,7 @@ $lang['invalidaction'] = 'Invalid action request entered.';
 $lang['invalidgid'] = 'Invalid GroupID provided.';
 $lang['invalidpref'] = 'Invalid Preference Value defined.';
 $lang['invaliduser'] = 'Invalid Username provided.';
+$lang['invalidemail'] = 'Invalid Email Address was entered.';
 #general error messages.
 $lang['nonews'] = 'No News To Report On.';
 $lang['groupstatus'] = 'GROUP STATUS ERROR!';
@@ -274,6 +275,7 @@ $lang['nolang'] = 'Select a language.';
 $lang['captchanomatch'] = 'CAPTCHA did not match.';
 $lang['emailexist'] = 'Your email address has already been used by another member.';
 $lang['usernameexist'] = 'This username has already been taken.';
+$lang['usernamenotexists'] = 'Username was not found.';
 $lang['bannedname'] = 'Sorry, the username you wish to use is banned for security reasons.';
 $lang['acctmade'] = "Account Created.";
 $lang['acctuser'] = 'Account Pending, please verify your account.';
@@ -776,12 +778,15 @@ $lang['savesettings'] = 'Save Settings';
 $lang['nocmdid'] = 'No cmd ID was located.';
 
 $lang['seluser'] = 'Select User';
-$lang['admintools'] = 'Admin-Only Tools';
 $lang['activeuser'] = 'User is active';
-$lang['banuser'] = 'Ban this User';
-$lang['tickban'] = 'Tick this box to ban this user; this action can be undone later on if needed.';
+
+$lang['banuser'] = 'User is Banned';
 $lang['deluser'] = 'Delete This User';
-$lang['tickdel'] = 'Tick this box to delete this user; this action cannot be undone!';
+$lang['confirmuserdelete'] = 'Are you sure you want to completely delete this user? This action can not be undone.';
+$lang['successacpuserupdate'] = 'Successfully Updated User Information';
+$lang['successacpuserdelete'] = 'Successfully Deleted User';
+$lang['failureacpuserupdate'] = 'Failed to delete user';
+
 $lang['notbanned'] = 'User is not banned.';
 $lang['warnlogtxt'] = 'Here is where you can see and revoke the warning actions performed.';
 $lang['warnperformed'] = 'Authorized By';

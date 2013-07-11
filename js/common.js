@@ -21,6 +21,7 @@ function gotoUrl(addr){
  * @param {string} msg the message displayed to the user.
  * @param {string} addr the url to direct user to.
  * @returns {object}
+ * @deprecated use confirmAction instead.
 */
 function confirmDlg(msg, addr) {
 	bootbox.confirm(msg, lang.No, lang.Yes, function(result) {
@@ -29,6 +30,23 @@ function confirmDlg(msg, addr) {
 		}
 	});
 }
+
+/**
+ * Used to display a confirmation dialog to the user.
+ * @param {string} msg the message displayed to the user.
+ * @param {object} callback the function to call when an action is confirmed.
+ * @returns {object}
+*/
+function confirmAction(msg, callback) {
+	bootbox.confirm(msg, lang.No, lang.Yes, function(result) {
+		if (result) {
+			if($.isFunction(callback)) {
+				callback();
+			}
+		}
+	});
+}
+
 
 /**
  * runs a check to see if the server has the correct extensions to use the uploader.

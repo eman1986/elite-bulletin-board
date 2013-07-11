@@ -26,7 +26,12 @@
 <script type="text/javascript" src="{{BOARD_URL}}js/lang/{{LANG}}/{{LANG}}.lang.js"></script>
 
 <!-- REQUIRED, CORE -->
-<script type="text/javascript" src="{{BOARD_URL}}js/jquery-1.9.1.min.js"></script>
+<!--[if lt IE 9]>
+    <script src="{{BOARD_URL}}js/jquery-1.10.1.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script src="{{BOARD_URL}}js/jquery-2.0.2.min.js"></script>
+<!--[endif]-->
 <script type="text/javascript" src="{{BOARD_URL}}js/jquery-ui-1.10.2.min.js"></script>
 <script type="text/javascript" src="{{BOARD_URL}}js/bootstrap.min.js"></script>
 

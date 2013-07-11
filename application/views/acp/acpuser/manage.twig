@@ -1,0 +1,178 @@
+<div class="block" id="block-forms-2">
+	<div class="content">
+		<div class="inner">
+
+			<!-- validation box. -->
+			<div style="display:none;" id="div_ErrMsg">
+				<div class="ui-widget centerContainer" style="width: 75%;">
+					<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;text-align:left;">
+						<span style="float: right;font-weight:bold;"><a href="#close" onclick="$('#div_ErrMsg').hide('blind', {}, 500);" class="ui-icon ui-icon-circle-close">&nbsp;</a></span>
+						<p id="validateRes"></p>
+					</div>
+				</div>
+			</div>
+			
+			{{USERMGRFORM|raw}}
+			<div class="columns buffer">
+				<div class="column left">
+					<div class="group">				
+						<label class="label">{{LANG_USERNAME}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_username" class="error"></span>
+							<input type="text" name="username" class="text_field" id="username" value="{{USERNAME}}" />
+						</div>
+					</div>
+					<div class="group">
+						<label class="label">{{LANG_EMAIL}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_email" class="error"></span>
+							<input type="text" name="email" class="text_field" id="email" value="{{EMAIL}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_CUSTOM_TITLE}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_custom_title" class="error"></span>
+							<input type="text" name="custom_title" class="text_field" id="custom_title" value="{{CUSTOM_TITLE}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_TIMEZONE}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_time_zone" class="error"></span>
+							{{TIMEZONE_SELECT|raw}}
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_DATE_FORMAT}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_date_format" class="error"></span>
+							{{DATE_FORMAT_SELECT|raw}}
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_TIME_FORMAT}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_time_format" class="error"></span>
+							{{TIME_FORMAT_SELECT|raw}}
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_SIG}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_user_sig" class="error"></span>
+							<textarea id="user_sig" name="user_sig" class="textarea_small">{{SIG}}</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="column right">
+					<div class="group">				
+						<label class="label">{{LANG_MSN}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_msn" class="error"></span>
+							<input type="text" name="msn" class="text_field" id="msn" value="{{MSN}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_YAHOO}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_yahoo" class="error"></span>
+							<input type="text" name="yahoo" class="text_field" id="yahoo" value="{{YAHOO}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_ICQ}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_icq" class="error"></span>
+							<input type="text" name="icq" class="text_field" id="icq" value="{{ICQ}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_AOL}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_aol" class="error"></span>
+							<input type="text" name="aol" class="text_field" id="aol" value="{{AOL}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_WWW}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_www" class="error"></span>
+							<input type="text" name="www" class="text_field" id="www" value="{{WWW}}" />
+						</div>
+					</div>
+					<div class="group">				
+						<label class="label">{{LANG_ACTIVE_USER}}</label>
+						<div class="fieldWithErrors">
+							<span id="error_active_user" class="error"></span>
+							<div>							
+								<input type="radio" name="active_user" id="active_user" value="1" class="checkbox" {{ ACTIVE_USER == 1 ? "checked=checked`" : "" }} /> <label for="active_user" class="radio inline">{{LANG_YES}}</label>
+							</div>
+							<div>
+								<input type="radio" name="active_user" id="unactive_user" value="0" class="checkbox" {{ ACTIVE_USER == 0 ? "checked=checked`" : "" }} /> <label for="unactive_user" class="radio inline">{{LANG_NO}}</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="group navform buffer">
+				<button class="button" type="submit">
+					<span class="icon-user"></span>&nbsp;{{LANG_SAVESETTINGS}}
+				</button>
+				&nbsp;
+				<button type="button" class="btn btn-danger" id="delUsr">
+					<span class="icon-remove"></span>&nbsp;{{LANG_DELETEUSER}}
+				</button>
+			</div>
+			<input type="hidden" name="userId" id="userId" value="{{USERID}}" />
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	new FormValidator('frmUserMgr', [{
+		name: 'username',
+		display: '{{LANG_USERNAME}}',
+		rules: 'required|alpha_numeric|max_length[25]'
+	}, {
+		name: 'email',
+		display: '{{LANG_EMAIL}}',
+		rules: 'required|valid_email|max_length[255]'
+	}, {
+		name: 'custom_title',
+		display: '{{LANG_CUSTOM_TITLE}}',
+		rules: 'max_length[20]'
+	}, {
+		name: 'www',
+		display: '{{LANG_WWW}}',
+		rules: 'valid_url|max_length[200]'
+	},  {
+		name: 'user_sig',
+		display: '{{LANG_SIG}}',
+		rules: 'max_length[255]'
+	}], function(errors, event) {
+		if (errors.length > 0) {
+			$('#validateRes').empty();
+			$('#validateRes').append(errors.join('<br />'));
+			$('#div_ErrMsg').show();
+		} else if (event != undefined && errors.length == 0) {
+			event.preventDefault(); //stay on page.
+			processForm('frmUserMgr', function() {
+				$('#acpFrm').dialog('close');
+			}, function() { 
+				FormResults("error", "{{LANG_FORMFAILURE}}");
+				$('#frmUserMgr')[0].reset();
+				$('#frmUserMgr').removeClass('ui-state-error');
+			});
+		}
+	});
+
+	//Button-Click event for deleting a user
+	$('#delUsr').click(function(){
+		confirmAction('{{LANG_CONFIRM_DELETE_USER}}', function() {
+			processGetRequest("{{BOARD_URL}}{{INDEX_PAGE}}ACP/acpuser/deleteuser/{{USERID}}", function() {
+				$('#acpFrm').dialog('close');
+			});
+		});
+	});
+</script>

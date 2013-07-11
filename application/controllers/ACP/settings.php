@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {exit('No direct script access allowed');}
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
- * @version 06/12/2013
+ * @version 07/06/2013
 */
 
 class Settings extends EBB_Controller {
@@ -199,6 +199,8 @@ class Settings extends EBB_Controller {
 		  'STYLE_SELECT' => ThemeList($this->preference->getPreferenceValue("default_style")),
 		  'LANG_LANGUAGE' => $this->lang->line('defaultlangacp'),
 		  'LANGUAGE_SELECT' => LanguageList($this->preference->getPreferenceValue("default_language")),
+		  'LANG_TIMEZONE' => $this->lang->line('timezone'),
+		  'TIMEZONE_SELECT' => TimeZoneList($this->preference->getPreferenceValue("timezone")),
 		  'LANG_DATE_FORMAT' => $this->lang->line('dateformat'),
 		  'DATE_FORMAT_SELECT' => dateFormatSelect($this->preference->getPreferenceValue("dateformat")),
 		  'LANG_TIME_FORMAT' => $this->lang->line('timeformat'),

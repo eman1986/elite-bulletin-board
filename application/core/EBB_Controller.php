@@ -258,7 +258,7 @@ class EBB_Controller extends CI_Controller {
 
 		//load up global settings.
 		$this->title = $this->preference->getPreferenceValue("board_name");
-		$this->boardUrl = $this->config->item('base_url');
+		$this->boardUrl = $this->config->item('base_url'); //@TODO detech if instance of EBB is using some sort of URL Rewrite method to route url.
 
 	}
 	
@@ -417,7 +417,7 @@ class EBB_Controller extends CI_Controller {
 			return FALSE;
 		}
 	}
-	
+
 	/**
 	 * Validate the info entered on the password recovery form.
 	 * @param string $str The value from the form.
