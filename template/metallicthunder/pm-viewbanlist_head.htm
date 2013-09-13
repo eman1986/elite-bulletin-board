@@ -1,0 +1,19 @@
+<script language="JavaScript" type="text/javascript"> 
+
+function del_confirm(id){ 
+if (confirm("{LANG-DELPROMPT}")){ 
+window.location="PM.php?action=del_ban&id="+id
+}
+} 
+</script>
+<a href="index.php">{TITLE}</a> &#187; <a href="PM.php">{LANG-TITLE}</a> &#187; {LANG-BANLIST}<br /><br />
+
+{TEXT}<br /><br />
+
+[<a href="PM.php?action=ban">{LANG-BANUSER}</a>]<br /><br />
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" width="50%">{LANG-BANNEDUSER}</td>
+<td class="td1" width="50%">{LANG-DELETE}</td>
+</tr>

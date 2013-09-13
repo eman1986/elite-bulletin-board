@@ -1,0 +1,42 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_groups";
+var nogroupname = "{LANG-NOGROUPNAME}";
+var nogroupdescription = "{LANG-NOGROUPDESCRIPTION}";
+var longgroupdescription = "{LANG-LONGGROUPDESCRIPTION}";
+var nogroupstat = "{LANG-NOGROUPSTAT}";
+var nogrouplevel = "{LANG-NOGROUPLEVEL}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-CREATEGROUP}<br /><br />
+
+<form method="post" action="groupcp.php?action=new_group_process" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-CREATEGROUP}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPNAME}</td>
+<td class="td2" width="50%"><input type="text" name="group" size="30" class="text" maxlength="30" id="groupname" /><div id="groupnameerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPDESCRIPTION}</td>
+<td class="td2" width="50%"><textarea name="description" rows="3" cols="50" wrap="soft" class="text" id="groupdescription"></textarea><div id="groupdescriptionerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPSTATUS}</td>
+<td class="td2" width="50%"><input type="radio" name="status" value="0" id="gclose" />{LANG-CLOSE}&nbsp;<input type="radio" name="status" value="1" id="gopen" />{LANG-OPEN}&nbsp;<input type="radio" name="status" value="2" id="ghidden" />{LANG-HIDDEN}<div id="groupstatuserr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPACCESS}</td>
+<td class="td2" width="50%"><select name="groupaccess" class="text" id="grouplevel">
+<option value="">{LANG-SEL-LEVEL}</option>
+<option value="1">{LANG-LEVEL-1}</option>
+<option value="2">{LANG-LEVEL-2}</option>
+<option value="3">{LANG-LEVEL-3}</option>
+</select><div id="grouplevelerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPPROFILE}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-GROUPPROFILEHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%">{GROUPPROFILE}
+</select><div id="gprofileerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-ADDGROUP}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

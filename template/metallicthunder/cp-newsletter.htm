@@ -1,0 +1,26 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_newsletter";
+var nosubject = "{LANG-NOSUBJECT}";
+var nobody = "{LANG-NOBODY}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-NEWSLETTER}<br />
+
+<p>{LANG-TEXT}</p>
+
+<form action="generalcp.php?action=mail_send" method="post" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-NEWSLETTER}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SUBJECT}</td>
+<td class="td2" width="50%"><input type="text" name="subject" class="text" size="30" id="subject" /><div id="subjecterr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-MESSAGE}</td>
+<td class="td2" width="50%"><textarea name="mail_message" rows="8" cols="70" wrap="soft" class="text" id="body"></textarea><div id="msgerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SENDNEWSLETTER}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

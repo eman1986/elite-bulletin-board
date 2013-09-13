@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>{TITLE} - {LANG-TITLE}</title>
+<link rel="stylesheet" type="text/css" href="template/clearblue2/style.css">
+</head>
+<body>
+<script language="JavaScript" type="text/javascript"> 
+
+function del_confirm(id, bid){ 
+if (confirm("{LANG-DELPROMPT}")){ 
+window.location="upload.php?mode=delete&id="+id+"&bid="+bid;
+}
+} 
+</script>
+<p class="td">{TITLE} &#187; {LANG-TITLE}</p>
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" width="33%">&nbsp;</td>
+<td class="td1" width="34%">{LANG-FILENAME}</td>
+<td class="td1" width="33%">{LANG-FILESIZE}</td>
+</tr>

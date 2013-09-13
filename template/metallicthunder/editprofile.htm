@@ -1,0 +1,80 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "edit_profile";
+var longpwd = "{LANG-LONGPASS}";
+var nopwd = "{LANG-NOPASS}";
+var longctitle = "{LANG-CTITLE}";
+var longmsn = "{LANG-LONGMSN}";
+var longaim = "{LANG-LONGAIM}";
+var longicq = "{LANG-LONGICQ}";
+var longyim = "{LANG-LONGYIM}";
+var longwww = "{LANG-LONGWWW}";
+var invalidurl = "{LANG-INVALIDURL}";
+var notimeform = "{LANG-NOTIMEFORM}";
+var longloc = "{LANG-LONGLOCATE}";
+var longrss = "{LANG-LONGRSS}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<a href="index.php">{TITLE}</a> &#187; <a href="Profile.php">{LANG-TITLE}</a> &#187; {LANG-EDITPROFILE}<br />
+
+<p>{LANG-TEXT}</p>
+
+<form method="post" action="Profile.php?mode=profile_process" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-EDITPROFILE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CURRPASS}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-ENTERPASS}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="password" name="conpass" class="text" size="30" id="pwd" /><div id="pwderr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-PMNOTIFY}</td>
+<td class="td2" width="50%">{PMNOTIFY}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SHOWEMAIL}</td>
+<td class="td2" width="50%">{SHOWEMAIL}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CUSTOMTITLE}</td>
+<td class="td2" width="50%">{CUSTOMTITLE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-MSN}</td>
+<td class="td2" width="50%"><input type="text" name="msn" value="{MSN}" class="text" size="30" id="msn" /><div id="msnerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-AOL}</td>
+<td class="td2" width="50%"><input type="text" name="aol" value="{AOL}" class="text" size="30" id="aim" /><div id="aimerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ICQ}</td>
+<td class="td2" width="50%"><input type="text" name="icq" value="{ICQ}" class="text" size="30" id="icq" /><div id="icqerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-YAHOO}</td>
+<td class="td2" width="50%"><input type="text" name="yim" value="{YAHOO}" class="text" size="30" id="yim" /><div id="yimerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-WWW}</td>
+<td class="td2" width="50%"><input type="text" name="www" value="{WWW}" class="text" size="30" id="www" /><div id="wwwerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TIME}</td>
+<td class="td2" width="50%">{TIME}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TIMEFORMAT}<a href="http://us2.php.net/manual/en/function.date.php" target="_blank" class="hintanchor" onMouseover="showhint('{LANG-TIMEINFO}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="text" name="time_format" value="{TIMEFORMAT}" class="text" maxlength="14" size="30" id="timeform" /><div id="timeformerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-STYLE}</td>
+<td class="td2" width="50%">{STYLE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-LANGUAGE}</td>
+<td class="td2" width="50%">{LANGUAGE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-LOCATION}</td>
+<td class="td2" width="50%"><input type="text" name="location"  value="{LOCATION}" class="text" size="30" id="loc" /><div id="locerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><b>{LANG-PICKRSSFEED}</b></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-RSSFEED1}</td>
+<td class="td2" width="50%"><input type="text" name="rssfeed1" value="{RSSFEED1}" class="text" size="30" id="rss1" /><div id="rssfeed1err"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-RSSFEED2}</td>
+<td class="td2" width="50%"><input type="text" name="rssfeed2" value="{RSSFEED2}" class="text" size="30" id="rss2" /><div id="rssfeed2err"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" VALUE="{SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

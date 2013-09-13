@@ -1,0 +1,79 @@
+.status { 
+	color: #000000;
+	padding-left: 150px;
+	white-space: nowrap;
+}
+.spell_container {
+
+}
+.suggestion_box {
+	background-color: #C2C9D1;
+	border: 1px solid #9FB6CD;
+	position: absolute;
+	padding: 2px 2px 2px 2px;
+}
+.suggestion {
+	cursor: pointer;
+	text-decoration: underline;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+.suggestion_box {
+	background-color: #C2C9D1;
+	border: 1px solid #9FB6CD;
+	position: absolute;
+	padding: 2px 2px 2px 2px;
+	text-align: left;
+}
+.corrected_word
+{
+	color: #005500;
+}
+
+.addtoDictionary {
+	background-color:  #C2C9D1;
+	cursor: pointer;
+	text-decoration: underline;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+.edit_box {
+          background-color : #e9e9e9;
+          border-color : #163061;
+          border-style : solid;
+          border-width : thin;
+          color : #163061;
+          font-family : vandana;
+          font-size : 9pt;
+}
+.text_box {
+          background-color : #e9e9e9;
+          border-color : #163061;
+          border-style : solid;
+          border-width : thin;
+          color : #163061;
+          font-family : vandana;
+          font-size : 9pt;
+}
+.highlight {
+	color: #0000ff;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.no_misspellings {
+	color: #000000;
+}
+.check_spelling {
+	color: #000000;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.resume_editing {
+	color: #000000;
+	text-decoration: underline;
+	cursor: pointer;
+}

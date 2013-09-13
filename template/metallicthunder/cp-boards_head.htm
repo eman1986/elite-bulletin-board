@@ -1,0 +1,24 @@
+<script language="JavaScript" type="text/javascript"> 
+function del_confirm(id,type){ 
+if (confirm("{LANG-DELPROMPT}\n\n{LANG-DELPROMPT2}")){ 
+
+window.location="boardcp.php?action=board_delete&id="+id+"&type="+type;
+}
+} 
+</script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-BOARDS}<br /><br />
+
+{LANG-TEXT}<br /><br />
+
+[<a href="#" onClick="return clickreturnvalue()" onMouseover="dropdownmenu(this, event, 'newitem')">{LANG-ADDBOARD}</a>]<br /><br />
+
+<div id="newitem" class="anylinkcss">
+<a href="boardcp.php?action=board_add&amp;type=1">{LANG-NEWCATEGORY}</a>
+<a href="boardcp.php?action=board_add&amp;type=2">{LANG-NEWBOARD}</a>
+<a href="boardcp.php?action=board_add&amp;type=3">{LANG-SUBBOARD}</a>
+</div>
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="4" class="td1" align="center"><b>::{LANG-BOARDS}::</b></td>
+</tr>

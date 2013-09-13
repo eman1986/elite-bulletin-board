@@ -1,0 +1,29 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_csettings";
+var nocookiedomain = "{LANG-NOCOOKIEDOMAIN}";
+var longcookiedomain = "{LANG-LONGCOOKIEDOMAIN}";
+var nocookiepath = "{LANG-NOCOOKIEPATH}";
+var longcookiepath = "{LANG-LONGCOOKIEPATH}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-COOKIESETTINGS}<br /><br />
+
+<form method="post" action="acpsettings.php?section=save_cookies" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-COOKIESETTINGS}</td>
+</tr><tr>
+<td class="td2">{LANG-COOKIEDOMAIN}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-COOKIEDOMAINTXT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="cookie_domain" size="30"value="{COOKIEDOMAIN}" class="text" id="cookiedomain" /><div id="cookiedomainerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-COOKIEPATH}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-COOKIEPATHTXT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="cookie_path" size="30" value="{COOKIEPATH}" class="text" id="cookiepath" /><div id="cookiepatherr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-COOKIESECURE}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-SSL}', this, event, '150px')">[?]</a></td>
+<td class="td2">{COOKIESECURE}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-SAVESETTINGS}" class="submit"></td>
+</tr>
+</table>
+</form><br />

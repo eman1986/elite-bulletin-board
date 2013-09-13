@@ -1,0 +1,20 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "mod_move";
+var noboard = "{LANG-NOBOARD}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}<br />
+
+<p>{LANG-TEXT}</p>
+
+<form method="post" action="manage.php?mode=move_process&amp;bid={BID}&amp;tid={TID}" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" align="center">{LANG-SUBMIT}</td>
+</tr><tr>
+<td class="td2" align="center">{BOARDLIST}<div id="moveerr"></div></td>
+</tr><tr>
+<td class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td></tr>
+</table>
+</form>

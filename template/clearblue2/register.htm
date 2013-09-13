@@ -1,0 +1,93 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "register";
+var longuser = "{LANG-LONGUSERNAME}";
+var shortuser = "{LANG-SHORTUSER}";
+var invaliduser = "{LANG-INVALIDUSER}";
+var longemail = "{LANG-LONGEMAIL}";
+var invalidemail = "{LANG-INVALIDEMAIL}";
+var longpass = "{LANG-LONGPASS}";
+var nopass = "{LANG-NOPASS}";
+var novpass = "{LANG-NOVPASS}";
+var nopwdmatch = "{LANG-NOPWDMATCH}";
+var notime = "{LANG-NOTIME}";
+var nopm = "{LANG-NOPM}";
+var nohideemail = "{LANG-NOHIDEEMAIL}";
+var invalidtos = "{LANG-INVALIDTOS}";
+var tos_stat = {TOSSTAT};
+var coppa_stat = {COPPASTAT};
+var invalidcoppa = "{LANG-INVALIDCOPPA}";
+var nocaptcha = "{LANG-NOCAPTCHA}";
+var captcha_stat = {CAPTCHASTAT};
+
+//Used to refresh captcha.
+function reloadElement(ele) {
+	var obj = document.getElementById(ele);
+	var src = obj.src;
+	var pos = src.indexOf('?');
+
+	if (pos >= 0) {
+		src = src.substr(0, pos);
+	}
+
+	//create new timestamp.
+	var date = new Date();
+	obj.src = src + '?v=' + date.getTime();
+	return false;
+}
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<script type="text/javascript" src="includes/pwdStrength.js"></script>
+<a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}<br /><br />
+
+
+<form method="post" action="register.php?action=process" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-TITLE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-EMAIL}</td>
+<td class="td2" width="50%"><input name="email" type="text" size="30" maxlength="225" class="text" id="email" /><div id="emailerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-USERNAME}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-RULE}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input name="username" type="text" size="30" maxlength="25" class="text" id="user" /><div id="usererr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-PASSWORD}</td>
+<td class="td2" width="50%"><input name="password" type="password" size="30" maxlength="25" class="text" id="pass" onkeyup="testPassword(document.getElementById('pass').value);" /><div id="pwdTest" class="pwdmeterdiv">Password Strength:<br />
+	<span id="meterEmpty" id="pwdmeterempty">
+	<span id="meterFull" class="pwdmeterfull"></span></span>
+	<span id="Words" class="pwdmetermsg">Begin Typing</span>
+</div><div id="passerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CORNFIRMPASSWORD}</td>
+<td class="td2" width="50%"><input name="vert_password" type="password" size="30" maxlength="25" class="text" id="vpass" /><div id="vpasserr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TIME}</td>
+<td class="td2" width="50%">{TIME}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TIMEFORMAT}<a href="http://us2.php.net/manual/en/function.date.php" target="_blank" class="hintanchor" onMouseover="showhint('{LANG-TIMEINFO}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="text" name="time_format" value="{TIMEFORMAT}" size="30" maxlength="14" class="text" id="timeform" /><div id="timeformerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-PMNOTIFY}</td>
+<td class="td2" width="50%"><input type="radio" name="pm_notice" value="1" id="newpm1" />{LANG-YES} <input type="radio" name="pm_notice" value="0" id="newpm2" />{LANG-NO}<div id="newpmerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SHOWEMAIL}</td>
+<td class="td2" width="50%"><input type="radio" name="show_email" value="0" id="yeshide" />{LANG-YES} <input type="radio" name="show_email" value="1" id="nohide" />{LANG-NO}<div id="hideemailerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-STYLE}</td>
+<td class="td2" width="50%">{STYLE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-LANGUAGE}</td>
+<td class="td2" width="50%">{LANGUAGE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CAPTCHA}</td>
+<td class="td2" width="50%">{CAPTCHA}</td>
+</tr><tr>
+<td colspan="2" class="td2" align="center">{TOS}</td>
+</tr><tr>
+<td colspan="2" class="td2" align="center">{COPPA}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" VALUE="{SUBMIT}" id="formSubmit" class="submit" disabled=disabled /></td>
+</tr>
+</table>
+</form>

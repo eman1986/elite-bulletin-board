@@ -1,0 +1,26 @@
+<br />
+<!-- Javascript for board ticker -->
+<script type="text/javascript">
+var interval = 5; // interval in seconds
+var fadeSpeed = 40; // fade speed, the lower the speed the faster the fade.  40 is normal.
+</script>
+<script type="text/javascript" src="template/clearblue2/ticker_functions.js"></script>
+<!-- END -->
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<th class="td1">::{LANG-ANNOUNCEMENT}::</th>
+</tr>
+<tr>
+<td class="td2" align="center">
+<div id="tic">
+<p class="td2"><b>{TITLE}:&nbsp;{LANG-TICKER}</b></p>
+{ANNOUNCEMENT}
+</div>
+<script type='text/javascript'>
+//<![CDATA[
+initialiseList("tic");
+//]]>
+</script>
+</td>
+</tr>
+</table><br />

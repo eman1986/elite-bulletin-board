@@ -1,0 +1,22 @@
+<script language='JavaScript' type="text/javascript">
+//lets add in some variables.
+var ftype = "acp_censor";
+var nocensor = "{LANG-NOCENSOR}";
+var longcensor = "{LANG-LONGCENSOR}";
+var nocensoraction = "{LANG-NOCENSORACTION}";
+
+function del_confirm(id){ 
+if (confirm("{LANG-DELPROMPT}")){ 
+window.location="generalcp.php?action=censor_modify&id="+id
+}
+}
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-CENSORLIST}<br /><br />
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" width="32%">&nbsp;</td>
+<td class="td1" width="34%" align="center">{LANG-ORIGINALWORD}</td>
+<td class="td1" width="34%" align="center">{LANG-CENSORACTION}</td>
+</tr>

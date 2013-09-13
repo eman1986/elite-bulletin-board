@@ -1,0 +1,37 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "pm_reply";
+var nobody = "{LANG-NOBODY}";
+var nosender = "{LANG-NOSENDER}";
+var longsender = "{LANG-LONGSENDER}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<script type="text/javascript" src="includes/bbcode.js"></script>
+<div class="titlebar"><a href="index.php">{TITLE}</a> &#187; <a href="PM.php">{LANG-TITLE}</a> &#187; {LANG-REPLYPM}</div>
+
+<form method="post" action="PM.php?action=reply_process" name="forum" onsubmit="return validate(ftype);">
+<table border="0" class="table" align="center" cellpadding="1" cellspacing="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-REPLYPM}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1">{BBCODE}</td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-USERNAME}</td>
+<td class="td1" width="80%">{USERNAME}</td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-TO}</td>
+<td class="td1" width="80%"><input type="text" name="send" value="{TO}" size="30" class="text" id="send" /><div id="sendtoerr"></div></td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-SUBJECT}</td>
+<td class="td1" width="80%">{SUBJECT}</td>
+</tr><tr>
+<td class="td2" align="center" width="20%">{SMILES}<br />
+<a href="#" OnClick="open_win('smiles.php', 455, 200);">{LANG-SMILES}</a></td>
+<td class="td1" width="80%"><textarea name="message" rows="5" cols="90" wrap="soft" class="text" id="body"></textarea><div id="bodyerr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1">
+<input type="hidden" name="subject" value="{SUBJECT}" />
+<input type="submit" value="{LANG-SENDPM}" class="submit" /></td>
+</tr>
+</table>
+</form>

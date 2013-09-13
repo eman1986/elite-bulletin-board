@@ -1,0 +1,570 @@
+#data{
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 10px;
+	font-weight:bold;
+	background-color: #9FB6CD;
+	color: #000;
+	border: 1px solid #163061;
+	padding: 0;
+	width: 40%;
+	margin-left: 30%;
+	display:none;
+}
+#update{
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 10px;
+	font-weight:bold;
+	background-color: #9FB6CD;
+	color: #000;
+	padding: 0;
+	width: 40%;
+	text-align: center;
+	margin-left: 30%;
+}
+
+/*BEGIN script.aculo.us styling*/
+
+.inplaceeditor-saving {
+	background: url(/images/loading.gif) bottom right no-repeat;
+}
+
+form.inplaceeditor-form { /* The form */
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 10px;
+	font-weight:bold;
+	background-color: #9FB6CD;
+	color: #000;
+	padding: 0;
+	width: 67%;
+	margin-left: 15%;
+}
+
+form.inplaceeditor-form input[type="text"] { /* Input box */
+    background-color : #e9e9e9;
+    border-color : #163061;
+    border-style : solid;
+    border-width : thin;
+    color : #163061;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 9pt;
+}
+
+form.inplaceeditor-form textarea { /* Textarea, if multiple columns */
+    background-color : #e9e9e9;
+    border-color : #163061;
+    border-style : solid;
+    border-width : thin;
+    color : #163061;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 9pt;
+}
+
+form.inplaceeditor-form input[type="submit"] { /* The submit button */
+	margin-left:1em;
+    background-color : #e9e9e9;
+    border-color : #163061;
+    border-style : solid;
+    border-width : thin;
+    color : #163061;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 9pt;
+}
+
+form.inplaceeditor-form a { /* The cancel link */
+  margin-left:1em;
+}
+
+/*END script.aculo.us styling*/
+
+/*BEGIN alert box*/
+
+.overlay_alert {
+	background-color: #7EA4C0;
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+}
+
+.alphacube_n {
+  border-top: 1px solid #467292;			
+  height:25px;
+}
+
+.alert_sizer {
+	cursor:se-resize;
+}
+
+.alert_close {
+	width: 23px;
+	height: 23px;
+	background: transparent url('close.gif') no-repeat;			
+	position:absolute;
+	top:0px;
+	right:11px;
+	cursor:pointer;
+	z-index:1000;
+}
+
+.alert_minimize {
+	width: 23px;
+	height: 23px;
+	background: transparent url('min.gif') no-repeat;			
+	position:absolute;
+	top:0px;
+	right:55px;
+	cursor:pointer;
+	z-index:1000;	
+}
+
+.alert_maximize {
+	width: 23px;
+	height: 23px;
+	background: transparent url('max.gif') no-repeat;			
+	position:absolute;
+	top:0px;
+	right:33px;
+	cursor:pointer;
+	z-index:1000;
+}
+
+.alert_title {
+	float:left;
+	height:14px;
+	font-size:14px;
+	text-align:center;
+	top:-17px;
+	width:100%;
+	color:#123456;
+}
+
+.alert_content {
+	overflow:auto;
+	width:100%;
+	color: #000;
+	border: 1px solid #467292;
+	font-family: Tahoma, Arial, sans-serif;
+	font: 12px arial;
+	background-color:#5B8CB0;
+}
+
+/* For alert/confirm dialog */
+.alert_window {
+	background: #FFF;
+	padding:20px;
+	margin-left:auto;
+	margin-right:auto;
+	width:400px;
+}
+
+.alert_message {
+  font: 12px arial;
+	width:100%;
+	color:#000;
+	padding-bottom:10px;
+}
+
+.alert_buttons {
+	text-align:center;
+	width:100%;
+}
+
+.alert_buttons input {
+	width:20%;
+	margin:10px;
+}
+
+.alert_progress {
+	float:left;
+	margin:auto;
+	text-align:center;
+	width:100%;
+	height:25px;
+	background: #5B8CB0 url('progress.gif') no-repeat center center
+}
+/*END alert box*/
+
+/*BEGIN portal code*/
+.innertube{
+margin: 10px; /*Margins for inner DIV inside each column (to provide padding)*/
+margin-top: 0;
+}
+#contentwrapper{
+float: left;
+width: 100%;
+}
+
+#contentcolumn{
+margin: 0 200px 0 25%; /*Margins for content column. Should be "0 right-column-width 0 left-column-width*/
+}
+
+#leftcolumn{
+float: left;
+width: 25%; /*Width of left column in percentage*/
+margin-left: -100%;
+}
+
+#rightcolumn{
+float: left;
+width: 200px; /*Width of right column in pixels*/
+margin-left: -200px; /*Set margin to -(RightColumnWidth)*/
+}
+
+
+.rsstitle{
+	width: auto;
+	height: 15px;
+	margin: 0px;
+	padding: 3px;
+	padding-bottom: 4px;
+    background-color : #9FB6CD;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+}
+
+.rssbox{
+	background-color : #C2C9D1;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	overflow: auto;
+    height: 300px;
+}
+
+.avatar{
+	float:right;
+	border: 0px;
+}
+/*END portal code*/
+
+.pagination{
+padding: 2px;
+}
+
+.pagination ul{
+margin: 0;
+padding: 0;
+text-align: left; /*Set to "right" to right align pagination interface*/
+font-size: 12px;
+}
+
+.pagination li{
+list-style-type: none;
+display: inline;
+padding-bottom: 1px;
+}
+
+.pagination a, .pagination a:visited{
+padding: 0 5px;
+border: 1px solid #163061;
+text-decoration: none; 
+color: #C2C9D1;
+}
+
+.pagination a:hover, .pagination a:active{
+border: 1px solid #163061;
+color: #CC6600;
+background-color: #9FB6CD;
+}
+
+.pagination li.currentpage{
+font-weight: bold;
+padding: 0 5px;
+border: 1px solid #163061;
+background-color: #9FB6CD;
+color: #000000;
+}
+
+.pagination li.disablepage{
+padding: 0 5px;
+border: 1px solid #163061;
+color: #929292;
+}
+
+.pagination li.nextpage{
+font-weight: bold;
+}
+
+* html .pagination li.currentpage, * html .pagination li.disablepage{ /*IE 6 and below. Adjust non linked LIs slightly to account for bugs*/
+margin-right: 5px;
+padding-right: 0;
+}
+img{
+	border: 0px;
+}
+.pwdmeterdiv{
+padding: 1px;
+float:right;
+font-size: 10px;
+width: 180px;
+min-width: 220;
+border: 1px dashed;
+margin-top: 0px;
+}
+.pwdmeterempty{
+padding: 0;
+margin: 0;
+width: 100%;
+background-color: #DC143C;
+display: block;
+height: 5px;
+}
+.pwdmeterfull{
+padding: 0;
+margin: 0;
+z-index: 100;
+width: 0;
+background-color: #006400;
+display: block;
+height: 5px;
+}
+.pwdmetermsg{
+font-size: 10px;
+margin-top: -25px;
+}
+#tic
+{
+	/* enter any styles for the ticker below */
+	font-size:0.85em;
+	padding:3px;
+	width:700px;
+	line-height:20px;
+	
+}
+#tic * /*this will hide all children tags */
+{
+	font-size: 8pt;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	margin:0px;
+	padding:0px;
+	display:none;
+}
+#tic a, #tic b, #tic i, #tic u, #tic img{
+	display:inline;
+}
+.popupbox{
+	position:absolute;
+	border: 1px solid #163061;
+	background-color: #85A6CB;
+	width: 30%;
+	padding: 8px;
+	display:none;
+	z-index: 110;
+}
+#livesearch{
+	margin: 0px;
+	width: 194px;
+        background-color: #9FB6CD;
+}
+A:link {
+          color : #163061;
+          text-decoration : none;
+      }
+A:visited {
+          color : #163061;
+          text-decoration : none;
+      }
+A:active {
+          color : #163061;
+      }
+A:hover {
+          color : #CC6600;
+          text-decoration : none;
+      }
+BODY {
+          background-color : #163061;
+          color : #000000;
+          font-family : Verdana, Arial, Helvetica, sans-serif;
+          font-size : 10px;
+      }
+div.container {
+
+          position: absolute;
+          left: 45px;
+          width: 90%;
+          line-height: 100%;
+      }
+.table {
+      width : 100%;
+      background-color : #163061;
+	  empty-cells: show;
+      }
+.td {
+        background-color : #e9e9e9;
+        font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+      }
+.td1{
+    background-color : #4B6C9E;
+    color:#fff;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+}
+.td2{
+    background-color : #C2C9D1;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+}
+.error{
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 10px;
+	font-weight:bold;
+}
+div#loading{
+	background: #E9E9E9 url(/images/loading.gif) no-repeat right;
+	width: 200px;
+}
+.text {
+          background-color : #e9e9e9;
+          border-color : #163061;
+          border-style : solid;
+          border-width : thin;
+          color : #163061;
+          font-family : Verdana, Arial, Helvetica, sans-serif;
+          font-size : 9pt;
+      }
+.submit {
+          background-color : #e9e9e9;
+          border-color : #163061;
+          border-style : solid;
+          border-width : thin;
+          color : #163061;
+          font-family : Verdana, Arial, Helvetica, sans-serif;
+          font-size : 9pt;
+      }
+.raisewarn{
+	color:#CD0000;
+	font-weight:bold;
+}
+.lowerwarn{
+	color: #238E23;
+	font-weight:bold;
+}
+.quote, .attachment, .styleinstaller, .smileinstaller, .modinstaller{
+        font-family : Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #9FB6CD;
+	border: 1px solid #163061;
+	margin: 1px;
+	padding: 1px;
+	font-size: x-small;
+	line-height: 1.4em;
+}
+.code{
+	color: #000000;
+	background-color: #9FB6CD;
+	font-family: "courier new", "times new roman", monospace;
+	font-size: 9px;
+	line-height: 1.3em;
+	border: 1px solid #163061;
+	margin: 1px auto 1px auto;
+	padding: 1px;
+	width: 99%;
+	white-space: nowrap;
+	overflow: auto;
+	max-height: 24em;
+}
+.warnlevel{
+        font-family : Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #9FB6CD;
+	border: 1px solid #163061;
+	margin: 1px;
+	padding: 1px;
+	font-size: x-small;
+	line-height: 1.4em;
+}
+.quoteheader, .codeheader, .attachheader, .warningheader{
+
+        font-family : Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	text-decoration: none;
+	font-style: normal;
+	font-weight: bold;
+	font-size: x-small;
+	line-height: 1.2em;
+}
+.postopt{
+float: right;
+}
+.anylinkcss{
+position:absolute;
+visibility: hidden;
+border:1px solid black;
+border-bottom-width: 0;
+font:normal 12px Verdana, Arial, Helvetica, sans-serif;
+line-height: 18px;
+z-index: 100;
+background-color: #9FB6CD;
+width: 205px;
+text-align: left;
+}
+
+.anylinkcss a{
+width: 100%;
+display: block;
+text-indent: 3px;
+border-bottom: 1px solid black;
+padding: 1px 0;
+text-decoration: none;
+font-weight: bold;
+text-indent: 5px;
+}
+
+.anylinkcss a:hover{ /*hover background color*/
+background-color: #C2C9D1;
+}
+
+#hintbox{ /*CSS for pop up hint box */
+position:absolute;
+top: 0;
+background-color: #9FB6CD;
+width: 150px; /*Default width of hint.*/ 
+padding: 3px;
+border:1px solid #163061;
+font:normal 11px Verdana, Arial, Helvetica, sans-serif;
+line-height:18px;
+z-index:100;
+border-right: 3px solid #9FBCD;
+border-bottom: 3px solid #9FBCD;
+visibility: hidden;
+}
+
+.hintanchor{ /*CSS for link that shows hint onmouseover*/
+font-weight: bold;
+color: #163061;
+margin: 3px 8px;
+}
+
+/* START help pane */
+	#help_leftPanel{	/* Styling the help panel */
+		
+		background-color: #9FB6CD;
+		color: #000;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size : 9pt;		
+		height: 100px;		
+		left:0px;
+		z-index:10;
+		position:absolute;
+		display:none;
+		overflow: auto;
+	}
+	
+	#help_leftPanel #leftPanelContent{
+		padding:0px;
+	}
+	#help_leftPanel .closeLink{ /* Layout of close link */
+		padding-left:2px;
+		padding-right:2px;
+		background-color:#C2C9D1;
+		position:absolute;
+		top:2px;
+		right:20px;
+		border:1px solid #000;
+		color:#163061;
+		font-size:0.8em;				
+	}
+	#help_leftPanel .closeLink:hover{	/* Close link text  - mouseover effect*/
+		color:#CC6600;
+		background-color:#9FB6CD;
+	}
+/* END help pane */

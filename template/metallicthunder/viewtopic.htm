@@ -1,0 +1,22 @@
+<a href="index.php">{TITLE}</a> &#187; <a href="viewboard.php?bid={BID}">{LANG-TITLE}</a> &#187; {LANG-TOPIC}<br /><br />
+{PAGENATION}<br />
+{REPLYLINK}<br />
+<p class="td"><a href="print.php?bid={BID}&amp;tid={TID}">{LANG-PRINT}</a></p>
+{POLL}<br />
+
+<table border="0" class="table" cellpadding="1" cellspacing="1">
+<tr>
+<td colspan="2" class="td1">{SUBJECT} - {LANG-POSTED}: {TOPIC-DATE}<span class="postopt">{MENU}</span></td>
+</tr><tr>
+<td width="15%" valign="top" class="td1"><b>{AUTHOR}</b><br />{CUSTOMTITLE}<i>{RANK}</i><br />{RANKICON}<br /><br /><img src="{AVATAR}" alt="" /><br /><br />{LANG-POSTCOUNT}: {POSTCOUNT}<br />{WARNINGBAR}</td>
+<td width="85%" valign="top" class="td2">{QUICKEDIT}<br /><div id="topic">{TOPIC}</div><br />{ATTACHMENT}<br />{SIGNATURE}</td>
+</tr><tr>
+<td colspan="2" align="right" class="td1"><a href="Profile.php?user={AUTHOR}"><img src="template/metallicthunder/images/profile.gif" border="0" alt="" /></a>&nbsp;<a href="PM.php?action=write&amp;user={AUTHOR}"><img src="template/metallicthunder/images/pm.gif" border="0" alt="" /></a>&nbsp;<a href="report.php?mode=topic&amp;tid={TID}"><img src="template/metallicthunder/images/report.gif" border="0" alt="" /></a></td>
+</tr>
+</table><br />
+<script language='JavaScript' type="text/javascript">
+var editor = new Ajax.InPlaceEditor($('topic'), 'quickedit.php?mode=edit&type=topic&tid={TID}&bid={BID}', {
+    externalControl: 'quickEdit', okText:'{LANG-QUICKEDIT}', cancelText: '{LANG-CANCELEDIT}', savingText: '{LANG-PROCESSINGEDIT}', clickToEditText: '', rows:5, cols:90, highlightcolor: 'td1', highlightendcolor: 'td2', loadTextURL: 'quickedit.php?type=topic&tid={TID}&bid={BID}' 
+    });
+    editor.dispose();
+</script>

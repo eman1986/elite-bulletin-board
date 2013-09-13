@@ -1,0 +1,15 @@
+<script>
+function loginForm(){
+	Dialog.alert({url: "quicklogin.php", options: {method: 'get'}}, {width:540, okLabel: "Close"});
+}
+</script>
+
+<table border="0" class="table" cellspacing="1" cellpadding="3">
+<tr>
+<td align="center" class="td" valign="top"><img src="template/metallicthunder/images/boardlogo.jpg" alt="{TITLE}" /></td>
+</tr><tr>
+<td class="td">{LANG-WELCOME}! <a href="#" onclick="loginForm();">{LANG-LOGIN}</a> | <a href="register.php">{LANG-REGISTER}</a></td>
+</tr><tr>
+<td class="td2" align="center"><a href="{ADDRESS}">{LANG-HOME}</a> - <a href="Search.php">{LANG-SEARCH}</a> - <a href="#" onclick="initSlideLeftPanel();return false">{LANG-FAQ}</a> - <a href="Members.php">{LANG-MEMBERLIST}</a> - <a href="groups.php">{LANG-GROUPLIST}</a></td>
+</tr><tr>
+<td valign="top" class="td">

@@ -1,0 +1,19 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_editgprofile";
+var noprofilename = "{ERROR-PROFILE}";
+var longprofilename = "{ERROR-LONGPROFILENAME}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-MODIFYPROFILE}<br /><br />
+
+<form method="post" action="groupcp.php?action=profile_modify_process&amp;type={TYPE}" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-MODIFYPROFILE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-PROFILENAME}</td>
+<td class="td2" width="50%"><input type="text" name="profilename" id="profilename" size="30" class="text" maxlength="30" value="{PROFILENAME}" id="groupname" /><div id="profilenameerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-ACTIONLIST}</td>
+</tr>

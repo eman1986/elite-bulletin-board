@@ -1,0 +1,39 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "post_topic";
+var nosubject = "{LANG-NOSUBJECT}";
+var nobody = "{LANG-NOBODY}";
+var longsubject = "{LANG-LONGSUBJECT}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<script type="text/javascript" src="includes/bbcode.js"></script>
+<a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}<br /><br />
+
+<form method="post" action="edit.php?mode=edit_topic&amp;bid={BID}&amp;tid={TID}" name="forum" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellpadding="1" cellspacing="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-TITLE}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1">{BBCODE}</td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-USERNAME}</td>
+<td class="td1" width="80%">{USERNAME}</td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-TOPIC}</td>
+<td class="td1" width="80%"><input type="text" name="topic" id="topic" value="{TOPIC}" class="text" size="30" /><div id="topicerr"></div></td>
+</tr><tr>
+<td class="td2" align="center" width="20%">{SMILES}<br />
+<a href="#" OnClick="open_win('smiles.php', 455, 200);">{LANG-SMILES}</a></td>
+<td class="td1" width="80%">
+<textarea title="spellcheck_icons" accesskey="spell/spell_checker.php" id="body" name="post" class="text_box" rows="5" cols="90" wrap="soft">{BODY}</textarea><div id="bodyerr"></div></td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-ATTACHMENTUPLOAD}</td>
+<td class="td1" width="80%"><input type="button" value="{LANG-ATTACHMENTMANAGER}" onclick="open_win('upload.php?mode=manage&type=topic&bid={BID}&tid={TID}', 455, 200);" class="submit" {ATTACHMENTSTAT} /></td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-OPTIONS}</td>
+<td class="td1" width="80%">{POST-TYPE}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" value="{LANG-EDITTOPIC}" class="submit" /></td>
+</tr>
+</table>
+</form>

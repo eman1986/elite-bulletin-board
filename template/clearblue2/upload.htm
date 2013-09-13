@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>{TITLE} - {LANG-TITLE}</title>
+<link rel="stylesheet" type="text/css" href="template/clearblue2/style.css">
+</head>
+<body>
+<p class="td">{TITLE} &#187; {LANG-TITLE}</p>
+
+<p class="td">{LANG-UPLOADTEXT}</p>
+<script type="text/javascript">
+//lets add in some variables.
+var ftype = "upload";
+var loadingtxt = "{LANG-LOADING}";
+var nosel = "{LANG-NOTHINGSELECTED}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<div id="loading"></div>
+<form method="post" action="upload.php?mode=upload&amp;bid={BID}" name="forum" enctype="multipart/form-data" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellpadding="1" cellspacing="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-TITLE}</td>
+</tr><tr>
+<td class="td2" width="20%">{LANG-FILETOUPLOAD}</td>
+<td class="td2" width=\80%"><input type="file" name="attachment" id="attach" size="30" class="text" /><div id="attacherr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" value="{LANG-TITLE}" class="submit" /></td>
+</tr>
+</table>
+</form>
+<p align="center" class="td">[<a href="javascript:self.close();">{LANG-CLOSEWINDOW}</a>]</p>
+</body>
+</html>

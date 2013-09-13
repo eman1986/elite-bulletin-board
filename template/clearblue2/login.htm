@@ -1,0 +1,28 @@
+<script language='JavaScript' type="text/javascript">
+//lets add in some variables.
+var ftype = "login";
+var nouser = "{LANG-NOUSERNAME}";
+var nopass = "{LANG-NOPASSWORD}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}<br /><br />
+{TEXT}
+<form method="post" action="checkuser.php" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">::{LANG-TITLE}::</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-USERNAME}<br>[<a href="register.php">{LANG-REGISTER}</a>]</td>
+<td class="td2" width="50%"><input type="text" name="username" tabindex="1" class="text" size="30" id="user" /><div id="usererr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-PASSWORD}<br>[<a href="login.php?mode=lostpassword">{LANG-FORGOT}</a>]</td>
+<td class="td2" width="50%"><input type="password" name="password" tabindex="2" class="text" size="30" id="pass" /><div id="passerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-REMEMBER}</td>
+<td class="td2" width="50%"><input type="checkbox" name="auto_login" value="1" />{LANG-REMEMBERTXT}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-LOGIN}" class="submit" /></td>
+</tr>
+</table>
+<input type="hidden" name="redirect" value="{PATH-REDIRECT}" />
+</form>

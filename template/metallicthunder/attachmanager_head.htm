@@ -1,0 +1,21 @@
+<script language="JavaScript" type="text/javascript"> 
+
+function del_confirm(id){ 
+if (confirm("{LANG-DELPROMPT}")){ 
+window.location="Profile.php?mode=deleteattachment&amp;id="+id
+}
+} 
+</script>
+<a href="index.php">{TITLE}</a> &#187; <a href="Profile.php">{LANG-TITLE}</a> &#187; {LANG-MANAGEATTACHMENTS}<br />
+
+{PAGINATION}
+
+<p>{LANG-TEXT}</p>
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" width="25%">&nbsp;</td>
+<td class="td1" width="25%">{LANG-FILENAME}</td>
+<td class="td1" width="25%">{LANG-FILESIZE}</td>
+<td class="td1" width="25%">{LANG-POSTEDIN}</td>
+</tr>

@@ -1,0 +1,34 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_cboard";
+var nocat = "{LANG-NOCAT}";
+var longcat = "{LANG-LONGCAT}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-ADDCATEGORY}<br /><br />
+
+{LANG-TEXT}<br /><br />
+
+<form method="post" action="boardcp.php?action=board_add_process&amp;type=1" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table"" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ADDCATEGORY}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CATEGORYNAME}</td>
+<td class="td2" width="50%"><input type="text" name="board_name" size="30" class="text" id="catname" /><div id="cateerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-BOARDPERMISSION}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-READACCESS}</td>
+<td class="td2" width="50%"><select name="readaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3">{LANG-ACCESS-REG}</option>
+<option value="0" selected=selected>{LANG-ACCESS-ALL}</option>
+</select></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

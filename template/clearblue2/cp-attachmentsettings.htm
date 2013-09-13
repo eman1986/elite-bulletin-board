@@ -1,0 +1,63 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_asettings";
+var nomaxupload = "{LANG-NOMAXUPLOAD}";
+var longmaxupload = "{LANG-LONGMAXUPLOAD}";
+var invalidmaxupload = "{LANG-NOMAXUPLOAD}";
+//FORM VALUES FOR 2nd FORM.
+var ftype2 = "acp_awhitelist";
+var noextension = "{LANG-NOENTENSION}";
+var longextension = "{LANG-LONGEXTENSION}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-ATTACHMENTSETTINGS}<br /><br />
+
+<!-- main settings form -->
+
+<form method="post" action="acpsettings.php?section=save_attachment" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ATTACHMENTSETTINGS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ATTACHMENTQUOTA}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-ATTACHMENTQUOTATXT}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="text" name="attach_quota" size="30"value="{ATTACHMENTQUOTA}" class="text" id="maxupload" /><div id="maxuploaderr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DOWNLOADRULE}</td>
+<td class="td2" width="50%">{DOWNLOADRULE}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-SAVESETTINGS}" class="submit"></td>
+</tr>
+</table>
+</form><br />
+
+<!-- whitelist form -->
+
+<form method="post" action="acpsettings.php?section=save_attachmentlist" onsubmit="return acp_validate(ftype2);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ATTACHMENTWHITELIST}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ATTACHMENTWHITELISTTXT}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-ATTACHMENTWHITELISTHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="text" name="add_ext" size="10" class="text" id="entension" /><div id="extensionerr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-ADDEXTENSION}" class="submit"></td>
+</tr>
+</table>
+<input type="hidden" name="cmd" value="addext" />
+</form><br />
+
+<!-- whitelist remover form -->
+
+<form method="post" action="acpsettings.php?section=save_attachmentlist">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-REMOVEATTACHMENTWHITELIST}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-REMOVEATTACHMENTWHITELISTHINT}</td>
+<td class="td2" width="50%">{EXTENSIONLIST}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-REMOVEEXTENSION}" class="submit"></td>
+</tr>
+</table>
+<input type="hidden" name="cmd" value="removeext" />
+</form><br />

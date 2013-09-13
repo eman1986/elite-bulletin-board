@@ -1,0 +1,30 @@
+<script language="JavaScript" type="text/javascript"> 
+//warnlog clear confirm.
+function warnclear_confirm(){ 
+if (confirm("{LANG-CLEARPROMPT}")){ 
+window.location="usercp.php?action=clearwarnlog"
+}
+}
+//warnlog revoke confirm.
+function warnrevoke_confirm(id){ 
+if (confirm("{LANG-DELCONFIRM}")){ 
+window.location="usercp.php?action=revoke&id="+id
+}
+} 
+</script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-WARNLOG}<br />
+
+<p>{LANG-TEXT}</p>
+
+<p>[<a href="#" onclick="warnclear_confirm();return false;">{LANG-DELETE}</a>]</p>
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<th colspan="5" class="td1">::{LANG-WARNLOG}::</th>
+</tr><tr>
+<td class="td1" width="20%" align="center">&nbsp;</td>
+<td class="td1" width="20%" align="center">{LANG-PROFORMEDBY}</td>
+<td class="td1" width="20%" align="center">{LANG-PROFORMEDTO}</td>
+<td class="td1" width="20%" align="center">{LANG-ACTION}</td>
+<td class="td1" width="20%" align="center">{LANG-REASON}</td>
+</tr>

@@ -1,0 +1,23 @@
+<table border="0" class="table" cellspacing="1" cellpadding="3">
+<tr>
+<td align="center" class="td" valign="top"><img src="../template/metallicthunder/images/boardlogo.jpg" alt="{TITLE}" /></td>
+</tr><tr>
+<td class="td">{LANG-WELCOME} <b>{LOGGEDUSER}</b> [<a href="../logout.php">{LANG-LOGOUT}</a>]<br /><a href="../PM.php">{NEWPM}</a><br /><a href="index.php">{LANG-CP}</a><br /><a href="../Search.php?action=newposts">{LANG-NEWPOSTS}</a></td>
+</tr><tr>
+<td class="td2" align="center"><a href="{ADDRESS}">{LANG-HOME}</a> - <a href="#" onclick="return overlay(this, 'subcontent')">{LANG-SEARCH}</a> - <a href="#" onclick="initSlideLeftPanel();return false">{LANG-FAQ}</a> - <a href="../Members.php">{LANG-MEMBERLIST}</a> - <a href="../groups.php">{LANG-GROUPLIST}</a> - <a href="../Profile.php">{LANG-PROFILE}</a> - <a href="../logout.php">{LANG-LOGOUT}</a></td>
+</tr><tr>
+<td valign="top" class="td">
+<!--BEGIN Instant search bar -->
+<div id="subcontent" class="popupbox">
+<div align="right"><a href="#" onclick="overlayclose('subcontent'); return false"><img src="../template/metallicthunder/images/close.gif" alt="{LANG-CLOSE}" /></a></div><br />
+<b>{LANG-QUICKSEARCH}</b><br /><br />
+
+<form method="get" action="#">
+<input type="text" id="query" class="text" size="30" />&nbsp;
+<input type="button" value="{LANG-SEARCH}" class="submit" onclick="acp_showResult(document.getElementById('query').value)" />
+</form>
+<div id="livesearch"></div>
+
+<a href="../Search.php">{LANG-ADVANCEDSEARCH}</a>
+</div>
+<!--END Instant search bar -->

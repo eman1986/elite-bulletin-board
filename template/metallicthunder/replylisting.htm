@@ -1,0 +1,16 @@
+<table border="0" class="table" id="post{POSTID}" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1">{LANG-POSTEDON}: {POSTEDON}<span class="postopt">{POSTOPTIONS}</span></td>
+</tr><tr>
+<td width="15%" class="td1" valign="top"><b>{AUTHOR}</b><br />{CUSTOMTITLE}<i>{RANKNAME}</i><br />{RANKICON}<br /><br /><img src="{AVATAR}" alt="" /><br /><br />{LANG-POSTCOUNT}: {POSTCOUNT}<br />{WARNINGBAR}</td>
+<td width="85%" valign="top" class="td2">{QUICKEDIT}<br /><div id="edit{POSTID}">{POSTBODY}</div><br />{ATTACHMENTS}<br />{SIGNATURE}</td>
+</tr><tr>
+<td colspan="2" align="right" class="td1"><a href="Profile.php?user={AUTHOR}"><img src="template/metallicthunder/images/profile.gif" border="0" alt="" /></a>&nbsp;<a href="PM.php?action=write&amp;user={AUTHOR}"><img src="template/metallicthunder/images/pm.gif" border="0" alt="" /></a>&nbsp;<a href="report.php?mode=post&amp;pid={POSTID}"><img src="template/metallicthunder/images/report.gif" border="0" alt="" /></a></td>
+</tr>
+</table><br />
+<script language='JavaScript' type="text/javascript">
+var editor{POSTID} = new Ajax.InPlaceEditor($('edit{POSTID}'), 'quickedit.php?mode=edit&type=post&tid={TID}&bid={BID}&pid={POSTID}', {
+    externalControl: 'quickEdit', okText:'{LANG-QUICKEDIT}', cancelText: '{LANG-CANCELEDIT}', savingText: '{LANG-PROCESSINGEDIT}', clickToEditText: '', rows:5, cols:90, highlightcolor: 'td1', highlightendcolor: 'td2', loadTextURL: 'quickedit.php?type=post&tid={TID}&bid={BID}&pid={POSTID}' 
+    });
+    editor{POSTID}.dispose();
+</script>

@@ -1,0 +1,30 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "edit_email";
+var longemail = "{LANG-LONGEMAIL}";
+var invalidemail = "{LANG-INVALIDEMAIL}";
+var nomatch = "{LANG-NOMATCH}";
+
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<a href="index.php">{TITLE}</a> &#187; <a href="Profile.php">{LANG-TITLE}</a> &#187; {LANG-EDITEMAIL}<br />
+<p>{LANG-TEXT}</p>
+
+<form method="post" action="Profile.php?mode=new_email_process" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" colspan="2" align="center">{LANG-EDITEMAIL}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CURREMAIL}</td>
+<td class="td2" width="50%"><input type="text" name="curemail" class="text" size="30" id="curemail" /><div id="curemailerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-NEWEMAIL}</td>
+<td class="td2" width="50%"><input type="text" name="newemail" class="text" size="30" id="newemail" /><div id="newemailerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CONFIRMEMAIL}</td>
+<td class="td2" width="50%"><input type="text" name="conemail" class="text" size="30" id="vemail" /><div id="vemailerr"></div></td>
+</tr><tr>
+<td class="td1" colspan="2" align="center"><input type="submit" value="{LANG-UPDATEEMAIL}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

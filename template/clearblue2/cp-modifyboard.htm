@@ -1,0 +1,72 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_editboard";
+var noboard = "{LANG-NOBOARD}";
+var longboard = "{LANG-LONGBOARD}";
+var nodescription = "{LANG-NODESCRIPTION}";
+var nocatsel = "{LANG-NOCATSEL}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-MODIFYBOARD}<br /><br />
+
+<form method="post" action="boardcp.php?action=board_modify_process&amp;id={ID}&amp;type={TYPE}" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-MODIFYBOARD}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BOARDNAME}</td>
+<td class="td2" width="50%"><input type="text" name="board_name" size="30" value="{BOARDNAME}" class="text" id="boardname" /><div id="boarderr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DESCRIPTION}</td>
+<td class="td2" width="50%"><textarea name="description" rows="3" cols="50" wrap="soft" class="text" id="description">{DESCRIPTION}</textarea><div id="descriptionerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-BOARDPERMISSION}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-READACCESS}</td>
+<td class="td2" width="50%">{READACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-WRITEACCESS}</td>
+<td class="td2" width="50%">{WRITEACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-REPLYACCESS}</td>
+<td class="td2" width="50%">{REPLYACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-VOTEACCESS}</td>
+<td class="td2" width="50%">{VOTEACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-POLLACCESS}</td>
+<td class="td2" width="50%">{POLLACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-EDITACCESS}</td>
+<td class="td2" width="50%">{EDITACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DELETEACCESS}</td>
+<td class="td2" width="50%">{DELETEACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ATTACHMENTACCESS}</td>
+<td class="td2" width="50%">{ATTACHMENTACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-IMPORTANTACCESS}</td>
+<td class="td2" width="50%">{IMPORTANTACCESS}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-BOARDSETTINGS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CATEGORY}</td>
+<td class="td2" width="50%">{CATEGORY}<div id="catselerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-POSTINCREMENT}</td>
+<td class="td2" width="50%">{POSTINCREMENT}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BBCODE}</td>
+<td class="td2" width="50%">{BBCODE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SMILE}</td>
+<td class="td2" width="50%">{SMILE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-IMG}</td>
+<td class="td2" width="50%">{IMG}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-MODIFYBOARD}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

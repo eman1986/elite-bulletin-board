@@ -1,0 +1,30 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "edit_avatar";
+var longavatar = "{LANG-LONGAVATAR}";
+var invalidurl = "{LANG-INVALIDURL}";
+
+function goto_gallery(){ 
+	window.location="Gallery.php"
+}
+</script>
+
+<script type="text/javascript" src="includes/validate.js"></script>
+<a href="index.php">{TITLE}</a> &#187; <a href="Profile.php">{LANG-TITLE}</a> &#187; {LANG-EDITAVATAR}<br />
+<p>{LANG-TEXT}</p>
+
+<form method="post" action="Profile.php?mode=avatar_process" onsubmit="return validate(ftype);">
+<table width="100%" border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" colspan="2" align="center">{LANG-EDITAVATAR}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CURRENTAVATAR}</td>
+<td class="td2" width="50%"><img src="{CURRENTAVATAR}" alt="{LANG-CURRENTAVATAR}"></td>
+</tr><tr>
+<td class="td2" width="50%">{ALLOWEDTYPES}</td>
+<td class="td2" width="50%"><input type="text" name="avatar_img" size="30" class="text" id="avatar" /><div id="avatarerr"></div></td>
+</tr><tr>
+<td class="td1" colspan="2" align="center"><input type="submit" value="{LANG-SAVEAVATAR}" class="submit" />&nbsp;<input type="button" value="{LANG-GALLERY}" onclick="goto_gallery();return false;" class="submit" /></td>
+</tr>
+</table>
+</form><br />

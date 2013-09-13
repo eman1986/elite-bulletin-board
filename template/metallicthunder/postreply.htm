@@ -1,0 +1,51 @@
+<script language='JavaScript' type="text/javascript">
+//lets add in some variables.
+var ftype = "post_reply";
+var nobody = "{LANG-NOBODY}";
+
+//a check to see if a user has replied to this message while one is making a reply.
+new Ajax.PeriodicalUpdater('update', 'includes/replystatus.php?tid={TID}', {
+  method: 'get', frequency: 30, decay: 2
+});
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<script type="text/javascript" src="includes/bbcode.js"></script>
+<a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}<br /><br />
+
+<table border="0" class="table" cellpadding="1" cellspacing="1">
+<tr>
+<td class="td1" align="center">{LANG-POSTINGRULES}</td>
+</tr><tr>
+<td class="td2" align="center">{LANG-ALLOWSMILES}: <b>{ALLOWSMILES}</b> &nbsp;|&nbsp;{LANG-ALLOWBBCODE}: <b>{ALLOWBBCODE}</b> &nbsp;|&nbsp;{LANG-ALLOWIMG}: <b>{ALLOWIMG}</b></td>
+</tr>
+</table><br />
+
+<div id="update"></div><br />
+
+<form method="post" action="Process.php?mode=Reply&amp;bid={BID}&amp;tid={TID}&amp;pg={PAGE}" name="forum" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellpadding="1" cellspacing="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-TITLE}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1">{BBCODE}</td>
+</tr><tr>
+<td class="td2" align="center" width="20%">{SMILES}<br />
+<a href="#" onclick="open_win('smiles.php', 455, 200);">{LANG-SMILES}</a></td>
+<td class="td1" align="center" width="80%"><textarea name="reply_post" id="body" rows="5" cols="90" wrap="soft" class="text">{QUOTES}</textarea><div id="bodyerr"></div></td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-ATTACHMENTUPLOAD}</td>
+<td class="td1" width="80%"><input type="button" value="{LANG-ATTACHMENTMANAGER}" onclick="open_win('upload.php?bid={BID}', 455, 200);" class="submit" {ATTACHMENTSTAT} /></td>
+</tr><tr>
+<td class="td1" width="20%">{LANG-OPTIONS}</td>
+<td class="td1" width="80%"><input type="checkbox" name="subscribe" value="yes" class="text" />{NOTIFY}<br />
+<input type="checkbox" name="no_smile" value="1" class="text" />{LANG-DISABLESMILES}<br />
+<input type="checkbox" name="no_bbcode" value="1" class="text" />{LANG-DISABLEBBCODE}</td>
+</tr><tr>
+<td colspan="2" align="center" class="td1">
+<input type="hidden" name="page" value="{PAGE}" />
+<input type="submit" value="{LANG-REPLY}" class="submit" /></td>
+</tr>
+</table>
+</form><br />
+<div class="td2"><p align="center"><b>{LANG-TOPICREVIEW}</b></p>
+<iframe src="topicreview.php?bid={BID}&amp;tid={TID}" width="100%"></iframe></div>

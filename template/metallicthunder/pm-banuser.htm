@@ -1,0 +1,26 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "pm_banlist";
+var nouser = "{LANG-NOUSERNAME}";
+var longuser = "{LANG-LONGUSERNAME}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<a href="index.php">{TITLE}</a> &#187; <a href="PM.php">{LANG-TITLE}</a> &#187; {LANG-BANUSER}<br />
+
+<p>{TEXT}</p>
+
+<form method="post" action="PM.php?action=ban_process" onsubmit="return validate(ftype);">
+<table border="0" class="table" align="center" cellpadding="1" cellspacing="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-BANUSER}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-USERNAME}</td>
+<td class="td2" width="50%">{USERNAME}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BAN}</td>
+<td class="td2" width="50%"><input type="text" name="banned_user" value="{BAN}" size="30" class="text" id="banuser" /><div id="banusererr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form>

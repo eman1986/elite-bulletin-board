@@ -1,0 +1,35 @@
+<script language='JavaScript' type="text/javascript">
+//lets add in some variables.
+var ftype = "acp_censor";
+var nocensor = "{LANG-NOCENSOR}";
+var longcensor = "{LANG-LONGCENSOR}";
+var nocensoraction = "{LANG-NOCENSORACTION}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-CENSORLIST}<br /><br />
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" width="33%">&nbsp;</td>
+<td class="td1" width="34%" align="center">{LANG-ORIGINALWORD}</td>
+<td class="td1" width="33%" align="center">{LANG-CENSORACTION}</td>
+</tr><tr>
+<td class="td2" align="center" colspan="3">{LANG-EMPTYCENSOR}</td>
+</tr>
+</table><br />
+
+<form method="post" action="generalcp.php?action=censor_add" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-CENSORLIST}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ADDCENSOR}</td>
+<td class="td2" width="50%"><input type="text" name="addcensor" size="30" class="text" id="censor" /><div id="censorerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CENSORACTION}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-CENSORACTIONHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="radio" name="censoraction" value="1" id="censorban" />{LANG-CENSORBAN}&nbsp;<input type="radio" name="censoraction" value="2" id="censorspam" />{LANG-CENSORSPAM}<div id="censoractionerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

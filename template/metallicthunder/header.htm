@@ -1,0 +1,62 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>{TITLE}  - {PAGETITLE}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" type="text/css" href="template/metallicthunder/style.css" />
+<link rel="stylesheet" type="text/css" href="template/metallicthunder/spell_checker.css" />
+<link rel="alternate" type="application/rss+xml" href="latestposts.php" title="Latest Posts" />
+<link rel="shortcut icon" href="template/metallicthunder/images/favicon.ico" />
+<link href="includes/windowjs/themes/default.css" rel="stylesheet" type="text/css" />
+
+<!-- REQUIRED, CORE -->
+<script type="text/javascript" src="includes/windowjs/javascripts/prototype.js"></script>
+<script src="includes/src/scriptaculous.js" type="text/javascript"></script>
+
+<!-- Optional, Provides fade-effect. -->
+<script type="text/javascript" src="includes/windowjs/javascripts/effects.js"></script>
+
+<!-- REQUIRED, CORE. Place last if effects.js is being used. -->
+<script type="text/javascript" src="includes/windowjs/javascripts/window.js"></script>
+
+<script type="text/javascript" src="includes/pop-up.js"></script>
+<script type="text/javascript" src="includes/livesearch.js"></script>
+<script type="text/javascript" src="includes/hint.js" ></script>
+<script language="JavaScript" type="text/javascript">
+function open_win(Url, width, height){
+	open(Url,"_blank","toolbar=no, location=no, directories=no, statusbar=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width="+width+", height="+height+"")
+}
+
+//BEGIN help pane configuration.
+var panelWidth = 150;	// Width of help panel	
+var slideSpeed = 15;		// Higher = quicker slide
+var slideTimer = 10;	// Lower = quicker slide
+var slideActive = true;	// Slide active ?
+var initBodyMargin = 0;	// Left or top margin of your <body> tag (left if panel is at the left, top if panel is on the top)
+var pushMainContentOnSlide = true;	// Push your main content to the right when sliding
+var panelPosition = 1; 	// 0 = left , 1 = top
+//END help pane configuration.
+</script>
+<script type="text/javascript" src="includes/help.js"></script>
+<script src="spell/cpaint/cpaint2.inc.compressed.js" type="text/javascript"></script>
+<script src="spell/js/spell_checker_compressed.js" type="text/javascript"></script>
+</head>
+<body>
+<!-- Code for help panel -->
+<div id="help_leftPanel">
+	<a class="closeLink" href="#" onclick="initSlideLeftPanel();return false">Close</a>
+	<div id="leftPanelContent">
+
+	<!-- help content -->
+	<div>
+		<p style="font-weight: bold;">{LANG-HELP-TITLE}</p>
+		<p>{LANG-HELP-BODY}</p>
+	</div>
+	<!-- End content -->
+
+	</div>
+</div>
+<!-- End code for help panel -->
+<div class="container">
