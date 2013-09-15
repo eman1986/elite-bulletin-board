@@ -1,14 +1,43 @@
-<script>
-function loginForm(){
-	Dialog.alert({url: "quicklogin.php", options: {method: 'get'}}, {width:540, okLabel: "Close"});
-}
+<script type="text/javascript" charset="utf-8">
+    //<![CDATA[
+    document.observe('dom:loaded', function(e)
+    {
+        var loginDlg = $('loginForm');
+
+        // can only be hidden by the 'cancel' link
+        new Dialog.Box(loginDlg, {overlay_color:'#589', opacity_to:0.5, persistent:false});
+
+        // setup the controls for the dialogs
+        $('show_login_dialog').observe('click', function(e){ loginDlg.persistent_show(); Event.stop(e); });
+        $('cancel_login_form').observe('click', function(e){ loginDlg.hide(); Event.stop(e); });
+    });
+    //]]>
 </script>
+
+<div id="loginForm" style='display:none;'>
+    <h3>User Login</h3>
+    <small>You must log in before continuing..</small>
+    <form method="post" action="checkuser.php" id="qlogin">
+    <p>
+        <label>Username</label>
+        <input type="text" name="username" tabindex="1" class="text" size="30" id="user" />
+    </p>
+    <p>
+        <label>Password</label>
+        <input type="password" name="password" tabindex="2" class="text" size="30" id="pass" />
+    </p>
+    <p>
+        <input type='submit' value='Login' onclick='alert("do your login business\nclick cancel to hide the dialog");'> or <a href='#' id='cancel_login_form'>cancel</a>
+    </p>
+    </form>
+
+</div>
 
 <table border="0" class="table" cellspacing="1" cellpadding="3">
 <tr>
 <td class="td1" valign="top"><img src="template/clearblue2/images/logo.gif" alt="{TITLE}" /></td>
 </tr><tr>
-<td class="td">{LANG-WELCOME}! <a href="#" onclick="loginForm();">{LANG-LOGIN}</a> | <a href="register.php">{LANG-REGISTER}</a></td>
+<td class="td">{LANG-WELCOME}! <a href="#" id="show_login_dialog">{LANG-LOGIN}</a> | <a href="register.php">{LANG-REGISTER}</a></td>
 </tr><tr>
 <td class="td2" align="center"><a href="{ADDRESS}">{LANG-HOME}</a> - <a href="Search.php">{LANG-SEARCH}</a> - <a href="#" onclick="initSlideLeftPanel();return false">{LANG-FAQ}</a> - <a href="Members.php">{LANG-MEMBERLIST}</a> - <a href="groups.php">{LANG-GROUPLIST}</a></td>
 </tr><tr>

@@ -13,125 +13,85 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 
-class login{
+class login {
 
     #declare data members
     private $user;
     private $pass;
 
-    /**
-	*__construct
-	*
-	*Setup common value.
-	*
-	*@modified 8/10/09
-	*
-	*@param string $usr - username under request.
-	*@param string $pwd - password under request.
-	*
-	*@access public
-	*/
-	public function __construct($usr, $pwd){
+	public function __construct($usr, $pwd) {
+        $this->user = $usr;
+        $this->pass = $pwd;
+    }
 
-		#define data member values.
-		$this->user = $usr;
-		$this->pass = $pwd;
-	}
+    public function __destruct() {
+        unset($this->user);
+        unset($this->pass);
+    }
 
     /**
-	*__destruct
-	*
-	*Clean-up class after we're done.
-	*
-	*@modified 8/10/09
-	*
-	*
-	*@access public
-	*/
-	public function __destruct(){
+     *Performs a check through the database to ensure the requested username is valid.
+     *@return bool
+   */
+    private function validateUser() {
 
-		unset($this->user);
-		unset($this->pass);
-	}
+        global $db;
 
-    /**
-	*validateUser
-	*
-	*Performs a check through the database to ensure the requested username is valid.
-	*
-	*@modified 10/19/09
-	*
-	*@return bool
-	*
-	*@access private
-	*/
-	private function validateUser(){
-
-	    global $db;
-
-	    #check against the database to see if the username and password match.
+        //check against the database to see if the username and password match.
         $db->SQL = "SELECT id FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
-		$validateUser = $db->affectedRows();
+        $validateUser = $db->affectedRows();
 
-		#setup boolean return.
-		if($validateUser == 0){
-		    return(false);
-		}else{
-		    return(true);
-		}
-	}
-	
+        //setup boolean return.
+        if($validateUser == 0){
+            return(false);
+        } else {
+            return(true);
+        }
+    }
+
     /**
-	*validatePwd
-	*
-	*Performs a check through the database to ensure the requested password is valid.
-	*
-	*@modified 10/19/09
-	*
-	*@return bool
-	*
-	*@access private
-	*/
-	private function validatePwd(){
+     * Performs a check through the database to ensure the requested password is valid.
+     * @return bool
+    */
+    private function validatePwd() {
 
-	    global $db;
+        global $db;
 
-        #encrypt password.
-	    $encryptPwd = sha1($this->pass.$this->getPwdSalt());
+        //encrypt password.
+        $encryptPwd = sha1($this->pass.$this->getPwdSalt());
 
-	    #check against the database to see if the username and password match.
+        //check against the database to see if the username and password match.
         $db->SQL = "SELECT id FROM ebb_users WHERE Password='".$encryptPwd."' LIMIT 1";
-		$validatePwd = $db->affectedRows();
+        $validatePwd = $db->affectedRows();
 
-		#setup boolean return.
-		if($validatePwd == 0){
-		    return(false);
-		}else{
-		    return(true);
-		}
-	}
+        #setup boolean return.
+        if($validatePwd == 0) {
+            return(false);
+        } else {
+            return(true);
+        }
+    }
 
-	/**
-			 * Validates current login password.
-			 * @access Private
-			 * @version 7/24/2011
-			*/
-	private function validatePwdEncrypted() {
+    /**
+     * Validates current login password.
+     * @return bool
+    */
+    private function validatePwdEncrypted() {
 
-	    global $db;
+        global $db;
 
-	    #check against the database to see if the username and password match.
+        #check against the database to see if the username and password match.
         $db->SQL = "SELECT id FROM ebb_users WHERE Password='".$this->pass."' LIMIT 1";
-		$validatePwd = $db->affectedRows();
+        $validatePwd = $db->affectedRows();
 
-		#setup boolean return.
-		if($validatePwd == 0){
-		    return(false);
-		}else{
-		    return(true);
-		}
-	}
-	
+        //setup boolean return.
+        if($validatePwd == 0) {
+            return(false);
+        } else {
+            return(true);
+        }
+    }
+
     /**
 	*getPwdSalt
 	*
@@ -143,7 +103,7 @@ class login{
 	*
 	*@access private
 	*/
-	private function getPwdSalt(){
+	private function getPwdSalt() {
 
 	    global $db;
 
@@ -203,7 +163,7 @@ class login{
     /**
 	*validateAdministrator
 	*
-	*Performs a check through the database to ensure the user can access the adminstration panel.
+	*Performs a check through the database to ensure the user can access the administration panel.
 	*
 	*@modified 7/24/11
 	*
@@ -339,11 +299,8 @@ class login{
 	*/
 	public function logOn(){
 
-		global $boardPref, $remember, $ipAddr, $db;
+        global $boardPref, $remember, $ipAddr, $db;
 
-        #encrypt password.
-	    $encryptPwd = sha1($this->pass.$this->getPwdSalt());
-	    
 		#set session to a secure status.
 		//ini_get('session.cookie_secure',true);
 		
@@ -351,8 +308,7 @@ class login{
 		if($remember == 0){
 			#create a session.
 			$_SESSION['ebb_user'] = $this->user;
-			$_SESSION['ebb_pass'] = $encryptPwd;
-			
+
 			#generate session-based validation.
 			$this->regenerateSession(true);
 		}else{
@@ -360,9 +316,8 @@ class login{
 			$expireTime = time() + (2592000);
 
 			#create cookie.
-			setcookie("ebbuser", $this->user, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-			setcookie("ebbpass", $encryptPwd, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-			
+			setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+
 			#remove user's IP from who's online list.
 			$db->SQL = "delete from ebb_online where ip='$ipAddr'";
 			$db->query();
@@ -372,57 +327,42 @@ class login{
 		}
 	}
 
-	
     /**
-	*logOut
-	*
-	*Performs logout process, removing any sessions or cookies created from the system.
-	*
-	*@modified 7/29/11
-	*
-	*
-	*@access public
-	*/
-	public function logOut(){
+     * Performs logout process, removing any sessions or cookies created from the system.
+    */
+    public function logOut(){
 
-		global $boardPref, $db;
-
-		#set session to a secure status.
-		//ini_get('session.cookie_secure',true);
+        global $boardPref, $db;
 
 		#setup session length.
+        $expireAcp = time()-3600;
 		$expireTime = time() - (2592000);
 
 		#see if user wants to remain logged on.
-		if(isset($_COOKIE['ebbuser'])){			
+		if (isset($_COOKIE['ebbuser'])) {
 
 			#destroy cookies.
-			setcookie("ebbuser", $this->user, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-			setcookie("ebbpass", $this->pass, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
+			setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
 
 			#remove user from who's online list.
 			$db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
 			$db->query();
 			
 			#close out ACP cookie if needed
-			if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))){
-				$expire = time()-3600;
-				setcookie("ebbacpu", $this->user, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-				setcookie("ebbacpp", $this->pass, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
+			if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
+				setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
 			}
 			
 			#clear session data.
 			session_destroy();
-		}else{
+		} else {
 			#remove user from who's online list.
 			$db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
 			$db->query();
 
 			#close out ACP cookie if needed
-			if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))){
-				$expire = time()-3600;
-				setcookie("ebbacpu", $this->user, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-				setcookie("ebbacpp", $this->pass, $expireTime, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
+			if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
+				setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
 			}
 
 			#clear session data.
@@ -440,22 +380,24 @@ class login{
 	*/
     public function validateSession($destroy = false){
 
-		try{
+        try {
             #validate User Agent and make sure it didn't just 'magically' change.
-	        if($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']){
-	        	$error = new notifySys("USER AGENT VALIDATE ERROR, SESSION HIJACKING DETECTED!", false);
-				$error->genericError();
-			}else{
-				#regenerate Session ID.
-				#NOTE: We should only be clearing the old session IDs when performing important tasks
-				#such as loging in or anything within the ACP.
-	            $this->regenerateSession($destroy);
+            if($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']){
+                //session mismatch, lets silently log out user.
+                $this->logOut();
+            } else {
+                /*
+                regenerate Session ID.
+                NOTE: We should only be clearing the old session IDs when performing important tasks
+                such as logging in or anything within the ACP.
+                */
+                $this->regenerateSession($destroy);
             }
-    	}catch(Exception $e){
-	        $error = new notifySys($e, true, true, __FILE__, __LINE__);
-			$error->genericError();
-    	}
-	}
+        } catch(Exception $e) {
+            $error = new notifySys($e, true, true, __FILE__, __LINE__);
+            $error->genericError();
+        }
+    }
 
     /**
 	*regenerateSession
