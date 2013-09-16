@@ -19,6 +19,10 @@ class login {
     private $user;
     private $pass;
 
+
+
+
+
 	public function __construct($usr, $pwd) {
         $this->user = $usr;
         $this->pass = $pwd;
@@ -73,36 +77,9 @@ class login {
     }
 
     /**
-     * Validates current login password.
-     * @return bool
+     * Get password salt for requested user.
+     * @return string $pwdSlt
     */
-    private function validatePwdEncrypted() {
-
-        global $db;
-
-        #check against the database to see if the username and password match.
-        $db->SQL = "SELECT id FROM ebb_users WHERE Password='".$this->pass."' LIMIT 1";
-        $validatePwd = $db->affectedRows();
-
-        //setup boolean return.
-        if($validatePwd == 0) {
-            return(false);
-        } else {
-            return(true);
-        }
-    }
-
-    /**
-	*getPwdSalt
-	*
-	*Get password salt for requested user.
-	*
-	*@modified 10/27/09
-	*
-	*@return string $pwdSlt
-	*
-	*@access private
-	*/
 	private function getPwdSalt() {
 
 	    global $db;
@@ -115,63 +92,46 @@ class login {
 	}
 
     /**
-	*validateLogin
-	*
-	*Performs a check through the database to ensure the requested information is valid.
-	*
-	*@modified 7/24/11
-	*
-	*@return bool
-	*
-	*@access public
-	*/
-	public function validateLogin(){
-
-		#See if this is a guest account.
-		if(($this->user == "guest") OR ($this->pass == "guest")){
-		    return(false);
-		}else{
-			#see if user entered the correct information.
-			if(($this->validateUser()) AND ($this->validatePwd())){
-			    return(true);
-			}else{
-			    return(false);
-			}
-		}
-	}
-	
-	/**
-			 * Validates current login session.
-			 * @access Public
-			 * @version 7/24/2011
-			*/
-	public function validateLoginSession(){
-
-		#See if this is a guest account.
-		if(($this->user == "guest") OR ($this->pass == "guest")){
-		    return(false);
-		}else{
-			#see if user entered the correct information.
-			if(($this->validateUser()) AND ($this->validatePwdEncrypted())){
-			    return(true);
-			}else{
-			    return(false);
-			}
-		}
-	}
+     * Performs a check through the database to ensure the requested information is valid.
+     * @return bool
+    */
+    public function validateLogin() {
+        //See if this is a guest account.
+        if ($this->user == "guest" || $this->pass == "guest") {
+            return false;
+        } else {
+            //see if user entered the correct information.
+            if ($this->validateUser() && $this->validatePwd()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
     /**
-	*validateAdministrator
-	*
-	*Performs a check through the database to ensure the user can access the administration panel.
-	*
-	*@modified 7/24/11
-	*
-	*@return bool
-	*
-	*@access public
-	*/
-	public function validateAdministrator(){
+     * Validates current login session.
+     * @return bool
+     */
+    public function validateLoginSession(){
+        //See if this is a guest account.
+        if ($this->user == "guest" || $this->pass == "guest") {
+            return false;
+        } else {
+            //see if user entered the correct information.
+            if ($this->validateUser() && $this->validatePwdEncrypted()){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * validateAdministrator
+     * @return bool
+    */
+    public function validateAdministrator(){
 	
 		#See if this is a guest account.
 		if(($this->user == "guest") OR ($this->pass == "guest")){
@@ -289,50 +249,42 @@ class login {
 	}
 
     /**
-	*logOn
-	*
-	*Performs login process, creating any sessions or cookies needed for the system.
-	*
-	*@modified 12/28/10
-	*
-	*@access public
-	*/
-	public function logOn(){
+     * Performs login process, creating any sessions or cookies needed for the system.
+     * @param bool $remember
+    */
+    public function logOn($remember=false){
 
-        global $boardPref, $remember, $ipAddr, $db;
+        global $ipAddr, $db;
 
-		#set session to a secure status.
-		//ini_get('session.cookie_secure',true);
-		
-		#see if user wants to remain logged on.
-		if($remember == 0){
-			#create a session.
-			$_SESSION['ebb_user'] = $this->user;
+        //see if user wants to remain logged on.
+        if ($remember) {
+            //create a session.
+            $_SESSION['ebb_user'] = $this->user;
 
-			#generate session-based validation.
-			$this->regenerateSession(true);
-		}else{
-			#setup session length.
-			$expireTime = time() + (2592000);
+            //generate session-based validation.
+            $this->regenerateSession(true);
+        } else {
+            //setup session length.
+            $expireTime = time() + (2592000);
 
-			#create cookie.
-			setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+            //create cookie.
+            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
 
-			#remove user's IP from who's online list.
-			$db->SQL = "delete from ebb_online where ip='$ipAddr'";
-			$db->query();
-			
-			#generate session-based validation.
-			$this->regenerateSession(true);
-		}
-	}
+            #remove user's IP from who's online list.
+            $db->SQL = "delete from ebb_online where ip='$ipAddr'";
+            $db->query();
+
+            //generate session-based validation.
+            $this->regenerateSession(true);
+        }
+    }
 
     /**
      * Performs logout process, removing any sessions or cookies created from the system.
     */
-    public function logOut(){
+    public function logOut() {
 
-        global $boardPref, $db;
+        global $db;
 
 		#setup session length.
         $expireAcp = time()-3600;
@@ -371,17 +323,12 @@ class login {
 	}
 
     /**
-	*validateSession
-	*
-	*Performs a check to ensure the session value is valid and not hijacked.
-	*@param $destroy bool - true will detroy old session data; false will not.
-	*@modified 12/28/10
-	*@access public
-	*/
+     * Performs a check to ensure the session value is valid and not hijacked.
+     * @param bool $destroy true will destroy old session data; false will not.
+    */
     public function validateSession($destroy = false){
-
         try {
-            #validate User Agent and make sure it didn't just 'magically' change.
+            //validate User Agent and make sure it didn't just 'magically' change.
             if($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']){
                 //session mismatch, lets silently log out user.
                 $this->logOut();
@@ -400,49 +347,37 @@ class login {
     }
 
     /**
-	*regenerateSession
-	*
-	*creates a new session id and destroys the old session id(if any exists).
-	*@param $destroy bool - true will detroy old session data; false will not.
-	*@modified 12/28/10
-	*@access public
-	*/
+     * creates a new session id and destroys the old session id(if any exists).
+     * @param bool $destroy true will destroy old session data; false will not.
+    */
     public function regenerateSession($destroy = false){
+        if(!isset($_SESSION['userAgent'])){
+            $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
+        }
 
-	    if(!isset($_SESSION['userAgent'])){
-	        $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
-		}
-
-	    #Create new session & destroy the old one.
-		if($destroy == true){
-	    	session_regenerate_id(true);
-	    }else{
-	    	session_regenerate_id();
-	    }
-	}
+        //Create new session & destroy the old one.
+        if ($destroy) {
+            session_regenerate_id(true);
+        } else {
+            session_regenerate_id();
+        }
+    }
 
     /**
-	*isActive
-	*
-	*Checks to see if the user is verified as active or still waiting for activation.
-	*
-	*@modified 8/10/09
-	*
-	*
-	*@access public
-	*/
-	public function isActive(){
+     * Checks to see if the user is verified as active or still waiting for activation.
+     * @return bool
+    */
+    public function isActive(){
+        global $db;
 
-		global $db;
-
-	    #check against the database to see if the username and password match.
+        //check against the database to see if the username and password match.
         $db->SQL = "SELECT active FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
 		$validateStatus = $db->fetchResults();
 
 		#setup bool. value to see if user is active or not.
-		if($validateStatus['active'] == 0){
+		if ($validateStatus['active'] == 0) {
 		    return(false);
-		}else{
+		} else {
 		    return(true);
 		}
 	}
@@ -548,43 +483,37 @@ class login {
 	*checkBan
 	*
 	*Checks to see if the user is banned or suspended.
-	*
-	*@modified 4/5/10
-	*
-	*
-	*@access public
 	*/
-	public function checkBan(){
+	public function checkBan() {
+        global $db, $lang, $suspend_length, $suspend_date, $groupProfile;
 
-		global $db, $lang, $suspend_length, $suspend_date, $groupProfile;
+        //see if user is marked as banned.
+        if ($groupProfile == 6) {
+            $error = new notifySys($lang['banned'], true);
+            $error->displayError();
+        }
 
-		#see if user is marked as banned.
-		if($groupProfile == 6){
-			$error = new notifySys($lang['banned'], true);
-			$error->displayError();
-		}
+        //see if user is suspended.
+        if ($suspend_length > 0) {
+            #see if user is still suspended.
+            $math = 3600 * $suspend_length;
+            $suspend_time = $suspend_date + $math;
+            $today = time() - $math;
+            if($suspend_time > $today){
+                $error = new notifySys($lang['suspended'], true);
+                $error->displayError();
+            }
+        }
 
-		#see if user is suspended.
-		if($suspend_length > 0){
-			#see if user is still suspended.
-			$math = 3600 * $suspend_length;
-			$suspend_time = $suspend_date + $math;
-			$today = time() - $math;
-			if($suspend_time > $today){
-				$error = new notifySys($lang['suspended'], true);
-				$error->displayError();
-			}
-		}
-		#see if the IP of the user is banned.
+        #see if the IP of the user is banned.
         $uip = detectProxy();
-		$db->SQL = "SELECT ban_item FROM ebb_banlist WHERE ban_type='IP' AND ban_item LIKE '%$uip%'";
-		$banChk = $db->affectedRows();
-		
-		#output an error msg.
-		if($banChk == 1){
-			$error = new notifySys($lang['banned'], true);
-			$error->displayError();
-		}
-	}
-}//END CLASS
-?>
+        $db->SQL = "SELECT ban_item FROM ebb_banlist WHERE ban_type='IP' AND ban_item LIKE '%$uip%'";
+        $banChk = $db->affectedRows();
+
+        #output an error msg.
+        if ($banChk == 1) {
+            $error = new notifySys($lang['banned'], true);
+            $error->displayError();
+        }
+    }
+}

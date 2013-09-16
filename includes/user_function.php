@@ -337,29 +337,36 @@ function valid_email($string) {
 		return 1;
 	} 
 }
-#proxy-deteching function.
-function detect_proxy(){
 
-	$ip_sources = array(
-    "HTTP_CLIENT_IP",
-	"HTTP_X_FORWARDED_FOR",
-	"HTTP_X_FORWARDED",
-	"HTTP_FORWARDED_FOR",
-	"HTTP_FORWARDED",
-	"HTTP_X_COMING_FROM",
-	"HTTP_COMING_FROM",
-	"REMOTE_ADDR");
-	foreach ($ip_sources as $ip_source){
-		// If the ip source exists, capture it
-		if (isset($_SERVER[$ip_source])){
-			$proxy_ip = $_SERVER[$ip_source];
-		break;
-		}
-	}
-	#if all else fails, just set a false value.
-	$proxy_ip = (isset($proxy_ip)) ? $proxy_ip : $_SERVER["REMOTE_ADDR"];
-	// Return the IP
-	return ($proxy_ip);
+/**
+ * sniffs out real IP Address.
+ * @return mixed
+*/
+function detectProxy(){
+
+    $ip_sources = array(
+        "HTTP_CLIENT_IP",
+        "HTTP_X_FORWARDED_FOR",
+        "HTTP_X_FORWARDED",
+        "HTTP_FORWARDED_FOR",
+        "HTTP_FORWARDED",
+        "HTTP_X_COMING_FROM",
+        "HTTP_COMING_FROM",
+        "REMOTE_ADDR");
+
+    foreach ($ip_sources as $ip_source){
+        // If the ip source exists, capture it
+        if (isset($_SERVER[$ip_source])) {
+            $proxy_ip = $_SERVER[$ip_source];
+        break;
+        }
+    }
+
+    //if all else fails, just set a false value.
+    $proxy_ip = (isset($proxy_ip)) ? $proxy_ip : $_SERVER["REMOTE_ADDR"];
+
+    // Return the IP
+    return $proxy_ip;
 }
 
 /**
