@@ -1,10 +1,10 @@
 <?php
-if (!defined('IN_EBB') ) {
-die("<B>!!ACCESS DENIED HACKER!!</B>");
+if (!defined('IN_EBB')) {
+    die("<B>!!ACCESS DENIED HACKER!!</B>");
 }
 /*
 Filename: template.php
-Last Modified: 9/12/2013
+Last Modified: 10/01/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -24,22 +24,16 @@ class template {
     */
     private $styleDir;
 
-    public function __construct($styleID, $file) {
+    /**
+     * @param string $file The template file we wish to process.
+     * @param string $styleFolder The folder the template resides in.
+    */
+    public function __construct($file, $styleFolder="clearblue2") {
 
-        global $db, $boardDir;
-
-        #do a check to see if the styleID used is valid.
-        if($this->StyleCheck($styleID) == 0){
-            $error = new notifySys("Invalid Style Selected.", false, true, __FILE__, __LINE__);
-            $error->genericError();
-        }else{
-            #get the style template path from the db.
-            $db->SQL = "SELECT Temp_Path FROM ebb_style WHERE id='$styleID'";
-            $theme = $db->fetchResults();
-        }
+        global $boardDir;
 
         #set styleDir to the path of the requested styleID.
-        $this->styleDir = trailingSlashRemover($_SERVER['DOCUMENT_ROOT']).'/'.$boardDir.'/template/'.$theme['Temp_Path'].'/';
+        $this->styleDir = trailingSlashRemover($_SERVER['DOCUMENT_ROOT']).'/'.$boardDir.'/template/'.$styleFolder.'/';
 
         #see if template file exists.
         if (!file_exists($this->styleDir.$file.'.htm')){

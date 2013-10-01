@@ -3,7 +3,7 @@ ob_start();
 define('IN_EBB', true);
 /*
 Filename: install.php
-Last Modified: 6/7/2013
+Last Modified: 10/01/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -28,47 +28,103 @@ if($file_size == 0){
 	echo '<p class="td2">The config file is blank, please go to the <b><a href="index.php?cmd=create">connection wizard</a></b>.</p>';
 	exit();
 }
-include "../config.php";
-require "../includes/db.php";
-$db = new db;
-require "../template.php";
-require "../lang/English.lang.php";
-require "../includes/function.php";
-require "../includes/template_function.php";
-require "../includes/user_function.php";
-require "../includes/admin_function.php";
-#header.
-$page = new template("../template/clearblue2/acp_header.htm");
+require_once "../config.php";
+
+// setup our database object.
+$options = array(
+    PDO::ATTR_PERSISTENT => true,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+);
+
+try {
+    $db = new PDO(DB_DSN, DB_USER, DB_PASS, $options);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    $this->error = $e->getMessage();
+}
+
+require_once FULLPATH."/includes/template.php";
+
+//setup some defaults.
+$boardDir = trailingSlashRemover(dirname(dirname($_SERVER["SCRIPT_NAME"])));
+$boardFolder = ltrim($boardDir, '/');
+
+require_once FULLPATH."/lang/English.lang.php";
+require_once FULLPATH."/includes/function.php";
+require_once FULLPATH."/includes/template_function.php";
+require_once FULLPATH."/includes/user_function.php";
+require_once FULLPATH."/includes/admin_function.php";
+
+$page = new template("acp_header");
 $page->replace_tags(array(
   "TITLE" => "Elite Bulletin Board",
-  "PAGETITLE" => "Version 2.1 Final Installer"));
-
+  "PAGETITLE" => "Version 2.2 Installer"));
 $page->output();
-#get top.
+
 echo '<div class="td1"><a href="index.php"><img src="../template/clearblue2/images/logo.gif" alt="" /></a></div>
 <h3 class="td2">Version 2.1.0 Final Installer</h3>';
-  switch ($step)  {
-  case 'install_1':
-	echo '<table border="0" class="table" align="center" cellspacing="1" cellpadding="3">
+
+
+switch ($step)  {
+    case 'install_1':
+        echo '<table border="0" class="table" align="center" cellspacing="1" cellpadding="3">
 <tr>
-<td align="center" class="td1" width="16%">Welcome</td>
-<td align="center" class="td1" width="17%">MySQL Connection Setup</td>
-<td align="center" class="td2" width="17%">Create Tables</td>
-<td align="center" class="td1" width="17%">Setup Settings</td>
-<td align="center" class="td1" width="16%">Create User</td>
-<td align="center" class="td1" width="17%">Create Category/Board</td>
+    <td align="center" class="td1" width="16%">Welcome</td>
+    <td align="center" class="td1" width="17%">MySQL Connection Setup</td>
+    <td align="center" class="td2" width="17%">Create Tables</td>
+    <td align="center" class="td1" width="17%">Setup Settings</td>
+    <td align="center" class="td1" width="16%">Create User</td>
+    <td align="center" class="td1" width="17%">Create Category/Board</td>
 </tr>
 </table><hr />';
-#create tables for this program.
-echo "<p class=\"titlebar\">Adding tables to database:</p>";
-//ebb_attachment_extlist
-$db->run = "CREATE TABLE IF NOT EXISTS `ebb_attachment_extlist` (
+    break;
+    case 'install_2':
+    case 'install_2b':
+        echo '<table border="0" class="table" align="center" cellspacing="1" cellpadding="3">
+<tr>
+    <td align="center" class="td1" width="16%">Welcome</td>
+    <td align="center" class="td1" width="17%">MySQL Connection Setup</td>
+    <td align="center" class="td1" width="17%">Create Tables</td>
+    <td align="center" class="td2" width="17%">Setup Settings</td>
+    <td align="center" class="td1" width="16%">Create User</td>
+    <td align="center" class="td1" width="17%">Create Category/Board</td>
+</tr>
+</table><hr />';
+    break;
+    case 'install_3':
+    case 'install_3b':
+    echo '<table border="0" class="table" align="center" cellspacing="1" cellpadding="3">
+<tr>
+    <td align="center" class="td1" width="16%">Welcome</td>
+    <td align="center" class="td1" width="17%">MySQL Connection Setup</td>
+    <td align="center" class="td1" width="17%">Create Tables</td>
+    <td align="center" class="td1" width="17%">Setup Settings</td>
+    <td align="center" class="td2" width="16%">Create User</td>
+    <td align="center" class="td1" width="17%">Create Category/Board</td>
+</tr>
+</table><br />';
+    break;
+}
+
+switch ($step) {
+case 'install_1':
+    //create tables for this program.
+    echo '<p class="titlebar">Adding tables to database:</p>';
+
+    try {
+        // ebb_attachment_extlist
+        $db->exec("CREATE TABLE IF NOT EXISTS `ebb_attachment_extlist` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `ext` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1";
-$db->query();
-$db->close();
+) ENGINE=MyISAM AUTO_INCREMENT=1");
+        
+    } catch (PDOException $e) {
+
+        exit('<h2 class="td2">ERROR!</h2><h3 class="td1">Failed to Create tables.</h3>'.$e->getMessage());
+    }
+
 //ebb_attachments
 $db->run = "CREATE TABLE IF NOT EXISTS `ebb_attachments` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -717,16 +773,7 @@ echo '<p class="td2">Database setup complete. <b><a href="install.php?step=insta
 $timezone = timezone_select(0);
 $style_select = style_select(1);
 $lang = @acp_lang_select("English");
-echo '<table border="0" class="table" align="center" cellspacing="1" cellpadding="3">
-<tr>
-<td align="center" class="td1" width="16%">Welcome</td>
-<td align="center" class="td1" width="17%">MySQL Connection Setup</td>
-<td align="center" class="td1" width="17%">Create Tables</td>
-<td align="center" class="td2" width="17%">Setup Settings</td>
-<td align="center" class="td1" width="16%">Create User</td>
-<td align="center" class="td1" width="17%">Create Category/Board</td>
-</tr>
-</table><hr />';
+
 echo '<h3 class="td2">This is where you set the board\'s settings to make it function correctly. The list below is only the main settings, you may alter the board more once your done with the setup.</h3>';
 
 echo "<form method=\"post\" action=\"install.php?step=install_2b\">
@@ -1076,16 +1123,6 @@ SMTP Password<br />
 	}
   break;
   case 'install_3':
-echo '<table border="0" class="table" align="center" cellspacing="1" cellpadding="3">
-<tr>
-<td align="center" class="td1" width="16%">Welcome</td>
-<td align="center" class="td1" width="17%">MySQL Connection Setup</td>
-<td align="center" class="td1" width="17%">Create Tables</td>
-<td align="center" class="td1" width="17%">Setup Settings</td>
-<td align="center" class="td2" width="16%">Create User</td>
-<td align="center" class="td1" width="17%">Create Category/Board</td>
-</tr>
-</table><br />';
 $timezone = timezone_select(0);
 $style_select = style_select(1);
 $lang = @acp_lang_select('English');

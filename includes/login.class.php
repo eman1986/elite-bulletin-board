@@ -1,9 +1,9 @@
 <?php
 if (!defined('IN_EBB')) {
-	die("<b>!!ACCESS DENIED HACKER!!</b>");
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /**
-Filename: loginmgr.class.php
+Filename: login.class.php
 Last Modified: 7/29/2011
 
 Term of Use:
@@ -18,10 +18,6 @@ class login {
     #declare data members
     private $user;
     private $pass;
-
-
-
-
 
 	public function __construct($usr, $pwd) {
         $this->user = $usr;
@@ -87,9 +83,81 @@ class login {
 	    #check against the database to see if the username and password match.
         $db->SQL = "SELECT salt FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
 		$pwdSlt = $db->fetchResults();
-		
+
 		return($pwdSlt['salt']);
 	}
+
+
+    //-------------------------
+
+    /**
+     * Validate Login Key is valid.
+     * @version 03/04/12
+     * @param string $key encrypted key hash being validated.
+     * @param integer $type 0=login key;1=admin key
+     * @return boolean
+     */
+    private function ValidateLoginKey($key, $type) {
+        global $db;
+
+        #see what type of keyt we're validating.
+        if ($type == 0) {
+            #check against the database to see if the username match.
+            $this->ci->db->select('login_key')->from('ebb_login_session')->where('username', $this->user)->where('login_key', $key)->limit(1);
+            $validateKey = $this->ci->db->count_all_results();
+        } elseif ($type == 1) {
+            #check against the database to see if the username match.
+            $this->ci->db->select('admin_key')->from('ebb_login_session')->where('username', $this->user)->where('admin_key', $key)->limit(1);
+            $validateKey = $this->ci->db->count_all_results();
+        } else {
+            return false;
+        }
+
+        #setup bool. value to see if user is active or not.
+        if ($validateKey == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Validates current login session.
+     * @access Public
+     * @version 04/11/12
+     * @return bool
+     */
+    public function validateLoginSession($lastActive, $loginKey, $keyType) {
+        #Level 1, validate username.
+        if ($this->validateUser()) {
+            #Level 2, validate activity & key.
+            if ((time() - $lastActive < 300) AND ($this->ValidateLoginKey($loginKey, $keyType))) { //5 minutes
+                #Level 3, update activity value and regenerate key.
+                $new_loginKey = sha1(makeRandomPassword());
+                $new_lastActive = time() + 300;
+
+                #set new values in session.
+                $this->ci->session->set_userdata('ebbLastActive', $new_lastActive);
+                $this->ci->session->set_userdata('ebbLoginKey', $new_loginKey);
+
+                #add new values to database.
+                $data = array(
+                    'last_active' => $new_lastActive,
+                    'login_key' => $new_loginKey
+                );
+                $this->ci->db->where('username',$this->user);
+                $this->ci->db->update('ebb_login_session', $data);
+
+                return (true); //session is valid
+            } else {
+                return (false); //session is invalid
+            }
+        } else {
+            return (false); //session is invalid
+        }
+    }
+
+    //-------------------------
 
     /**
      * Performs a check through the database to ensure the requested information is valid.
@@ -247,6 +315,45 @@ class login {
 			session_destroy();
 		}
 	}
+
+    /**
+     * Performs login process, creating any sessions or cookies needed for the system.
+     * @param boolean $remember keep user login info in tact?
+     * @version 07/28/12
+     * @access public
+     */
+    public function logOn($remember){
+
+        global $db;
+
+        #setup variables.
+        $loginKey = sha1(makeRandomPassword());
+        $lastActive = time() + 300;
+
+        #see if user wants to remain logged on.
+        if($remember) {
+            //setup session length.
+            $expireTime = time() + (2592000);
+
+            //create cookie.
+            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+
+            #remove user's IP from who's online list.
+            $db->delete("ebb_online", "ip = :ip", array(":ip" => $ipAddr));
+
+            $_SESSION['ebb_login_key'] = $loginKey;
+
+            //generate session-based validation.
+            $this->regenerateSession(true);
+        } else {
+            //create a session.
+            $_SESSION['ebb_user'] = $this->user;
+            $_SESSION['ebb_login_key'] = $loginKey;
+
+            //generate session-based validation.
+            $this->regenerateSession(true);
+        }
+    }
 
     /**
      * Performs login process, creating any sessions or cookies needed for the system.

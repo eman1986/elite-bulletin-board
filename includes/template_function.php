@@ -1,10 +1,10 @@
 <?php
 if (!defined('IN_EBB') ) {
-die("<b>!!ACCESS DENIED HACKER!!</b>");
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /*
 Filename: template_function.php
-Last Modified: 07/16/2013
+Last Modified: 09/23/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -13,15 +13,20 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 #theme_selector.
-function theme($string){
 
-	global $db;
+/**
+ * Get template path.
+ * @param int $id Theme ID
+ * @return mixed
+*/
+function theme($id) {
 
-	$db->run = "SELECT Temp_Path FROM ebb_style where id='$string'";
-	$theme = $db->result();
-	$db->close();
+    global $db;
 
-	return ($theme);
+    $query = $db->from('article')->select('Temp_Path')->where('id', $id)->limit(1);
+    $theme = $query->fetch();
+
+    return $theme;
 }
 #board grabber.
 function index_board(){
