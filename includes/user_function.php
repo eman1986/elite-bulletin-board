@@ -1,7 +1,7 @@
 <?php
 /*
 Filename: user_function.php
-Last Modified: 9/11/2013
+Last Modified: 10/02/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -9,20 +9,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
-#check if username exists.
-function user_check($user, $pass){
 
-	global $db, $txt;
-
-	if ((empty($user)) and (empty($pass))){
-		die($txt['invalidprofile']);
-	}else{
-		$db->run = "SELECT id FROM ebb_users WHERE Username='$user' and Password='$pass'";
-		$chk_user = $db->num_results();
-		$db->close();
-	}
-	return ($chk_user);
-}
 #output last new user.
 function newuser(){
 

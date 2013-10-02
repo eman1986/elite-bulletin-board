@@ -101,6 +101,12 @@ if ((isset($_COOKIE['ebbuser']) && ($_SESSION['ebbLoginKey'])) OR (isset($_SESSI
     #start-up login checker.
     $userAuth = new login($logged_user);
 
+    if ($userAuth->validateLoginSession(time(), $loginKey, $logged_user)) {
+        //user is logged in.
+    } else {
+        //not logged in.
+    }
+
     $chk_user = user_check($logged_user, $chkpwd);
     if($chk_user == 1){
         #set the columes needed for now.
