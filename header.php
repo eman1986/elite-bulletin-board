@@ -34,8 +34,32 @@ if($file_size == 0){
     header("Location: ". isSecure() ? "https://" : "http://" . $_SERVER["SERVER_NAME"] . "/install");
 }
 
-#load functions
 require_once "config.php";
+
+//load exception handler library.
+require_once FULLPATH.'/includes/Whoops/Run.php';
+require_once FULLPATH.'/includes/Whoops/Handler/HandlerInterface.php';
+require_once FULLPATH.'/includes/Whoops/Handler/Handler.php';
+require_once FULLPATH.'/includes/Whoops/Handler/PrettyPageHandler.php';
+require_once FULLPATH.'/includes/Whoops/Handler/JsonResponseHandler.php';
+require_once FULLPATH.'/includes/Whoops/Exception/ErrorException.php';
+require_once FULLPATH.'/includes/Whoops/Exception/Inspector.php';
+require_once FULLPATH.'/includes/Whoops/Exception/Frame.php';
+require_once FULLPATH.'/includes/Whoops/Exception/FrameCollection.php';
+
+$run = new \Whoops\Run;
+$errorPage = new \Whoops\Handler\PrettyPageHandler;
+
+$errorPage->setPageTitle("System Failure!");
+
+//$JsonHandler = new \Whoops\Handler\JsonResponseHandler;
+
+//$run->pushHandler($JsonHandler);
+$run->pushHandler($errorPage);
+$run->register();
+
+
+#load functions
 require_once FULLPATH."/includes/function.php";
 require_once FULLPATH."/includes/template_function.php";
 require_once FULLPATH."/includes/posting_function.php";
@@ -54,7 +78,7 @@ try {
     $db = new PDO(DB_DSN, DB_USER, DB_PASS, $options);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    $this->error = $e->getMessage();
+    echo $e->getMessage();
 }
 
 //update online data.
@@ -64,14 +88,14 @@ $timeout = time() - 120;
 $db->exec('DELETE FROM ebb_online WHERE time = $timeout');
 
 #user check
-if ((isset($_COOKIE['ebbuser']) && ($_COOKIE['ebbpass'])) OR (isset($_SESSION['ebb_user'])) && ($_SESSION['ebb_pass'])){
+if ((isset($_COOKIE['ebbuser']) && ($_SESSION['ebbLoginKey'])) OR (isset($_SESSION['ebb_user'])) && ($_SESSION['ebbLoginKey'])){
     #get username value.
     if(isset($_SESSION['ebb_user'])){
         $logged_user = var_cleanup($_SESSION['ebb_user']);
-        $chkpwd = var_cleanup($_SESSION['ebb_pass']);
+        $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
     }else{
         $logged_user = var_cleanup($_COOKIE['ebbuser']);
-        $chkpwd = var_cleanup($_COOKIE['ebbpass']);
+        $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
     }
 
     #start-up login checker.
