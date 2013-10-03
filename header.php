@@ -117,7 +117,16 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
 
         //validate user is correct.
         if ($userEntity) {
-
+            #set-up vars
+            $logged_user = $userInfo->getUserName();
+            $stat = $userpref['Status'];
+            $template = $userInfo->getStyle();
+            $time_format = $userInfo->getTimeFormat();
+            $lang = $userInfo->getLanguage();
+            $gmt = $userInfo->getTimeZone();
+            $last_visit = $userInfo->getLastVisit();
+            $suspend_length = $userInfo->getSuspendLength();
+            $suspend_date = $userInfo->getSuspendTime();
         } else {
             throw new Exception('Invalid User');
         }
@@ -127,19 +136,11 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     }
 
     if($chk_user == 1){
-        #set the columes needed for now.
+        #set the columns needed for now.
         $columes = 'Status, Style, Time_format, Language, Time_Zone, last_visit, suspend_length, suspend_time';
         #call user function.
         $userpref = user_settings($logged_user, $columes);
-        #set-up vars
-        $stat = $userpref['Status'];
-        $template = $userpref['Style'];
-        $time_format = $userpref['Time_format'];
-        $lang = $userpref['Language'];
-        $gmt = $userpref['Time_Zone'];
-        $last_visit = $userpref['last_visit'];
-        $suspend_length = $userpref['suspend_length'];
-        $suspend_date = $userpref['suspend_time'];
+
         //check to see if user is part of a group.
         if ($stat == "groupmember"){
             $db->run = "SELECT gid FROM ebb_group_users where Username='$logged_user' AND Status='Active'";

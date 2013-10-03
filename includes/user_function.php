@@ -21,20 +21,6 @@ function newuser(){
 
 	return ($new_user);
 }
-#setup user's settings
-function user_settings($string, $var){
-
-	global $db, $cp;
-
-	if(($string == "") or ($var == "")){
-		die($cp['nousernameentered']);
-	}else{
-		$db->run = "SELECT $var FROM ebb_users WHERE Username='$string'";
-		$userpref = $db->result();
-		$db->close();
-	}
-	return ($userpref);
-}
 #group checker.
 function group_validate($bid, $gid, $type){
 
@@ -315,15 +301,6 @@ function update_user($user){
 	$db->query();
 	$db->close(); 
 }
-#email format checker.
-function valid_email($string) { 
-
-	if(preg_match("(\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3})", $string)) {
-		return 0;
-	}else{
-		return 1;
-	} 
-}
 
 /**
  * sniffs out real IP Address.
@@ -368,13 +345,12 @@ function DetectNewPM($user) {
     global $db, $menu;
     
     #total of new PM messages.
-	$db->run = "select Read_Status from ebb_pm WHERE Reciever='$user' and Folder='Inbox' and Read_Status=''";
-	$new_pm = $db->num_results();
-	$db->close();
-	if($new_pm == 0){
-		return $menu['nonewpm'];	
-	}else{
-		return $new_pm.$menu['newpm'];
+    $db->run = "select Read_Status from ebb_pm WHERE Reciever='$user' and Folder='Inbox' and Read_Status=''";
+    $new_pm = $db->num_results();
+    $db->close();
+    if($new_pm == 0){
+        return $menu['nonewpm'];
+    }else{
+        return $new_pm.$menu['newpm'];
 	}
 }
-?>
