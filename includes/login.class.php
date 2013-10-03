@@ -4,7 +4,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: login.class.php
-Last Modified: 7/29/2011
+Last Modified: 10/01/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -15,20 +15,6 @@ the Free Software Foundation; either version 2 of the License, or
 
 class login {
 
-    #declare data members
-    private $user;
-    private $pass;
-
-	public function __construct($usr, $pwd) {
-        $this->user = $usr;
-        $this->pass = $pwd;
-    }
-
-    public function __destruct() {
-        unset($this->user);
-        unset($this->pass);
-    }
-
     /**
      *Performs a check through the database to ensure the requested username is valid.
      *@return bool
@@ -37,108 +23,96 @@ class login {
 
         global $db;
 
-        //check against the database to see if the username and password match.
-        $db->SQL = "SELECT id FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
-        $validateUser = $db->affectedRows();
+        try {
+            //check against the database to see if the username  match.
+            $query = $db->prepare('SELECT id from ebb_users WHERE Username=:username LIMIT 1');
+            $query->execute(array(":username" => $this->user));
+            $validateUser = $query->rowCount();
 
-        //setup boolean return.
-        if($validateUser == 0){
-            return(false);
-        } else {
-            return(true);
+            //see if username is value.
+            return $validateUser == 0 ? false : true;
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return null;
         }
     }
 
     /**
      * Performs a check through the database to ensure the requested password is valid.
+     * @param string $pwd
      * @return bool
     */
-    private function validatePwd() {
+    private function validatePwd($pwd) {
 
         global $db;
 
         //encrypt password.
-        $encryptPwd = sha1($this->pass.$this->getPwdSalt());
+        $encryptPwd = sha1($pwd.$this->getPwdSalt());
 
-        //check against the database to see if the username and password match.
-        $db->SQL = "SELECT id FROM ebb_users WHERE Password='".$encryptPwd."' LIMIT 1";
-        $validatePwd = $db->affectedRows();
 
-        #setup boolean return.
-        if($validatePwd == 0) {
-            return(false);
-        } else {
-            return(true);
-        }
+        //check against the database to see if the password match.
+        $query = $db->prepare('SELECT id from ebb_users WHERE Password=:password LIMIT 1');
+        $query->execute(array(":password" => $encryptPwd));
+        $validatePwd = $query->rowCount();
+
+        //see if password is value.
+        return $validatePwd == 0 ? false : true;
     }
 
     /**
      * Get password salt for requested user.
      * @return string $pwdSlt
     */
-	private function getPwdSalt() {
+    private function getPwdSalt() {
 
-	    global $db;
+        global $db;
 
-	    #check against the database to see if the username and password match.
-        $db->SQL = "SELECT salt FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
-		$pwdSlt = $db->fetchResults();
+        $query = $db->prepare('SELECT salt from ebb_users WHERE Username=:username LIMIT 1');
+        $query->execute(array(":username" => $this->user));
+        $results = $query->fetch(PDO::FETCH_OBJ);
 
-		return($pwdSlt['salt']);
-	}
+
+        return($results->salt);
+    }
 
 
     //-------------------------
 
     /**
      * Validate Login Key is valid.
-     * @version 03/04/12
      * @param string $key encrypted key hash being validated.
-     * @param integer $type 0=login key;1=admin key
      * @return boolean
      */
-    private function ValidateLoginKey($key, $type) {
+    private function ValidateLoginKey($key) {
         global $db;
 
-        #see what type of keyt we're validating.
-        if ($type == 0) {
-            #check against the database to see if the username match.
-            $this->ci->db->select('login_key')->from('ebb_login_session')->where('username', $this->user)->where('login_key', $key)->limit(1);
-            $validateKey = $this->ci->db->count_all_results();
-        } elseif ($type == 1) {
-            #check against the database to see if the username match.
-            $this->ci->db->select('admin_key')->from('ebb_login_session')->where('username', $this->user)->where('admin_key', $key)->limit(1);
-            $validateKey = $this->ci->db->count_all_results();
-        } else {
-            return false;
-        }
+        $query = $db->prepare('SELECT name, login_key from ebb_login_session WHERE username=:username');
+        $query->execute(array(":username" => $key));
+        $validateKey = $query->rowCount();
 
         #setup bool. value to see if user is active or not.
-        if ($validateKey == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return $validateKey == 0 ? false : true;
     }
 
     /**
      * Validates current login session.
-     * @access Public
-     * @version 04/11/12
+     * @param $lastActive
+     * @param $loginKey
      * @return bool
-     */
-    public function validateLoginSession($lastActive, $loginKey, $keyType) {
+    */
+    public function validateLoginSession($lastActive, $loginKey) {
         #Level 1, validate username.
         if ($this->validateUser()) {
             #Level 2, validate activity & key.
-            if ((time() - $lastActive < 300) AND ($this->ValidateLoginKey($loginKey, $keyType))) { //5 minutes
+            if ((time() - $lastActive < 300) AND ($this->ValidateLoginKey($loginKey))) { //5 minutes
                 #Level 3, update activity value and regenerate key.
                 $new_loginKey = sha1(makeRandomPassword());
                 $new_lastActive = time() + 300;
 
                 #set new values in session.
-                $this->ci->session->set_userdata('ebbLastActive', $new_lastActive);
-                $this->ci->session->set_userdata('ebbLoginKey', $new_loginKey);
+                $_SESSION['ebbLastActive'] = $new_lastActive;
+                $_SESSION['ebbLoginKey'] = $new_loginKey;
 
                 #add new values to database.
                 $data = array(
@@ -181,19 +155,19 @@ class login {
      * Validates current login session.
      * @return bool
      */
-    public function validateLoginSession(){
-        //See if this is a guest account.
-        if ($this->user == "guest" || $this->pass == "guest") {
-            return false;
-        } else {
-            //see if user entered the correct information.
-            if ($this->validateUser() && $this->validatePwdEncrypted()){
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+//    public function validateLoginSession(){
+//        //See if this is a guest account.
+//        if ($this->user == "guest" || $this->pass == "guest") {
+//            return false;
+//        } else {
+//            //see if user entered the correct information.
+//            if ($this->validateUser() && $this->validatePwdEncrypted()){
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
+//    }
 
     /**
      * validateAdministrator
@@ -322,38 +296,38 @@ class login {
      * @version 07/28/12
      * @access public
      */
-    public function logOn($remember){
-
-        global $db;
-
-        #setup variables.
-        $loginKey = sha1(makeRandomPassword());
-        $lastActive = time() + 300;
-
-        #see if user wants to remain logged on.
-        if($remember) {
-            //setup session length.
-            $expireTime = time() + (2592000);
-
-            //create cookie.
-            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
-
-            #remove user's IP from who's online list.
-            $db->delete("ebb_online", "ip = :ip", array(":ip" => $ipAddr));
-
-            $_SESSION['ebb_login_key'] = $loginKey;
-
-            //generate session-based validation.
-            $this->regenerateSession(true);
-        } else {
-            //create a session.
-            $_SESSION['ebb_user'] = $this->user;
-            $_SESSION['ebb_login_key'] = $loginKey;
-
-            //generate session-based validation.
-            $this->regenerateSession(true);
-        }
-    }
+//    public function logOn($remember){
+//
+//        global $db;
+//
+//        #setup variables.
+//        $loginKey = sha1(makeRandomPassword());
+//        $lastActive = time() + 300;
+//
+//        #see if user wants to remain logged on.
+//        if($remember) {
+//            //setup session length.
+//            $expireTime = time() + (2592000);
+//
+//            //create cookie.
+//            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+//
+//            #remove user's IP from who's online list.
+//            $db->delete("ebb_online", "ip = :ip", array(":ip" => $ipAddr));
+//
+//            $_SESSION['ebb_login_key'] = $loginKey;
+//
+//            //generate session-based validation.
+//            $this->regenerateSession(true);
+//        } else {
+//            //create a session.
+//            $_SESSION['ebb_user'] = $this->user;
+//            $_SESSION['ebb_login_key'] = $loginKey;
+//
+//            //generate session-based validation.
+//            $this->regenerateSession(true);
+//        }
+//    }
 
     /**
      * Performs login process, creating any sessions or cookies needed for the system.

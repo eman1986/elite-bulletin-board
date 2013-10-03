@@ -21,7 +21,7 @@ if(isset($_GET['step'])){
 $template_path = "../template/clearblue2";
 $versionKey = 'c2e7b5bb0ec8bb7e2aaf8a5516ca5387';
 
-#see if config file is already writtened.
+#see if config file is already written.
 $config_path = '../config.php';
 $file_size = filesize($config_path);
 if($file_size == 0){

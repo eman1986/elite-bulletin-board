@@ -13,7 +13,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: header.php
-Last Modified: 9/24/2013
+Last Modified: 10/02/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -59,13 +59,15 @@ $run->pushHandler($errorPage);
 $run->register();
 
 
-#load functions
+#load functions & classes
+require_once FULLPATH."/includes/template.php";
 require_once FULLPATH."/includes/function.php";
 require_once FULLPATH."/includes/template_function.php";
 require_once FULLPATH."/includes/posting_function.php";
 require_once FULLPATH."/includes/user_function.php";
 
 require_once FULLPATH."/includes/login.class.php";
+require_once FULLPATH."/includes/user.class.php";
 
 // setup our database object.
 $options = array(
@@ -88,26 +90,42 @@ $timeout = time() - 120;
 $db->exec('DELETE FROM ebb_online WHERE time = $timeout');
 
 #user check
-if ((isset($_COOKIE['ebbuser']) && ($_SESSION['ebbLoginKey'])) OR (isset($_SESSION['ebb_user'])) && ($_SESSION['ebbLoginKey'])){
+if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     #get username value.
-    if(isset($_SESSION['ebb_user'])){
-        $logged_user = var_cleanup($_SESSION['ebb_user']);
+    if (isset($_SESSION['ebb_user'])) {
+        $ebbUserId = var_cleanup($_SESSION['ebb_user']);
         $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
-    }else{
-        $logged_user = var_cleanup($_COOKIE['ebbuser']);
+        $loginLastActive = var_cleanup($_SESSION['ebbLastActive']);
+    } elseif(isset($_COOKIE['ebbuser'])) {
+        $$ebbUserId = var_cleanup($_COOKIE['ebbuser']);//$logged_user
         $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
+        $loginLastActive = var_cleanup($_SESSION['ebbLastActive']);
+    } else {
+        exit('Invalid login!');
     }
 
     #start-up login checker.
-    $userAuth = new login($logged_user);
+    $userAuth = new login();
 
-    if ($userAuth->validateLoginSession(time(), $loginKey, $logged_user)) {
+    if ($userAuth->validateLoginSession($loginLastActive, $loginKey, $ebbUserId)) {
         //user is logged in.
+
+        //get user info.
+        $userInfo = new user($db);
+
+        $userEntity = $userInfo->getUser($ebbUserId);
+
+        //validate user is correct.
+        if ($userEntity) {
+
+        } else {
+            throw new Exception('Invalid User');
+        }
+
     } else {
         //not logged in.
     }
 
-    $chk_user = user_check($logged_user, $chkpwd);
     if($chk_user == 1){
         #set the columes needed for now.
         $columes = 'Status, Style, Time_format, Language, Time_Zone, last_visit, suspend_length, suspend_time';
@@ -185,7 +203,6 @@ $theme = theme($template);
 
 #set-up vars
 $template_path = $theme['Temp_Path'];
-#template loading
-require FULLPATH."/includes/template.php";
+
 #language loading
 require FULLPATH."/lang/".$lang.".lang.php";
