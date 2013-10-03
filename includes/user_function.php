@@ -10,6 +10,109 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 
+
+/**
+ * Get Avatar from Gravatar Service.
+ * @param string $eml The email to look up on gravatar.
+ * @param string $size Setup the size of the avatar.
+ * @param string $dImage Setup a default image.
+ * @param string $rating Restrict the type of avatar to allow.
+ * @return string URL to return an image.
+ */
+function getGravatar($eml, $size = "medium", $dImage = "gravatar", $rating = "ignore") {
+    //base URL.
+    $gravatarUrl = (!isSecure()) ? 'http://www.gravatar.com/avatar/' : 'https://www.gravatar.com/avatar/';
+
+    //available sizes (gravatar allows 1-2048px, a preset of sizes is set to prevent abuse).
+    $availableSizes = array(
+        "tiny" => "16",
+        "small" => "32",
+        "medium" => "48",
+        "large" => "64",
+        "huge" => "128"
+    );
+
+    //available options.
+    $defaultImage = array(
+        "gravatar" => "",
+        "404" => "404",
+        "mystery-man" => "mm",
+        "patterns" => "identicon",
+        "monsters" => "monsterid",
+        "faces" => "wavatar",
+        "8bit" => "retro"
+    );
+
+    //the ratings filter.
+    $ratings = array(
+        "ignore" => "", //ignores the ratings rule.
+        "all" => "g",
+        "general" => "pg",
+        "adult" => "r",
+        "sexual" => "x"
+    );
+
+    //setup default value if incorrect value entered.
+    if (!array_key_exists($size, $availableSizes)) {
+        $size = "medium";
+    }
+    if (!array_key_exists($dImage, $defaultImage)) {
+        $dImage = "gravatar";
+    }
+    if (!array_key_exists($rating, $ratings)) {
+        $rating = "ignore";
+    }
+
+    //setup query string.
+    if ($rating != "ignore") {
+        $qsRating = 'r='.$ratings[$rating];
+    } else {
+        $qsRating = '';
+    }
+    if ($dImage == "gravatar") {
+        $qsDefault = "d=";
+    } else {
+        $qsDefault = "d=".$defaultImage[$dImage];
+    }
+    $qsSize = 's='.$availableSizes[$size];
+
+    return $gravatarUrl.md5(strtolower(trim($eml))).'?'.$qsRating.'&'.$qsSize.'&'.$qsDefault;
+}
+
+/**
+ * Subscribe or unsubscribe from a topic.
+ * @param string $user the user we want to this to affect.
+ * @param integer $tid the Topic ID we want this to affect.
+ * @param string $mode are we subscribing or unsubscribing?
+ */
+function subscriptionManager($user, $tid, $mode) {
+
+    global $db;
+
+    try {
+        //check against the database to see if the username  match.
+        $query = $db->prepare('SELECT tid from ebb_topic_watch WHERE username=:username');
+        $query->execute(array(":username" => $user));
+
+        //see if they want to subscribe or unsubscribe to a topic.
+        if ($mode == "subscribe" && $query->rowCount() == 0) {
+            $data = array(
+                "username" => $user,
+                "tid" => $tid,
+                "read_status" => 0
+            );
+            $query = $db->prepare('INSERT INTO ebb_topic_watch (username, tid, read_status) VALUES(:username, :tid, :read_status)');
+            $query->execute($data);
+        } elseif ($mode == "unsubscribe" && $query->rowCount() > 0) {
+            $query = $db->prepare('DELETE FROM ebb_topic_watch WHERE tid=:tid AND username=:username');
+            $query->execute(array(":tid" => $tid, ":username" => $user));
+        }
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
 #output last new user.
 function newuser(){
 

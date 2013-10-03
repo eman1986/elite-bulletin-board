@@ -17,16 +17,17 @@ class login {
 
     /**
      *Performs a check through the database to ensure the requested username is valid.
+     * @param string $usr The username we wish to check.
      *@return bool
    */
-    private function validateUser() {
+    private function validateUser($usr) {
 
         global $db;
 
         try {
             //check against the database to see if the username  match.
             $query = $db->prepare('SELECT id from ebb_users WHERE Username=:username LIMIT 1');
-            $query->execute(array(":username" => $this->user));
+            $query->execute(array(":username" => $usr));
             $validateUser = $query->rowCount();
 
             //see if username is value.
