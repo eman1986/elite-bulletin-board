@@ -1,7 +1,7 @@
 <?php
 /*
 Filename: user_function.php
-Last Modified: 10/02/2013
+Last Modified: 10/03/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -91,7 +91,7 @@ function subscriptionManager($user, $tid, $mode) {
 
     try {
         //check against the database to see if the username  match.
-        $query = $db->prepare('SELECT tid from ebb_topic_watch WHERE username=:username');
+        $query = $db->prepare('SELECT tid FROM ebb_topic_watch WHERE username=:username');
         $query->execute(array(":username" => $user));
 
         //see if they want to subscribe or unsubscribe to a topic.
@@ -118,98 +118,13 @@ function newuser(){
 
 	global $db;
 
-	$db->run = "select Username from ebb_users where active='1' ORDER BY Date_Joined DESC LIMIT 1";
+	$db->run = "SELECT Username FROM ebb_users WHERE active='1' ORDER BY Date_Joined DESC LIMIT 1";
 	$new_user = $db->result();
 	$db->close();
 
 	return ($new_user);
 }
-#group checker.
-function group_validate($bid, $gid, $type){
 
-global $db, $txt, $cp;
-
-	#see if Board ID was declared, if not terminate any further outputting.
-	if((!isset($bid)) or (empty($bid))){
-		die($txt['nobid']);
-	}
-	#see if Group ID was declared, if not terminate any further outputting.
-	if((!isset($gid)) or (empty($gid))){
-		die($txt['nogid']);
-	}
-	#see if Group Type was declared, if not terminate any further outputting.
-	if((!isset($type)) or (empty($type))){
-		die($cp['nogroupsel']);
-	}
-	//check to see if this user is able to access this area.
-	$db->run = "select type from ebb_grouplist WHERE board_id='$bid' and group_id='$gid' and type='$type'";
-	$checkgroup = $db->num_results();
-	$db->close();
-
-	return ($checkgroup);
-}
-#permission checker.
-function permission_check($action){
-
-	global $access_level, $checkgroup, $checkmod, $txt;
-
-	#see if action variable was used.(!isset($action)) or(DEBUG PURPOSES) 
-	//if($action == ""){
-	//	die($txt['invalidaction']);	
-	//}
-	#check permission.
-	if($checkmod == 1){
-		$permission_chk = 1;	
-	}else{	
-		if(($action == 1) AND ($access_level == 1)){
-			$permission_chk = 1;
-		}elseif(($action == 2) AND ($access_level == 1) or ($access_level == 2)){
-			$permission_chk = 1;
-		}elseif(($action == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-			$permission_chk = 1;	
-		}elseif($action == 4){
-			$permission_chk = 0;
-		}elseif(($action == 5) and ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-			$permission_chk = 1;
-		}elseif($action == 0){
-			$permission_chk = 1;	
-		}else{
-			$permission_chk = 0;
-		}
-	}
-	return($permission_chk);
-}
-#group access controller.
-function access_vaildator($permission_profile, $permission_action){
-	
-	global $db, $txt, $stat;
-	
-	#first lets make sure the permission profile used is valid.
-	$db->run = "SELECT id FROM ebb_permission_profile WHERE id='$permission_profile'";
-	$permission_profile_chk = $db->num_results();
-	$db->close();
-	
-	#see if user ID is incorrect or Null.
-	if(($permission_profile_chk == 0) and ($stat !== "guest")){
-		die($txt['invalidprofile']);
-	}
-	
-	#lets also check to make sure the action requested is valid.
-	$db->run = "SELECT id FROM ebb_permission_actions WHERE id='$permission_action'";
-	$permission_action_chk = $db->num_results();
-	$db->close();
-	if($permission_action_chk == 0){
-		die($txt['invalidaction']);
-	}
-	
-	#see if user has correct permission to access requested permission.
-	$db->run = "SELECT set_value FROM ebb_permission_data WHERE profile='$permission_profile' and permission='$permission_action'";
-	$validate_permission = $db->result();
-	$db->close();
-
-	#output value in script.
-	return ($validate_permission['set_value']);
-}
 #user's warning level bar.
 function user_warn($user){
 
@@ -253,98 +168,6 @@ function user_warn($user){
 		}
 	}
 	return($warn_bar);
-}
-
-#get latest 5 replies made by selected user.
-function latestTopics($user){
-
-	global $db, $stat, $level_result;
-
-	$db->run = "select tid, bid, author, Topic, Body, Original_Date FROM ebb_topics where author='$user' Order By Original_Date DESC limit 5";
-	$topic_query = $db->query();
-	$db->close();
-	
-	#prime var.
-	$LatestTopics = '';
-	while($topic = mysql_fetch_array($topic_query)) {
-
-		//check for the posting rule.
-		$db->run = "select B_Read from ebb_board_access WHERE B_id='$topic[bid]'";
-		$board_rule = $db->result();
-		$db->close();
-		if(($stat == "guest") or ($stat == "Member")){
-			#guest has no group rights.
-			$checkgroup = 0;
-			$checkmod = 0;
-		}else{
-			#get group access information.
-			$checkgroup = group_validate($topic['bid'], $level_result['id'], 2);
-			$checkmod = group_validate($topic['bid'], $level_result['id'], 1);
-		}
-		//see if the user can access this spot.
-		$read_chk = permission_check($board_rule['B_Read']);
-		if ($read_chk == 1){
-		
-			#if body is over 100 characters, cut it off.
-			if(strlen($topic['Body']) > 200){
-				$topicBody = substr_replace(var_cleanup($topic['Body']),'[...]',100);
-			}else{
-				$topicBody = $topic['Body'];
-			}
-			
-			#output topics
-			$LatestTopics .= "<b>$topic[Topic]</b><br />$topicBody<hr />";
-		}
-	}
-	return ($LatestTopics);	
-}
-
-#get latest 5 replies made by selected user.
-function latestPosts($user){
-	global $db, $stat, $level_result;
-
-	$db->run = "select author, pid, tid, bid, Body, Original_Date from ebb_posts where author='$user' Order By Original_Date DESC LIMIT 10";
-	$post_query = $db->query();
-	$db->close();
-	
-	#prime var.
-	$LatestPosts = '';
-	while($post = mysql_fetch_array($post_query)) {
-
-		//check for the posting rule.
-		$db->run = "select B_Read from ebb_board_access WHERE B_id='$post[bid]'";
-		$board_rule = $db->result();
-		$db->close();
-		if(($stat == "guest") or ($stat == "Member")){
-		  #guest has no group rights.
-			$checkgroup = 0;
-			$checkmod = 0;
-		}else{
-			#get group access information.
-			$checkgroup = group_validate($post['bid'], $level_result['id'], 2);
-			$checkmod = group_validate($post['bid'], $level_result['id'], 1);
-		}
-		//see if the user can access this spot.
-		$read_chk = permission_check($board_rule['B_Read']);
-		if ($read_chk == 1){
-		
-			#if body is over 100 characters, cut it off.
-			if(strlen($post['Body']) > 200){
-				$postBody = substr_replace(var_cleanup($post['Body']),'[...]',100);
-			}else{
-				$postBody = var_cleanup($post['Body']);
-			}
-		
-			#get topic details.
-			$db->run = "SELECT Topic FROM ebb_topics where tid='$post[tid]'";
-			$topic_r = $db->result();
-			$db->close();
-		
-			#output topics
-			$LatestPosts .= "<b>$topic_r[Topic]</b><br />$postBody<hr />";
-	}
-	}
-	return ($LatestPosts);	
 }
 
 #update user's online status

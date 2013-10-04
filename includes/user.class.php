@@ -4,7 +4,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: user.class.php
-Last Modified: 10/02/2013
+Last Modified: 10/03/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -764,50 +764,54 @@ class user {
      * @return bool
     */
     public function getUser($userID) {
+        try {
+            //Get data
+            $query = $this->db->prepare('SELECT id, Username, Password, salt, Email, gid, Custom_Title, last_visit, PM_Notify, Hide_Email,WWW, Location, Sig, Time_format, date_format, Time_Zone, Date_Joined, IP, Style, Language, Post_Count, last_post, last_search, failed_attempts, active, act_key, password_recovery_date, warning_level, suspend_length, suspend_time FROM ebb_users WHERE Username=:username LIMIT 1');
+            $query->execute(array(":username" => $userID));
 
-        //Get data
-        $query = $this->db->prepare('SELECT id, Username, Password, salt, Email, gid, Custom_Title, last_visit, PM_Notify, Hide_Email,WWW, Location, Sig, Time_format, date_format, Time_Zone, Date_Joined, IP, Style, Language, Post_Count, last_post, last_search, failed_attempts, active, act_key, password_recovery_date, warning_level, suspend_length, suspend_time from ebb_users WHERE Username=:username LIMIT 1');
-        $query->execute(array(":username" => $userID));
+            //see if we have any records to show.
+            if($query->rowCount() > 0) {
+                $userData = $query->fetch(PDO::FETCH_OBJ);
 
-        //see if we have any records to show.
-        if($query->rowCount() > 0) {
-            $userData = $query->fetch(PDO::FETCH_OBJ);
-
-            //populate properties with values.
-            $this->setId($userData->id);
-            $this->setUserName($userData->Username);
-            $this->setPassword($userData->Password);
-            $this->setEmail($userData->Email);
-            $this->setGid($userData->gid);
-            $this->setCustomTitle($userData->Custom_Title);
-            $this->setLastVisit($userData->last_visit);
-            $this->setPmNotify($userData->PM_Notify);
-            $this->setHideEmail($userData->Hide_Email);
-            $this->setWww($userData->WWW);
-            $this->setLocation($userData->Location);
-            $this->setSig($userData->Sig);
-            $this->setTimeFormat($userData->Time_format);
-            $this->setDateFormat($userData->date_format);
-            $this->setTimeZone($userData->Time_Zone);
-            $this->setDateJoined($userData->Date_Joined);
-            $this->setIp($userData->IP);
-            $this->setStyle($userData->Style);
-            $this->setLanguage($userData->Language);
-            $this->setPostCount($userData->Post_Count);
-            $this->setLastPost($userData->last_post);
-            $this->setLastSearch($userData->last_search);
-            $this->setFailedAttempts($userData->failed_attempts);
-            $this->setActive($userData->active);
-            $this->setActKey($userData->act_key);
-            $this->setPasswordRecoveryDate($userData->password_recovery_date);
-            $this->setWarningLevel($userData->warning_level);
-            $this->setSuspendLength($userData->suspend_length);
-            $this->setSuspendTime($userData->suspend_time);
-            return TRUE;
-        } else {
+                //populate properties with values.
+                $this->setId($userData->id);
+                $this->setUserName($userData->Username);
+                $this->setPassword($userData->Password);
+                $this->setEmail($userData->Email);
+                $this->setGid($userData->gid);
+                $this->setCustomTitle($userData->Custom_Title);
+                $this->setLastVisit($userData->last_visit);
+                $this->setPmNotify($userData->PM_Notify);
+                $this->setHideEmail($userData->Hide_Email);
+                $this->setWww($userData->WWW);
+                $this->setLocation($userData->Location);
+                $this->setSig($userData->Sig);
+                $this->setTimeFormat($userData->Time_format);
+                $this->setDateFormat($userData->date_format);
+                $this->setTimeZone($userData->Time_Zone);
+                $this->setDateJoined($userData->Date_Joined);
+                $this->setIp($userData->IP);
+                $this->setStyle($userData->Style);
+                $this->setLanguage($userData->Language);
+                $this->setPostCount($userData->Post_Count);
+                $this->setLastPost($userData->last_post);
+                $this->setLastSearch($userData->last_search);
+                $this->setFailedAttempts($userData->failed_attempts);
+                $this->setActive($userData->active);
+                $this->setActKey($userData->act_key);
+                $this->setPasswordRecoveryDate($userData->password_recovery_date);
+                $this->setWarningLevel($userData->warning_level);
+                $this->setSuspendLength($userData->suspend_length);
+                $this->setSuspendTime($userData->suspend_time);
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
             return FALSE;
         }
     }
-
 
 }
