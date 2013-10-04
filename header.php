@@ -105,7 +105,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     }
 
     #start-up login checker.
-    $userAuth = new login();
+    $userAuth = new login($db);
 
     if ($userAuth->validateLoginSession($loginLastActive, $loginKey, $ebbUserId)) {
         //user is logged in.

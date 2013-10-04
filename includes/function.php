@@ -4,7 +4,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: function.php
-Last Modified: 10/03/2013
+Last Modified: 10/04/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -158,6 +158,23 @@ function GenerateCaptchaQuestion() {
 */
 function var_cleanup($string){
     return trim(removeEvilAttributes(htmlentities($string, ENT_QUOTES)));
+}
+
+/**
+ * Get a language tag from the language file.
+ * @param string $tag The desired language tag.
+ * @return string
+*/
+function outputLanguageTag($tag) {
+
+    global $lang;
+
+    //see if tag exists.
+    if (!in_array($tag, $lang)) {
+        return $tag." is an invalid language tag.";
+    }  else {
+        return $lang[$tag];
+    }
 }
 
 /**

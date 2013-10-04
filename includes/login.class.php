@@ -15,6 +15,12 @@ the Free Software Foundation; either version 2 of the License, or
 
 class login {
 
+    protected $db; // our PDO instance.
+
+    public function __construct(PDO $db) {
+        $this->db = $db;
+    }
+
     /**
      *Performs a check through the database to ensure the requested username is valid.
      * @param string $usr The username we wish to check.
@@ -22,11 +28,9 @@ class login {
    */
     private function validateUser($usr) {
 
-        global $db;
-
         try {
             //check against the database to see if the username  match.
-            $query = $db->prepare('SELECT id from ebb_users WHERE Username=:username LIMIT 1');
+            $query = $this->db->prepare('SELECT id from ebb_users WHERE Username=:username LIMIT 1');
             $query->execute(array(":username" => $usr));
             $validateUser = $query->rowCount();
 
@@ -46,14 +50,12 @@ class login {
     */
     private function validatePwd($pwd) {
 
-        global $db;
-
         //encrypt password.
         $encryptPwd = sha1($pwd.$this->getPwdSalt());
 
 
         //check against the database to see if the password match.
-        $query = $db->prepare('SELECT id from ebb_users WHERE Password=:password LIMIT 1');
+        $query = $this->db->prepare('SELECT id from ebb_users WHERE Password=:password LIMIT 1');
         $query->execute(array(":password" => $encryptPwd));
         $validatePwd = $query->rowCount();
 
@@ -67,9 +69,7 @@ class login {
     */
     private function getPwdSalt() {
 
-        global $db;
-
-        $query = $db->prepare('SELECT salt from ebb_users WHERE Username=:username LIMIT 1');
+        $query = $this->db->prepare('SELECT salt from ebb_users WHERE Username=:username LIMIT 1');
         $query->execute(array(":username" => $this->user));
         $results = $query->fetch(PDO::FETCH_OBJ);
 
@@ -86,9 +86,8 @@ class login {
      * @return boolean
      */
     private function ValidateLoginKey($key) {
-        global $db;
 
-        $query = $db->prepare('SELECT name, login_key from ebb_login_session WHERE username=:username');
+        $query = $this->db->prepare('SELECT name, login_key from ebb_login_session WHERE username=:username');
         $query->execute(array(":username" => $key));
         $validateKey = $query->rowCount();
 

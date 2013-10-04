@@ -1,7 +1,7 @@
 <?php
 /*
 Filename: user_function.php
-Last Modified: 10/03/2013
+Last Modified: 10/04/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -113,119 +113,138 @@ function subscriptionManager($user, $tid, $mode) {
     }
 }
 
-#output last new user.
-function newuser(){
-
+/**
+ * Get the latest user that joined.
+ * @return string
+*/
+function newuser() {
 	global $db;
 
-	$db->run = "SELECT Username FROM ebb_users WHERE active='1' ORDER BY Date_Joined DESC LIMIT 1";
-	$new_user = $db->result();
-	$db->close();
+    try {
+        //Get data
+        $query = $db->query('SELECT Username FROM ebb_users ORDER BY Date_Joined DESC LIMIT 1');
+        $result = $query->fetch(PDO::FETCH_OBJ);
 
-	return ($new_user);
+        return $result->Username;
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+        return NULL;
+    }
 }
 
 #user's warning level bar.
 function user_warn($user){
 
-	global $db, $checkmod, $access_level, $level_r, $template_path, $cp, $viewtopic, $tid, $bid, $logged_user, $permission_chk_warn;
-	
-	#see if user variable is blank.
-	if(!isset($user) || empty($user)){
-		echo $cp['nousernameentered'];
-		exit();
-	}else{
-		#get user's warning level.
-		$db->run = "SELECT warning_level FROM ebb_users WHERE Username='$user'";
-		$warn_r = $db->result();
-		$user_chk = $db->num_results();
-		$db->close();
-		#see if username placed in the function is invalid.
-		if($user_chk == 0){
-			echo $cp['nousernameentered'];
-			exit();
-		}
-		#see if user has moderator status, if so let them alter warning level.
-		if($checkmod == 1){
-			#see if user they wish to warn is higher in rank than them, if so don't let them set anything.
-			if(($access_level == 2) and ($level_r['Level'] == 1)){
-				$warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
-			}else{
-				#see if user has permission to alter warning value.
-				if($permission_chk_warn == 1){
-					$warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"12\" width=\"$warn_r[warning_level]\" />&nbsp;(<a href=\"manage.php?mode=warn&amp;user=$user&amp;bid=$bid&amp;tid=$tid\">$warn_r[warning_level]%</a>)</div>";
-				}else{
-					$warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
-				}
-			}
-		}else{
-			#see if user is the actual user.
-			if($user == $logged_user){
-				$warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
-			}else{
-				$warn_bar = '';
-			}
-		}
-	}
-	return($warn_bar);
+    global $db, $checkmod, $access_level, $level_r, $template_path, $cp, $viewtopic, $tid, $bid, $logged_user, $permission_chk_warn;
+
+    #see if user variable is blank.
+    if(!isset($user) || empty($user)){
+        echo $cp['nousernameentered'];
+        exit();
+    }else{
+        #get user's warning level.
+        $db->run = "SELECT warning_level FROM ebb_users WHERE Username='$user'";
+        $warn_r = $db->result();
+        $user_chk = $db->num_results();
+        $db->close();
+        #see if username placed in the function is invalid.
+        if($user_chk == 0){
+            echo $cp['nousernameentered'];
+            exit();
+        }
+        #see if user has moderator status, if so let them alter warning level.
+        if($checkmod == 1){
+            #see if user they wish to warn is higher in rank than them, if so don't let them set anything.
+            if(($access_level == 2) and ($level_r['Level'] == 1)){
+                $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
+            }else{
+                #see if user has permission to alter warning value.
+                if($permission_chk_warn == 1){
+                    $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"12\" width=\"$warn_r[warning_level]\" />&nbsp;(<a href=\"manage.php?mode=warn&amp;user=$user&amp;bid=$bid&amp;tid=$tid\">$warn_r[warning_level]%</a>)</div>";
+                }else{
+                    $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
+                }
+            }
+        }else{
+            #see if user is the actual user.
+            if($user == $logged_user){
+                $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
+            }else{
+                $warn_bar = '';
+            }
+        }
+    }
+    return($warn_bar);
 }
 
-#update user's online status
-function update_whosonline_reg($string){
+/**
+ * Update the online status of logged in users.
+ * @param string $user The user we wish to update their online status.
+*/
+function update_whosonline_reg($user){
 
-	global $db;
+    global $db;
 
-	//update the user's last active status.
-	$time = time();
-	$db->run = "update ebb_users SET last_visit='$time' where Username='$string'";
-	$db->query();
-	$db->close();
-	//check to see if user is marked as online, if not mark them as online.
-	$db->run = "select Username from ebb_online where Username='$string'";
-	$count_member = $db->num_results();
-	$db->close();
-	if ($count_member == 0){
-		//user seems to be just getting on.
-		$db->run = "insert into ebb_online (Username, time, location) values('$string', '$time', '".var_cleanup($_SERVER['PHP_SELF'])."')";
-		$db->query();
-		$db->close();
-	}else{
-		//user is still here so lets up their time to let the script know the user is still around.
-		$db->run = "update ebb_online Set time='".var_cleanup($time)."', location='".var_cleanup($_SERVER['PHP_SELF'])."' where Username='$string'";
-		$db->query();
-		$db->close();
-	}
+    try {
+        //$query = $db->prepare('UPDATE ebb_users SET last_visit=:last_visit WHERE Username=:username');
+        //$query->execute(array(":last_visit" => time(), ":username" => $user));
+
+        $query = $db->prepare('SELECT Username FROM ebb_online WHERE Username=:username');
+        $query->execute(array(":username" => $user));
+
+        if ($query->rowCount() == 0) {
+            $insertQ = $db->prepare('INSERT INTO  ebb_online (Username, time) VALUES(:username, :time)');
+            $insertQ->execute(array(":username" => $user, ":time" => time()));
+        } else {
+            $updateQ = $db->prepare('UPDATE  ebb_online SET time=:time WHERE Username=:username');
+            $updateQ->execute(array(":time" => time(), ":username" => $user));
+        }
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 }
-#update guest's last activre status.
+
+/**
+ * Update the online status of guest accounts.
+*/
 function update_whosonline_guest(){
 
-	global $db;
+    global $db;
 
-	$time = time();
-	$ip = var_cleanup($_SERVER["REMOTE_ADDR"]);
-	$db->run = "select Username from ebb_online where ip='$ip'";
-	$count_guest = $db->num_results();
-	$db->close();
-	if ($count_guest == 0){
-		$db->run = "insert into ebb_online (ip, time, location) values('$ip', '$time', '".var_cleanup($_SERVER['PHP_SELF'])."')";
-		$db->query();
-		$db->close();
-	}else{
-		//user is still here so lets up their time to let the script know the user is still around.
-		$db->run = "update ebb_online Set time='$time', location='".var_cleanup($_SERVER['PHP_SELF'])."' where ip='$ip'";
-		$db->query();
-		$db->close();
-	}
+    try {
+        $query = $db->prepare('SELECT ip FROM ebb_online WHERE ip=:ip');
+        $query->execute(array(":ip" => detectProxy()));
+
+        if ($query->rowCount() == 0) {
+            $insertQ = $db->prepare('INSERT INTO  ebb_online (ip, time) VALUES(:ip, :time)');
+            $insertQ->execute(array(":ip" => detectProxy(), ":time" => time()));
+        } else {
+            $updateQ = $db->prepare('UPDATE  ebb_online SET time=:time WHERE ip=:ip');
+            $updateQ->execute(array(":time" => time(), ":ip" => detectProxy()));
+        }
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 }
-#update user
+
+/**
+ * Update the last post when creating a post.
+ * @param string $user
+*/
 function update_user($user){
 
-	global $db, $time;
+    global $db;
 
-	//update user's last post.
-	$db->run = "Update ebb_users SET last_post='$time' WHERE Username='$user'";
-	$db->query();
-	$db->close(); 
+    try {
+        $queryQ = $db->prepare('UPDATE  ebb_users SET last_post=:last_post WHERE Username=:username');
+        $queryQ->execute(array(":last_post" => time(), ":username" => $user));
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 }
 
 /**
@@ -261,22 +280,24 @@ function detectProxy(){
 
 /**
  * Detects new PMs in user's Inbox.
- * @version 2/8/12
- * @global db $db
- * @global string $menu
  * @param string $user
  * @return string 
- */
+*/
 function DetectNewPM($user) {
     global $db, $menu;
-    
-    #total of new PM messages.
-    $db->run = "select Read_Status from ebb_pm WHERE Reciever='$user' and Folder='Inbox' and Read_Status=''";
-    $new_pm = $db->num_results();
-    $db->close();
-    if($new_pm == 0){
-        return $menu['nonewpm'];
-    }else{
-        return $new_pm.$menu['newpm'];
-	}
+
+    try {
+        $query = $db->prepare("SELECT Read_Status FROM ebb_pm  WHERE Reciever=:reciever AND Folder='Inbox' AND Read_Status=''");
+        $query->execute(array(":reciever" => $user));
+
+        if($query->rowCount() == 0){
+            return $menu['nonewpm'];
+        }else{
+            return $query->rowCount().$menu['newpm'];
+        }
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+        return NULL;
+    }
 }
