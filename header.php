@@ -6,14 +6,14 @@ if (phpversion() < "5.3") {
 }
 
 //delete old session.
-session_regenerate_id(true);
+session_regenerate_id(TRUE);
 
-if (!defined('IN_EBB') ) {
-	die("<b>!!ACCESS DENIED HACKER!!</b>");
+if (!defined('IN_EBB')) {
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /*
 Filename: header.php
-Last Modified: 10/02/2013
+Last Modified: 10/10/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -23,15 +23,13 @@ the Free Software Foundation; either version 2 of the License, or
 */
 if (phpversion() >= "5.4") {
     error_reporting(E_ALL ^ E_DEPRECATED ^ E_STRICT); //to remove all DEPRECATED & STRICT STANDARDS errors in production for PHP 5.4 users.
-}elseif (phpversion() >= "5.3") {
+} elseif (phpversion() >= "5.3") {
     error_reporting(E_ALL ^ E_DEPRECATED); //to remove all DEPRECATED errors in production for PHP 5.3 users.
 }
 
-#see if config file is already written.
-$config_path = 'config.php';
-$file_size = filesize($config_path);
-if($file_size == 0){
-    header("Location: ". isSecure() ? "https://" : "http://" . $_SERVER["SERVER_NAME"] . "/install");
+//see if config file is already written.
+if (filesize('config.php') == 0) {
+    header("Location: ". (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https://" . $_SERVER["SERVER_NAME"] . "/install" : "http://" . $_SERVER["SERVER_NAME"] . "/install");
 }
 
 require_once "config.php";
@@ -59,7 +57,7 @@ $run->pushHandler($errorPage);
 $run->register();
 
 
-#load functions & classes
+//load functions & classes
 require_once FULLPATH."/includes/template.php";
 require_once FULLPATH."/includes/function.php";
 require_once FULLPATH."/includes/template_function.php";
@@ -68,6 +66,7 @@ require_once FULLPATH."/includes/user_function.php";
 
 require_once FULLPATH."/includes/login.class.php";
 require_once FULLPATH."/includes/user.class.php";
+require_once FULLPATH."/includes/preference.class.php";
 
 // setup our database object.
 $options = array(
@@ -89,9 +88,12 @@ $timeout = time() - 120;
 //delete any old entries
 $db->exec('DELETE FROM ebb_online WHERE time = $timeout');
 
-#user check
+//load our preference object.
+$boardPref = new preference($db);
+
+//user check
 if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
-    #get username value.
+    //get username value.
     if (isset($_SESSION['ebb_user'])) {
         $ebbUserId = var_cleanup($_SESSION['ebb_user']);
         $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
@@ -104,7 +106,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
         exit('Invalid login!');
     }
 
-    #start-up login checker.
+    //start-up login checker.
     $userAuth = new login($db);
 
     if ($userAuth->validateLoginSession($loginLastActive, $loginKey, $ebbUserId)) {
@@ -113,13 +115,25 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
         //get user info.
         $userInfo = new user($db);
 
+        //get group data.
+        $groupData = new groupPolicy($db);
+
         $userEntity = $userInfo->getUser($ebbUserId);
+
 
         //validate user is correct.
         if ($userEntity) {
-            #set-up vars
+            $groupEntity = $groupData->getGroupData($userInfo->getGid());
+
+            if ($groupEntity) {
+                $access_level = $groupData->getLevel();
+            } else {
+                throw new Exception('Invalid Group ID');
+            }
+
+            //set-up vars
             $logged_user = $userInfo->getUserName();
-            $stat = $userpref['Status'];
+            //$stat = $userpref['Status']; //TODO: should replace with $access_level
             $template = $userInfo->getStyle();
             $time_format = $userInfo->getTimeFormat();
             $lang = $userInfo->getLanguage();
@@ -132,78 +146,33 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
         }
 
     } else {
-        //not logged in.
+        //@todo invalid login session, log user out.
     }
+} else {
+    $logged_user = 'guest';
 
-    if($chk_user == 1){
-        #set the columns needed for now.
-        $columes = 'Status, Style, Time_format, Language, Time_Zone, last_visit, suspend_length, suspend_time';
-        #call user function.
-        $userpref = user_settings($logged_user, $columes);
+    //get group data.
+    $groupData = new groupPolicy($db);
+    $groupData->isGuest = TRUE;
 
-        //check to see if user is part of a group.
-        if ($stat == "groupmember"){
-            $db->run = "SELECT gid FROM ebb_group_users where Username='$logged_user' AND Status='Active'";
-            $groupuser = $db->result();
-            $group_auth_chk = $db->num_results();
-            $db->close();
-            if ($group_auth_chk == 1){
-                $db->run = "SELECT id, Name, Level, permission_type FROM ebb_groups where id='$groupuser[gid]'";
-                $level_result = $db->result();
-                $db->close();
-                #set-up vars
-                $access_level = $level_result['Level'];
-                $permission_type = $level_result['permission_type'];
-            }else{
-                die('INVALID GROUP ID');
-            }
-        }elseif($stat == "Member"){
-            $level_result = 3;
-            $access_level = 3;
-            $permission_type = 4;
-        }else{
-            $logged_user = '';
-            $level_result = 0;
-            $access_level = 0;
-            $permission_type = 0;
-        }
-    }else{
-        $error = "INVALID COOKIE OR SESSION!";
-        echo error($error, "error");
-    }
-}else{
-    $stat = "guest";
-    $access_level = 0;
-    $logged_user = '';
-    $level_result['Level'] = 0;
-    $level_result['id'] = 0;
-    $permission_type = 0;
-    #call board setting function.
-    $colume = 'Default_Style, Default_Language, Default_Time, Default_Zone, activation';
-    $settings = board_settings($colume);
-    #set-up vars
-    $template = $settings['Default_Style'];
-    $lang = $settings['Default_Language'];
-    $time_format = $settings['Default_Time'];
-    $gmt = $settings['Default_Zone'];
-    $active_type = $settings['activation'];
+    //get default values.
+    $template = $boardPref->getPreferenceValue("default_style");
+    $time_format = $boardPref->getPreferenceValue("time_format");
+    $lang = $boardPref->getPreferenceValue("default_language");
+    $gmt = $boardPref->getPreferenceValue("timezone");
+    $last_visit = NULL;
+    $suspend_length = NULL;
+    $suspend_date = NULL;
 }
-#call board setting function.
-$colume = 'Site_Title, Site_Address, Board_Address, Board_Status, Board_Email, Off_Message';
-$settings = board_settings($colume);
-#settings
-$title = $settings['Site_Title'];
-$address = $settings['Site_Address'];
-$board_address = $settings['Board_Address'];
-$board_status = $settings['Board_Status'];
-$board_email = $settings["Board_Email"];
-$off_msg = $settings["Off_Message"];
 
-#template
-$theme = theme($template);
+//settings
+$title = $boardPref->getPreferenceValue("board_name");
+$address = $boardPref->getPreferenceValue("board_address");
+$board_status = $boardPref->getPreferenceValue("board_status");
+$board_email = $boardPref->getPreferenceValue("board_email");
 
-#set-up vars
-$template_path = $theme['Temp_Path'];
+//get template path.
+$template_path = theme($template);
 
-#language loading
-require FULLPATH."/lang/".$lang.".lang.php";
+//language loading
+require_once FULLPATH."/lang/".$lang.".lang.php";

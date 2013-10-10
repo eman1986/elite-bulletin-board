@@ -4,7 +4,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: function.php
-Last Modified: 10/04/2013
+Last Modified: 10/10/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -268,20 +268,22 @@ function board_stats(){
 
 	return ($b_stats);
 }
-#check for setup files.
-function checkinstall(){
 
-	if (file_exists("install/install.php")){
-		$setupexist = 1;
-	}else{
-		$setupexist = 0;
-	}
-	return ($setupexist);
+/**
+ * See if installation files are still on the server.
+ * @return bool
+*/
+function checkInstall() {
+    return file_exists(FULLPATH."/install/install.php");
 }
 
-#php parsing function for information ticker.
+/**
+ * php parsing function for information ticker.
+ * @param string $string the content from our news feed.
+ * @return string
+*/
 function nl2p($string) {
-	return "<p align=\"center\">" . str_replace("\n", "</p><p align=\"center\">", $string) . "</p>";
+    return '<p align="center">' . str_replace("\n", '</p><p align="center">', $string) . '</p>';
 }
 
 /**
@@ -390,8 +392,9 @@ function other_ip_check(){
  * Shows an error message is a styled format to the user.
  * @param string $error The message to present to the user.
  * @param string $type The type of error.
+ * @param bool $halt determines if we should prevent any further execution.
 */
-function error($error, $type) {
+function error($error, $type, $halt=FALSE) {
     global $title, $txt, $template_path;
 
     switch($type){
@@ -402,7 +405,11 @@ function error($error, $type) {
             "LANG-TITLE" => "$txt[error]",
             "ERRORMSG" => "$error"));
             $page->output();
-            exit();
+
+            //kill script?
+            if ($halt) {
+                exit();
+            }
         break;
         case 'general':
             $page = new template("error", $template_path);
@@ -411,6 +418,11 @@ function error($error, $type) {
             "LANG-TITLE" => "$txt[info]",
             "ERRORMSG" => "$error"));
             $page->output();
+
+            //kill script?
+            if ($halt) {
+                exit();
+            }
         break;
         case 'validate': //@TODO we may not need this anymore.
             $page = new template("error-validate", $template_path);

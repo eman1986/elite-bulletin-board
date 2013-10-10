@@ -1,0 +1,9 @@
+{
+    "require": {
+        "filp/whoops": "dev-master",
+        "phpmailer/phpmailer": "dev-master"
+    },
+    "config" : {
+        "vendor-dir" : "includes"
+    }
+}
