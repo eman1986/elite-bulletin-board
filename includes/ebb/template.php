@@ -1,10 +1,10 @@
 <?php
 if (!defined('IN_EBB')) {
-    die("<B>!!ACCESS DENIED HACKER!!</B>");
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
-/*
+/**
 Filename: template.php
-Last Modified: 10/01/2013
+Last Modified: 10/18/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -12,6 +12,8 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
+
+namespace ebb;
 class template {
 
     /**

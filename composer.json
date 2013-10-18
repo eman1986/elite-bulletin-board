@@ -4,6 +4,19 @@
         "phpmailer/phpmailer": "v5.2.7",
         "ircmaxell/password-compat": "1.0.3"
     },
+    "autoload": {
+        "psr-0": {
+            "ebb\\": "includes/"
+        },
+        "files": [
+            "includes/admin_function.php",
+            "includes/function.php",
+            "includes/posting_function.php",
+            "includes/template_function.php",
+            "includes/topic_function.php",
+            "includes/user_function.php"
+        ]
+    },
     "config" : {
         "vendor-dir" : "includes"
     }

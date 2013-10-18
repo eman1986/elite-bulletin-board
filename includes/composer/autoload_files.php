@@ -7,4 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     $vendorDir . '/ircmaxell/password-compat/lib/password.php',
+    $vendorDir . '/admin_function.php',
+    $vendorDir . '/function.php',
+    $vendorDir . '/posting_function.php',
+    $vendorDir . '/template_function.php',
+    $vendorDir . '/topic_function.php',
+    $vendorDir . '/user_function.php',
 );

@@ -4,7 +4,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: user.class.php
-Last Modified: 10/03/2013
+Last Modified: 10/18/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -13,6 +13,7 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
  */
 
+namespace ebb;
 class user {
 
     /**

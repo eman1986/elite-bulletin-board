@@ -13,7 +13,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: header.php
-Last Modified: 10/10/2013
+Last Modified: 10/18/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -48,17 +48,6 @@ $errorPage->setPageTitle("System Failure!");
 $run->pushHandler($errorPage);
 $run->register();
 
-
-//load functions & classes
-require_once FULLPATH."/includes/template.php";
-require_once FULLPATH."/includes/function.php";
-require_once FULLPATH."/includes/template_function.php";
-require_once FULLPATH."/includes/posting_function.php";
-require_once FULLPATH."/includes/user_function.php";
-
-require_once FULLPATH."/includes/login.class.php";
-require_once FULLPATH."/includes/user.class.php";
-require_once FULLPATH."/includes/preference.class.php";
 
 // setup our database object.
 $options = array(
