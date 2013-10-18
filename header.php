@@ -34,16 +34,8 @@ if (filesize('config.php') == 0) {
 
 require_once "config.php";
 
-//load exception handler library.
-require_once FULLPATH.'/includes/Whoops/Run.php';
-require_once FULLPATH.'/includes/Whoops/Handler/HandlerInterface.php';
-require_once FULLPATH.'/includes/Whoops/Handler/Handler.php';
-require_once FULLPATH.'/includes/Whoops/Handler/PrettyPageHandler.php';
-require_once FULLPATH.'/includes/Whoops/Handler/JsonResponseHandler.php';
-require_once FULLPATH.'/includes/Whoops/Exception/ErrorException.php';
-require_once FULLPATH.'/includes/Whoops/Exception/Inspector.php';
-require_once FULLPATH.'/includes/Whoops/Exception/Frame.php';
-require_once FULLPATH.'/includes/Whoops/Exception/FrameCollection.php';
+//composer autoloader
+require_once FULLPATH.'/includes/autoload.php';
 
 $run = new \Whoops\Run;
 $errorPage = new \Whoops\Handler\PrettyPageHandler;
@@ -99,7 +91,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
         $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
         $loginLastActive = var_cleanup($_SESSION['ebbLastActive']);
     } elseif(isset($_COOKIE['ebbuser'])) {
-        $$ebbUserId = var_cleanup($_COOKIE['ebbuser']);//$logged_user
+        $$ebbUserId = var_cleanup($_COOKIE['ebbuser']);
         $loginKey = var_cleanup($_SESSION['ebbLoginKey']);
         $loginLastActive = var_cleanup($_SESSION['ebbLastActive']);
     } else {

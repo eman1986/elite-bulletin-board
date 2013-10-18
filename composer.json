@@ -1,7 +1,8 @@
 {
     "require": {
-        "filp/whoops": "dev-master",
-        "phpmailer/phpmailer": "dev-master"
+        "filp/whoops": "1.0.8",
+        "phpmailer/phpmailer": "v5.2.7",
+        "ircmaxell/password-compat": "1.0.3"
     },
     "config" : {
         "vendor-dir" : "includes"
