@@ -50,7 +50,7 @@ require_once FULLPATH."/includes/template.php";
 $boardDir = trailingSlashRemover(dirname(dirname($_SERVER["SCRIPT_NAME"])));
 $boardFolder = ltrim($boardDir, '/');
 
-require_once FULLPATH."/lang/English.lang.php";
+require_once FULLPATH . "/lang/english.lang.php";
 require_once FULLPATH."/includes/function.php";
 require_once FULLPATH."/includes/template_function.php";
 require_once FULLPATH."/includes/user_function.php";

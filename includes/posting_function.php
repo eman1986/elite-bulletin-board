@@ -1,10 +1,10 @@
 <?php
 if (!defined('IN_EBB') ) {
-die("<b>!!ACCESS DENIED HACKER!!</b>");
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /*
 Filename: posting_function.php
-Last Modified: 06/30/2012
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -293,33 +293,3 @@ function update_topic($tid, $newlink, $user){
 	$db->query();
 	$db->close();
 }
-
-/**
- * Subscribe or unsubscribe from a topic.
- * @global db $db
- * @global string $logged_user
- * @param integer $tid the Topic ID we want this to affect.
- * @param string $mode are we subscribing or unsubscribing?
- * @version 06/30/12
- */
-function SubscriptionManager($tid, $mode) {
-
-	global $db, $logged_user;
-	
-	//get a check to see if they are a part the topic defined.
-	$db->run = "SELECT tid from ebb_topic_watch WHERE username='$logged_user'";
-	$subscription_status = $db->num_results();
-	$db->close();
-	
-	//see if they want to subscribe or unsubscribe to a topic.
-	if ($mode == "subscribe" && $subscription_status == 0) {
-		$db->run = "insert into ebb_topic_watch (username, tid, status) values ('$logged_user', '$tid', 'Unread')";
-		$db->query();
-		$db->close();
-	}elseif ($mode == "unsubscribe" && $subscription_status > 0) {
-		$db->run = "DELETE FROM ebb_topic_watch WHERE username='$logged_user'";
-		$db->query();
-		$db->close();
-	} 
-}
-?>

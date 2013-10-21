@@ -32,7 +32,7 @@ include "../config.php";
 require "../includes/db.php";
 $db = new db;
 require "../template.php";
-require "../lang/English.lang.php";
+require "../lang/english.lang.php";
 require "../includes/function.php";
 require "../includes/template_function.php";
 require "../includes/user_function.php";

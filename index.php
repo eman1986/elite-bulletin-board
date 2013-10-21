@@ -11,9 +11,8 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 require "header.php";
-include FULLPATH."/includes/topic_function.php";
 
-$page = new template($template_path ."/header.htm");
+$page = new \ebb\template("header", $template_path);
 $page->replace_tags(array(
   "TITLE" => "$title",
   "PAGETITLE" => "$index[title]"));
@@ -179,5 +178,5 @@ $page->output();
 $page = new template($template_path ."/footer.htm");
 $page->replace_tags(array(
   "LANG-POWERED" => "$index[poweredby]"));
-$page->output();
+$page-> output();
 ob_end_flush();

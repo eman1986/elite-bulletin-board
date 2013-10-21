@@ -4,7 +4,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: template_function.php
-Last Modified: 09/23/2013
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ the Free Software Foundation; either version 2 of the License, or
 function theme($id) {
     global $db;
 
-    $query = $db->prepare('SELECT Temp_Path from ebb_styles WHERE id=:id LIMIT 1');
+    $query = $db->prepare('SELECT Temp_Path from ebb_style WHERE id=:id LIMIT 1');
     $query->execute(array(":id" => $id));
     $results = $query->fetch(PDO::FETCH_OBJ);
 

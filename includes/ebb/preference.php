@@ -1,10 +1,15 @@
 <?php
+namespace ebb;
+use PDO;
+use PDOException;
+use Exception;
+
 if (!defined('IN_EBB') ) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /**
-Filename: preference.class.php
-Last Modified: 10/18/2013
+Filename: preference.php
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -12,8 +17,6 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
-
-namespace ebb;
 class preference {
 
     /**
@@ -46,10 +49,9 @@ class preference {
     */
     public static $boolean = 3;
 
-    public function __construct(PDO $db) {
+    public function __construct(\PDO $db) {
         $this->db = $db;
     }
-
 
     /**
      * Obtains the value of a defined preference.
@@ -66,7 +68,7 @@ class preference {
 
                 return $prefVal->pref_value;
             } else {
-                throw new Exception('Invalid preference option requested.');
+                throw new Exception($prefName. ' is an invalid preference option.');
             }
         }
         catch (PDOException $e) {
@@ -94,7 +96,7 @@ class preference {
 
                 return $prefVal->pref_type;
             } else {
-                throw new Exception('Invalid preference option requested.');
+                throw new Exception($prefName. ' is an invalid preference option.');
             }
         }
         catch (PDOException $e) {

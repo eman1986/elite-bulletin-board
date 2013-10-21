@@ -1,7 +1,7 @@
 <?php
 /*
 Filename: topic_function.php
-Last Modified: 1/11/2011
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -10,17 +10,6 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 
-#check read status on board.
-function read_board_stat($bid, $user){
-
-	global $db;
-
-	$db->run = "select Board from ebb_read_board WHERE Board='$bid' and User='$user'";
-	$read_ct = $db->num_results();
-	$db->close(); 
-
-	return ($read_ct);
-}
 #check read status on topic.
 function read_topic_stat($tid, $user){
 
@@ -28,7 +17,7 @@ function read_topic_stat($tid, $user){
 
 	$db->run = "select Topic from ebb_read_topic WHERE Topic='$tid' and User='$user'";
 	$read_ct = $db->num_results();
-	$db->close(); 
+	$db->close();
 
 	return ($read_ct);
 }
@@ -36,132 +25,132 @@ function read_topic_stat($tid, $user){
 function board_policy(){
 
 	global $db, $board_rule, $checkmod, $checkgroup, $viewtopic, $stat, $access_level;
-	
+
 	#read policy.
 	if(($board_rule['B_Read'] == 1) AND ($access_level == 1)){
 		$board_policy = $viewtopic['canread']. "<br />";
 	}elseif(($board_rule['B_Read'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy = $viewtopic['canread']. "<br />"; 
+		$board_policy = $viewtopic['canread']. "<br />";
 	}elseif(($board_rule['B_Read']== 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy = $viewtopic['canread']. "<br />"; 
+		$board_policy = $viewtopic['canread']. "<br />";
 	}elseif($board_rule['B_Read'] == 0){
-		$board_policy = $viewtopic['canread']. "<br />"; 
+		$board_policy = $viewtopic['canread']. "<br />";
 	}elseif(($board_rule['B_Read'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy = $viewtopic['canread']. "<br />"; 
+		$board_policy = $viewtopic['canread']. "<br />";
 	}else{
-		$board_policy = $viewtopic['cantread']. "<br />"; 
+		$board_policy = $viewtopic['cantread']. "<br />";
 	}
 	#posting policy.
 	if(($board_rule['B_Post'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canpost']. "<br />";
 	}elseif(($board_rule['B_Post'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canpost']. "<br />"; 
+		$board_policy .= $viewtopic['canpost']. "<br />";
 	}elseif(($board_rule['B_Post'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canpost']. "<br />"; 
+		$board_policy .= $viewtopic['canpost']. "<br />";
 	}elseif($board_rule['B_Post'] == 4){
-		$board_policy .= $viewtopic['cantpost']. "<br />"; 
+		$board_policy .= $viewtopic['cantpost']. "<br />";
 	}elseif(($board_rule['B_Post'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canpost']. "<br />"; 
+		$board_policy .= $viewtopic['canpost']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantpost']. "<br />"; 
+		$board_policy .= $viewtopic['cantpost']. "<br />";
 	}
 	#reply policy.
 	if(($board_rule['B_Reply'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canreply']. "<br />";
 	}elseif(($board_rule['B_Reply'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canreply']. "<br />"; 
+		$board_policy .= $viewtopic['canreply']. "<br />";
 	}elseif(($board_rule['B_Reply'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canreply']. "<br />"; 
+		$board_policy .= $viewtopic['canreply']. "<br />";
 	}elseif($board_rule['B_Reply'] == 4){
-		$board_policy .= $viewtopic['cantreply']. "<br />"; 
+		$board_policy .= $viewtopic['cantreply']. "<br />";
 	}elseif(($board_rule['B_Reply'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canreply']. "<br />"; 
+		$board_policy .= $viewtopic['canreply']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantreply']. "<br />"; 
+		$board_policy .= $viewtopic['cantreply']. "<br />";
 	}
 	#voting policy.
 	if(($board_rule['B_Vote'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canvote']. "<br />";
 	}elseif(($board_rule['B_Vote'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canvote']. "<br />"; 
+		$board_policy .= $viewtopic['canvote']. "<br />";
 	}elseif(($board_rule['B_Vote'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canvote']. "<br />"; 
+		$board_policy .= $viewtopic['canvote']. "<br />";
 	}elseif($board_rule['B_Vote'] == 4){
-		$board_policy .= $viewtopic['canvote']. "<br />"; 
+		$board_policy .= $viewtopic['canvote']. "<br />";
 	}elseif(($board_rule['B_Vote'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canvote']. "<br />"; 
+		$board_policy .= $viewtopic['canvote']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantvote']. "<br />"; 
+		$board_policy .= $viewtopic['cantvote']. "<br />";
 	}
 	#poll policy.
 	if(($board_rule['B_Poll'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canpoll']. "<br />";
 	}elseif(($board_rule['B_Poll'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canpoll']. "<br />"; 
+		$board_policy .= $viewtopic['canpoll']. "<br />";
 	}elseif(($board_rule['B_Poll'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canpoll']. "<br />"; 
+		$board_policy .= $viewtopic['canpoll']. "<br />";
 	}elseif($board_rule['B_Poll'] == 4){
-		$board_policy .= $viewtopic['cantpoll']. "<br />"; 
+		$board_policy .= $viewtopic['cantpoll']. "<br />";
 	}elseif(($board_rule['B_Poll'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canpoll']. "<br />"; 
+		$board_policy .= $viewtopic['canpoll']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantpoll']. "<br />"; 
+		$board_policy .= $viewtopic['cantpoll']. "<br />";
 	}
 	#edit topic policy.
 	if(($board_rule['B_Edit'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canedit']. "<br />";
 	}elseif(($board_rule['B_Edit'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canedit']. "<br />"; 
+		$board_policy .= $viewtopic['canedit']. "<br />";
 	}elseif(($board_rule['B_Edit'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canedit']. "<br />"; 
+		$board_policy .= $viewtopic['canedit']. "<br />";
 	}elseif($board_rule['B_Edit'] == 4){
-		$board_policy .= $viewtopic['cantedit']. "<br />"; 
+		$board_policy .= $viewtopic['cantedit']. "<br />";
 	}elseif(($board_rule['B_Edit'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canedit']. "<br />"; 
+		$board_policy .= $viewtopic['canedit']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantedit']. "<br />"; 
+		$board_policy .= $viewtopic['cantedit']. "<br />";
 	}
 	#delete topic policy.
 	if(($board_rule['B_Delete'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['candelete']. "<br />";
 	}elseif(($board_rule['B_Delete'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['candelete']. "<br />"; 
+		$board_policy .= $viewtopic['candelete']. "<br />";
 	}elseif(($board_rule['B_Delete'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['candelete']. "<br />"; 
+		$board_policy .= $viewtopic['candelete']. "<br />";
 	}elseif($board_rule['B_Delete'] == 4){
-		$board_policy .= $viewtopic['cantdelete']. "<br />"; 
+		$board_policy .= $viewtopic['cantdelete']. "<br />";
 	}elseif(($board_rule['B_Delete'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['candelete']. "<br />"; 
+		$board_policy .= $viewtopic['candelete']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantdelete']. "<br />"; 
+		$board_policy .= $viewtopic['cantdelete']. "<br />";
 	}
 	#important topic policy.
 	if(($board_rule['B_Important'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canimportant']. "<br />";
 	}elseif(($board_rule['B_Important'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canimportant']. "<br />"; 
+		$board_policy .= $viewtopic['canimportant']. "<br />";
 	}elseif(($board_rule['B_Important'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canimportant']. "<br />"; 
+		$board_policy .= $viewtopic['canimportant']. "<br />";
 	}elseif($board_rule['B_Important'] == 4){
-		$board_policy .= $viewtopic['cantimportant']. "<br />"; 
+		$board_policy .= $viewtopic['cantimportant']. "<br />";
 	}elseif(($board_rule['B_Important'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canimportant']. "<br />"; 
+		$board_policy .= $viewtopic['canimportant']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantimportant']. "<br />"; 
+		$board_policy .= $viewtopic['cantimportant']. "<br />";
 	}
 	#attachment policy.
 	if(($board_rule['B_Attachment'] == 1) AND ($access_level == 1)){
 		$board_policy .= $viewtopic['canattach']. "<br />";
 	}elseif(($board_rule['B_Attachment'] == 2) AND ($access_level == 1) or ($access_level == 2)){
-		$board_policy .= $viewtopic['canattach']. "<br />"; 
+		$board_policy .= $viewtopic['canattach']. "<br />";
 	}elseif(($board_rule['B_Attachment'] == 3) AND ($access_level == 3) or ($access_level == 2) or ($access_level == 1)){
-		$board_policy .= $viewtopic['canattach']. "<br />"; 
+		$board_policy .= $viewtopic['canattach']. "<br />";
 	}elseif(($board_rule['B_Attachment'] == 5) AND ($checkgroup == 1) or ($access_level == 1) or ($checkmod == 1)){
-		$board_policy .= $viewtopic['canattach']. "<br />"; 
+		$board_policy .= $viewtopic['canattach']. "<br />";
 	}elseif($board_rule['B_Attachment'] == 4){
-		$board_policy .= $viewtopic['cantattach']. "<br />"; 
+		$board_policy .= $viewtopic['cantattach']. "<br />";
 	}else{
-		$board_policy .= $viewtopic['cantattach']. "<br />"; 
+		$board_policy .= $viewtopic['cantattach']. "<br />";
 	}
 	#see if this user is a moderator of this board.
 	if($checkmod == 1){
@@ -254,4 +243,3 @@ function view_results(){
 	$poll = $page->output();
 	return ($poll);
 }
-?>

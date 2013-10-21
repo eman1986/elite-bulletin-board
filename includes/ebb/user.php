@@ -1,10 +1,14 @@
 <?php
+namespace ebb;
+use PDO;
+use PDOException;
+
 if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /**
-Filename: user.class.php
-Last Modified: 10/18/2013
+Filename: user.php
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -13,7 +17,6 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
  */
 
-namespace ebb;
 class user {
 
     /**
@@ -52,7 +55,7 @@ class user {
     private $suspendLength;
     private $suspendTime;
 
-    public function __construct(PDO $db) {
+    public function __construct(\PDO $db) {
         $this->db = $db;
     }
 

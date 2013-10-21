@@ -1,10 +1,11 @@
 <?php
+namespace ebb;
 if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /**
-Filename: PM.class.php
-Last Modified: 10/18/2013
+Filename: PM.php
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -13,7 +14,6 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
  */
 
-namespace ebb;
 class PM {
 
     //

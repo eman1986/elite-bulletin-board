@@ -13,7 +13,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: header.php
-Last Modified: 10/18/2013
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,7 @@ $options = array(
 );
 
 try {
-    $db = new PDO(DB_DSN, DB_USER, DB_PASS, $options);
+    $db = new \PDO(DB_DSN, DB_USER, DB_PASS, $options);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo $e->getMessage();
@@ -67,10 +67,11 @@ try {
 $timeout = time() - 120;
 
 //delete any old entries
-$db->exec('DELETE FROM ebb_online WHERE time = $timeout');
+$updateOnlineStatusQ = $db->prepare('DELETE FROM ebb_online WHERE time =:time');
+$updateOnlineStatusQ->execute(array(":time" => $timeout));
 
 //load our preference object.
-$boardPref = new preference($db);
+$boardPref = new \ebb\preference($db);
 
 //user check
 if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
@@ -88,16 +89,16 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     }
 
     //start-up login checker.
-    $userAuth = new login($db);
+    $userAuth = new \ebb\login($db);
 
     if ($userAuth->validateLoginSession($loginLastActive, $loginKey, $ebbUserId)) {
         //user is logged in.
 
         //get user info.
-        $userInfo = new user($db);
+        $userInfo = new \ebb\user($db);
 
         //get group data.
-        $groupData = new groupPolicy($db);
+        $groupData = new \ebb\groupPolicy($db);
 
         $userEntity = $userInfo->getUser($ebbUserId);
 
@@ -133,10 +134,11 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     $logged_user = 'guest';
 
     //get group data.
-    $groupData = new groupPolicy($db);
+    $groupData = new \ebb\groupPolicy($db);
     $groupData->isGuest = TRUE;
 
     //get default values.
+    $access_level = 0;
     $template = $boardPref->getPreferenceValue("default_style");
     $time_format = $boardPref->getPreferenceValue("time_format");
     $lang = $boardPref->getPreferenceValue("default_language");
@@ -151,6 +153,7 @@ $title = $boardPref->getPreferenceValue("board_name");
 $address = $boardPref->getPreferenceValue("board_address");
 $board_status = $boardPref->getPreferenceValue("board_status");
 $board_email = $boardPref->getPreferenceValue("board_email");
+$boardDir = $boardPref->getPreferenceValue("board_directory");
 
 //get template path.
 $template_path = theme($template);

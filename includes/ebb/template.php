@@ -1,10 +1,13 @@
 <?php
+namespace ebb;
+use Exception;
+
 if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /**
 Filename: template.php
-Last Modified: 10/18/2013
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -13,7 +16,6 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 
-namespace ebb;
 class template {
 
     /**
@@ -39,16 +41,14 @@ class template {
 
         #see if template file exists.
         if (!file_exists($this->styleDir.$file.'.htm')){
-            $error = new notifySys('Template file ('.$this->styleDir.$file.'.htm) was not found.', false, true, __FILE__, __LINE__);
-            $error->genericError();
+            throw new \Exception('Template file ('.$this->styleDir.$file.'.htm) was not found.');
         }else{
             #get the contents of the template file
             $contents = file_get_contents($this->styleDir.$file.'.htm');
 
             #see if template file is empty.
             if(empty($contents)){
-                $error = new notifySys('Template file is empty.', false, true, __FILE__, __LINE__);
-                $error->genericError();
+                throw new \Exception('Template file is empty.');
             }else{
                 #Add template contents into output variable.
                 $this->page = $contents;

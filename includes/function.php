@@ -4,7 +4,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: function.php
-Last Modified: 10/10/2013
+Last Modified: 10/20/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -399,7 +399,7 @@ function error($error, $type, $halt=FALSE) {
 
     switch($type){
         case 'error':
-            $page = new template("error", $template_path);
+            $page = new \ebb\template("error", $template_path);
             $page->replace_tags(array(
             "TITLE" => "$title",
             "LANG-TITLE" => "$txt[error]",
@@ -412,7 +412,7 @@ function error($error, $type, $halt=FALSE) {
             }
         break;
         case 'general':
-            $page = new template("error", $template_path);
+            $page = new \ebb\template("error", $template_path);
             $page->replace_tags(array(
             "TITLE" => "$title",
             "LANG-TITLE" => "$txt[info]",
@@ -425,7 +425,7 @@ function error($error, $type, $halt=FALSE) {
             }
         break;
         case 'validate': //@TODO we may not need this anymore.
-            $page = new template("error-validate", $template_path);
+            $page = new \ebb\template("error-validate", $template_path);
             $page->replace_tags(array(
             "TITLE" => "$title",
             "LANG-TITLE" => "$txt[error]",
