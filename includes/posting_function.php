@@ -4,7 +4,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: posting_function.php
-Last Modified: 10/20/2013
+Last Modified: 10/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -12,120 +12,297 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
-#Smiles function - converts smiles bbcode
-function smiles($string) {
 
-	global $db;
 
-	$db->run = "SELECT code, img_name FROM ebb_smiles";
-	$smiles_q = $db->query();
-	$db->close();	
-	while ($row = mysql_fetch_assoc ($smiles_q)) {
-		$smilecode = array ($row['code']);
-		foreach ($smilecode as $smiles) {
-
-			$string = str_replace($smiles,"<img src=\"images/smiles/$row[img_name]\" alt=\"\" />",$string);
-		}
-	}
-	return ($string);
+/**
+ * Our list of emoticons.
+ * @return array
+*/
+function getSmilesList() {
+    return array(
+        //smiley            image name                      width   height  alt
+        ':)'            =>  array('smiley.png',             '16',   '16',   'smile'),
+        'O:)'           =>  array('smiley-angel.png',       '16',   '16',   'angel'),
+        ':?'            =>  array('smiley-confuse.png',     '16',   '16',   'confuse'),
+        '8)'            =>  array('smiley-cool.png',        '16',   '16',   'cool'),
+        ':cry:'         =>  array('smiley-cry.png',         '16',   '16',   'cry'),
+        ":'("           =>  array('smiley-cry.png',         '16',   '16',   'cry'),
+        ':eek:'         =>  array('smiley-eek.png',         '16',   '16',   'eek'),
+        ':evil:'        =>  array('smiley-evil.png',        '16',   '16',   'evil'),
+        ':D'            =>  array('smiley-grin.png',        '16',   '16',   'Grin'),
+        ':*'            =>  array('smiley-kiss.png',        '16',   '16',   'kiss'),
+        ':kiss:'        =>  array('smiley-kiss.png',        '16',   '16',   'kiss'),
+        ':lol:'         =>  array('smiley-lol.png',         '16',   '16',   'lol'),
+        ':angry:'       =>  array('smiley-mad.png',         '16',   '16',   'mad'),
+        ':mrgreen:'     =>  array('smiley-mr-green.png',    '16',   '16',   'mr. green grin'),
+        ':nerd:'        =>  array('smiley-nerd.png',        '16',   '16',   'nerdy smile'),
+        ':|'            =>  array('smiley-neutral.png',     '16',   '16',   'neutral'),
+        ':P'            =>  array('smiley-razz.png',        '16',   '16',   'raspberry'),
+        ':oops:'        =>  array('smiley-red.png',         '16',   '16',   'embarrassed'),
+        ':roll:'        =>  array('smiley-roll.png',        '16',   '16',   'eye roll'),
+        ':stressed:'    =>  array('smiley-roll-sweat.png',  '16',   '16',   'stressed'),
+        ':('            =>  array('smiley-sad.png',         '16',   '16',   'sad'),
+        ':zzz:'         =>  array('smiley-sleep.png',       '16',   '16',   'sleepy'),
+        '8O'            =>  array('smiley-surprise.png',    '16',   '16',   'surprised'),
+        ':!'            =>  array('smiley-surprise.png',    '16',   '16',   'surprised'),
+        ':sweat:'       =>  array('smiley-sweat.png',       '16',   '16',   'sweating'),
+        ':twisted:'     =>  array('smiley-twist.png',       '16',   '16',   'twisted'),
+        ';)'            =>  array('smiley-wink.png',        '16',   '16',   'winking'),
+        ':yell:'        =>  array('smiley-yell.png',        '16',   '16',   'yelling'),
+        ':X'            =>  array('smiley-zipper.png',      '16',   '16',   'zipped'),
+        ':%'            =>  array('smiley-zipper.png',      '16',   '16',   'zipped') // no comma after last item
+    );
 }
-#smiles output for the form
+
+/**
+ * converts text-based smiles into graphical ones.
+ * @param string $str the string to search for emoticons.
+ * @return string
+*/
+function smiles($str) {
+
+    $smiles = getSmilesList();
+    foreach ($smiles as $key => $val)
+    {
+        $str = str_replace($key, "<img src=\"images/smiles/".$smiles[$key][0]."\" width=\"".$smiles[$key][1]."\" height=\"".$smiles[$key][2]."\" alt=\"".$smiles[$key][3]."\" style=\"border:0;\" />", $str);
+    }
+
+    return $str;
+}
+
+/**
+ * Outputs the list of smiles available(up to 30).
+ * @param string $val the object to search for
+ * @return string HTML displaying smiles.
+*/
 function form_smiles($val){
 
-	global $allowsmile, $db;
+    global $allowsmile;
 
-	if ($allowsmile == 0){
-		$smile = '';
-	}else{
-		$smile = '';
-		$x=0; // we will use this to count to four later
-		$db->run = "SELECT code, img_name FROM ebb_smiles limit 12";
-		$smiles = $db->query();
-		$db->close();
-		while($row = mysql_fetch_assoc($smiles)){
-			if (($x % 4) == 0) {
-				$smile .= "<br />";  // $x == 4 so we start the line again
-				$x=0; // $x is now 4 so we reset it here to start the next line
-			}
-			$smile .= "<a href=\"javascript:smile(' $row[code] ', '$val')\"><img src=\"images/smiles/$row[img_name]\" border=\"0\" alt=\"smiles\" /></a>&nbsp;";
-			$x++; // increment $x by 1 so we get our 4
-		}
-	}
-	return ($smile);
-}
-#show all smiles output for the form.
-function showall_smiles(){
+    if ($allowsmile == 0){
+        $smile = '';
+    } else {
+        $x = 0; // we will use this to count to four later
+        $smile = '';
+        $smiles = getSmilesList();
+        $used = array();
+        foreach($smiles as $key => $value) {
+            // Keep duplicates from being used, which can happen if the
+            // mapping array contains multiple identical replacements.  For example:
+            // :-) and :) might be replaced with the same image so both smileys
+            // will be in the array.
+            if (isset($used[$smiles[$key][0]]))
+            {
+                continue;
+            }
 
-	global $allowsmile, $db;
-	
-	$allsmile = '';
-	$x=0; // we will use this to count to eight later
+            if (($x % 4) == 0) {
+                $smile .= "<br />";  // $x == 4 so we start the line again
+                $x = 0; // $x is now 4 so we reset it here to start the next line
+            }
 
-	$db->run = "SELECT code, img_name FROM ebb_smiles";
-	$smiles = $db->query();
-	$db->close();
-
-	while($row = mysql_fetch_assoc($smiles)){
-		if (($x % 3) == 0) {
-			$allsmile .= "</tr><tr>";  // $x == 8 so we start the line again
-			$x=0; // $x is now 8 so we reset it here to start the next line
-		}
-		$allsmile .= "<td class=\"td1\" align=\"center\" width=\"20%\"><img src=\"images/smiles/$row[img_name]\" alt=\"\" /></td>
-		<td class=\"td2\" width=\"20%\">$row[code]</td>";
-		$x++; // increment $x by 1 so we get our 8
-
-	}
-	return ($allsmile);
-}
-
-#BBCode function - converts bbcode
-function BBCode($string, $allowimgs = false) {
-
-	$string = preg_replace('~\[i\](.*?)\[\/i\]~is', '<i>\\1</i>', $string);
-    $string = preg_replace('~\[b\](.*?)\[\/b\]~is', '<b>\\1</b>', $string);
-    $string = preg_replace('~\[u\](.*?)\[\/u\]~is', '<u>\\1</u>', $string);
-    $string = preg_replace('~\[url\](.*?)\[\/url\]~is', '<a href="\\1">\\1</a>', $string);    
-	//get back to this task later...
-	$string = preg_replace('#([^\'"=\]]|^)(http[s]?|ftp[s]?|gopher|irc){1}://([:a-z_\-\\./0-9%~]+){1}(\?[a-z=0-9\-_&;]*)?(\#[a-z0-9]+)?#mi', '\1<a href="\2://\3\4\5" target="_blank">\2://\3\4\5</a>', $string);
-	
-	$string = preg_replace('~\[list\](.*?)\[\/list\]~is', '<li>\\1</li>', $string);
-	$string = preg_replace('~\[center\](.*?)\[\/center\]~is', '<div align="center">\\1</div>', $string);
-    $string = preg_replace('~\[right\](.*?)\[\/right\]~is', '<div align="right">\\1</div>', $string);
-    $string = preg_replace('~\[left\](.*?)\[\/left\]~is', '<div align="left">\\1</div>', $string);
-    $string = preg_replace('~\[sub\](.*?)\[\/sub\]~is', '<sub>\\1</sub>', $string);
-    $string = preg_replace('~\[sup\](.*?)\[\/sup\]~is', '<sup>\\1</sup>', $string);
-    $string = preg_replace('~\[marque\](.*?)\[\/marque\]~is', '<marquee>\\1</marquee>', $string);
-    $string = preg_replace('~\[quote\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\">Quote:</div><div class=\"quote\">\\1</div>", $string);
-    $string = preg_replace('~\[quote=(.*?)\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\"> \\1 Wrote:</div><div class=\"quote\">\\2</div>", $string);
-    $string = preg_replace('~\[code\](.*?)\[\/code\]~is', "<div class=\"codeheader\">Code:</div><div class=\"code\">\\1</div>", $string);
-
-    //we don't want to allow imgs all the time!
-    if ($allowimgs == true) {
-		$string = preg_replace('~\[img\](.*?)\[\/img\]~is', '<img src="\\1" border="0" alt="" />', $string);
+            $smile .= "<a href=\"javascript:void(0);\" onclick=\"smile('".$key. "', '".$val."')\"><img src=\"images/smiles/".$smiles[$key][0]."\"  width=\"".$smiles[$key][1]."\" height=\"".$smiles[$key][2]."\" alt=\"".$smiles[$key][3]."\" style=\"border:0;\" /></a><br />\n";
+            $used[$smiles[$key][0]] = TRUE;
+            $x++; // increment $x by 1 so we get our 4
+        }
     }
-    return ($string);
+    return $smile;
 }
-#printable-version bbcode
-function BBCode_print($string) {
 
-	$string = preg_replace('~\[i\](.*?)\[\/i\]~is', '<i>\\1</i>', $string);
-    $string = preg_replace('~\[b\](.*?)\[\/b\]~is', '<b>\\1</b>', $string);
-    $string = preg_replace('~\[u\](.*?)\[\/u\]~is', '<u>\\1</u>', $string);
-    $string = preg_replace('~\[url\](.*?)\[\/url\]~is', '<a href="\\1">\\1</a>', $string);
-    $string = preg_replace('#([^\'"=\]]|^)(http[s]?|ftp[s]?|gopher|irc){1}://([:a-z_\-\\./0-9%~]+){1}(\?[a-z=0-9\-_&;]*)?(\#[a-z0-9]+)?#mi', '\1<a href="\2://\3\4\5" target="_blank">\2://\3\4\5</a>', $string);
-    $string = preg_replace('~\[list\](.*?)\[\/list\]~is', '<li>\\1</li>', $string);
-    $string = preg_replace('~\[center\](.*?)\[\/center\]~is', '<div align="center">\\1</div>', $string);
-    $string = preg_replace('~\[right\](.*?)\[\/right\]~is', '<div align="right">\\1</div>', $string);
-    $string = preg_replace('~\[left\](.*?)\[\/left\]~is', '<div align="left">\\1</div>', $string);
-    $string = preg_replace('~\[sub\](.*?)\[\/sub\]~is', '<sub>\\1</sub>', $string);
-    $string = preg_replace('~\[sup\](.*?)\[\/sup\]~is', '<sup>\\1</sup>', $string);
-    $string = preg_replace('~\[marque\](.*?)\[\/marque\]~is', '<marquee>\\1</marquee>', $string);
-    $string = preg_replace('~\[quote\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\">Quote:</div><div class=\"quote\">\\1</div>", $string);
-    $string = preg_replace('~\[quote=(.*?)\](.*?)\[\/quote\]~is', "<div class=\"quoteheader\"> \\1 Wrote:</div><div class=\"quote\">\\2</div>", $string);
-    $string = preg_replace('~\[code\](.*?)\[\/code\]~is', "<div class=\"codeheader\">Code:</div><div class=\"code\">\\1</div>", $string);
+/**
+ * Grabs a list of all available smiles.
+ * @return string
+ */
+function showall_smiles() {
 
-	return ($string);
+    global $allowsmile;
+
+    if ($allowsmile == 0){
+        $allsmile = '';
+    } else {
+        $x = 0; // we will use this to count to four later
+        $allsmile = '';
+        $smiles = getSmilesList();
+        $used = array();
+        foreach($smiles as $key => $value) {
+            // Keep duplicates from being used, which can happen if the
+            // mapping array contains multiple identical replacements.  For example:
+            // :-) and :) might be replaced with the same image so both smileys
+            // will be in the array.
+            if (isset($used[$smiles[$key][0]]))
+            {
+                continue;
+            }
+
+            if (($x % 3) == 0) {
+                $allsmile .= "</tr><tr>";  // $x == 8 so we start the line again
+                $x = 0; // $x is now 4 so we reset it here to start the next line
+            }
+
+            $allsmile .= "<td class=\"td1\" align=\"center\" width=\"20%\"><img src=\"images/smiles/".$smiles[$key][0]."\"  width=\"".$smiles[$key][1]."\" height=\"".$smiles[$key][2]."\" alt=\"".$smiles[$key][3]."\" style=\"border:0;\" /></td>\n
+            <td class=\"td2\" width=\"20%\">".$key."</td>";
+            $used[$smiles[$key][0]] = TRUE;
+            $x++; // increment $x by 1 so we get our 4
+        }
+    }
+
+    return $allsmile;
 }
+
+/**
+ * Formats our messages converting over BBCode tags into HTML content.
+ * @param string $str the string to check for our BBCode tags.
+ * @param boolean $allowimgs allow parsing of image tags?
+ * @return string
+*/
+function BBCode($str, $allowimgs = FALSE) {
+    //see if we're able to parse the img tag.
+    if ($allowimgs) {
+        $find = array(
+            '~\[b\](.*?)\[/b\]~is',
+            '~\[i\](.*?)\[/i\]~is',
+            '~\[u\](.*?)\[\/u\]~is',
+            '~\[img\](.*?)\[\/img\]~is',
+            '~\[url\="?(.*?)"?\](.*?)\[\/url\]~is',
+            '~\[list\](.*?)\[\/list\]~is',
+            '~\[list\=(.*?)\](.*?)\[\/list\]~is',
+            '/\[\*\]\s?(.*?)\n/ms',
+            '~\[size\="?(.*?)"?\](.*?)\[\/size\]~is',
+            '~\[center\](.*?)\[\/center\]~is',
+            '~\[right\](.*?)\[\/right\]~is',
+            '~\[left\](.*?)\[\/left\]~is',
+            '~\[sub\](.*?)\[\/sub\]~is',
+            '~\[sup\](.*?)\[\/sup\]~is',
+            '~\[color=(.*?)\](.*?)\[\/color\]~is',
+            '~\[quote\](.*?)\[\/quote\]~is',
+            '~\[quote=(.*?)\](.*?)\[\/quote\]~is',
+            '~\[code\](.*?)\[\/code\]~is',
+            "/\\[youtube(=([0-9]+),([0-9]+))?\\](.+?)\\[\\/youtube\\]/se",
+        );
+        $replace = array(
+            '<b>\1</b>',
+            '<i>\1</i>',
+            '<u>\\1</u>',
+            '<img src="\\1" alt="" />',
+            '<a href="\1" target="_blank">\2</a>',
+            '<ul>\1</ul>',
+            '<ol start="\1">\2</ol>',
+            '<li>\\1</li>',
+            '<span style="font-size:\1%">\2</span>',
+            '<div align="center">\\1</div>',
+            '<div align="right">\\1</div>',
+            '<div align="left">\\1</div>',
+            '<sub>\\1</sub>',
+            '<sup>\\1</sup>',
+            '<span style="color: \\1">\\2</span>',
+            '<div class="quoteheader">Quote:</div><blockquote class="quote">\\1</blockquote>',
+            '<div class="quoteheader">\\1 Wrote:</div><blockquote class="quote">\\2</blockquote>',
+            '<div class="codeheader">Code:</div><div class="code"><pre style="display: inline;">\\1</pre></div>',
+            "youtubeParse('\\4')"
+        );
+    } else {
+        $find = array(
+            '~\[b\](.*?)\[/b\]~is',
+            '~\[i\](.*?)\[/i\]~is',
+            '~\[u\](.*?)\[\/u\]~is',
+            '~\[url\="?(.*?)"?\](.*?)\[\/url\]~is',
+            '~\[list\](.*?)\[\/list\]~is',
+            '~\[list\=(.*?)\](.*?)\[\/list\]~is',
+            '/\[\*\]\s?(.*?)\n/ms',
+            '~\[size\="?(.*?)"?\](.*?)\[\/size\]~is',
+            '~\[center\](.*?)\[\/center\]~is',
+            '~\[right\](.*?)\[\/right\]~is',
+            '~\[left\](.*?)\[\/left\]~is',
+            '~\[sub\](.*?)\[\/sub\]~is',
+            '~\[sup\](.*?)\[\/sup\]~is',
+            '~\[color=(.*?)\](.*?)\[\/color\]~is',
+            '~\[quote\](.*?)\[\/quote\]~is',
+            '~\[quote=(.*?)\](.*?)\[\/quote\]~is',
+            '~\[code\](.*?)\[\/code\]~is',
+            "/\\[youtube(=([0-9]+),([0-9]+))?\\](.+?)\\[\\/youtube\\]/se",
+        );
+        $replace = array(
+            '<b>\1</b>',
+            '<i>\1</i>',
+            '<u>\\1</u>',
+            '<a href="\1" target="_blank">\2</a>',
+            '<ul>\1</ul>',
+            '<ol start="\1">\2</ol>',
+            '<li>\\1</li>',
+            '<span style="font-size:\1%">\2</span>',
+            '<div align="center">\\1</div>',
+            '<div align="right">\\1</div>',
+            '<div align="left">\\1</div>',
+            '<sub>\\1</sub>',
+            '<sup>\\1</sup>',
+            '<span style="color: \\1">\\2</span>',
+            '<div class="quoteheader">Quote:</div><blockquote class="quote">\\1</blockquote>',
+            '<div class="quoteheader">\\1 Wrote:</div><blockquote class="quote">\\2</blockquote>',
+            '<div class="codeheader">Code:</div><div class="code"><pre style="display: inline;">\\1</pre></div>',
+            "youtubeParse('\\4')"
+        );
+    }
+
+    return preg_replace($find, $replace, $str);
+}
+
+/**
+ * Same functionality as BBcode, only used for printer-friendly pages and has a limited number of things it'll parse.
+ * @param string $str the string to check for our BBCode tags.
+ * @return string
+*/
+function BBCode_print($str) {
+    $find = array(
+        '~\[b\](.*?)\[/b\]~is',
+        '~\[i\](.*?)\[/i\]~is',
+        '~\[u\](.*?)\[\/u\]~is',
+        '~\[url\="?(.*?)"?\](.*?)\[\/url\]~is',
+        '~\[list\](.*?)\[\/list\]~is',
+        '~\[list\=(.*?)\](.*?)\[\/list\]~is',
+        '/\[\*\]\s?(.*?)\n/ms',
+        '~\[size\="?(.*?)"?\](.*?)\[\/size\]~is',
+        '~\[center\](.*?)\[\/center\]~is',
+        '~\[right\](.*?)\[\/right\]~is',
+        '~\[left\](.*?)\[\/left\]~is',
+        '~\[sub\](.*?)\[\/sub\]~is',
+        '~\[sup\](.*?)\[\/sup\]~is',
+        '~\[color=(.*?)\](.*?)\[\/color\]~is',
+        '~\[quote\](.*?)\[\/quote\]~is',
+        '~\[quote=(.*?)\](.*?)\[\/quote\]~is',
+        '~\[code\](.*?)\[\/code\]~is'
+    );
+    $replace = array(
+        '<b>\1</b>',
+        '<i>\1</i>',
+        '<u>\\1</u>',
+        '<a href="\1" target="_blank">\2</a>',
+        '<ul>\1</ul>',
+        '<ol start="\1">\2</ol>',
+        '<li>\\1</li>',
+        '<span style="font-size:\1%">\2</span>',
+        '<div align="center">\\1</div>',
+        '<div align="right">\\1</div>',
+        '<div align="left">\\1</div>',
+        '<sub>\\1</sub>',
+        '<sup>\\1</sup>',
+        '<span style="color: \\1">\\2</span>',
+        '<div class="quoteheader">Quote:</div><blockquote class="quote">\\1</blockquote>',
+        '<div class="quoteheader">\\1 Wrote:</div><blockquote class="quote">\\2</blockquote>',
+        '<div class="codeheader">Code:</div><div class="code"><pre style="display: inline;">\\1</pre></div>'
+    );
+
+    return preg_replace($find, $replace, $str);
+}
+
+/* This is a helper function for the you tube BBCode.
+ * @param string vCode the vcode assigned by youtube.
+ * @return mixed
+*/
+function youtubeParse($vCode) {
+    return '<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/'.$vCode.'"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/'.$vCode.'" type="application/x-shockwave-flash" wmode="transparent" width="425" height="350"></embed></object>';
+}
+
+
 #bbcode button output
 function bbcode_form($val){
 

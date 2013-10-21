@@ -20,7 +20,7 @@ $page->replace_tags(array(
 $page->output();
 //check to see if the install file is still on the user's server.
 $setupexist = checkinstall();
-if ($setupexist == 1){
+if ($setupexist){
 	if ($access_level == 1){
 		$error = $txt['installadmin'];
 		echo error($error, "error");
