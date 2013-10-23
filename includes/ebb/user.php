@@ -8,7 +8,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: user.php
-Last Modified: 10/20/2013
+Last Modified: 10/23/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -813,6 +813,35 @@ class user {
             }
         }
         catch (PDOException $e) {
+            echo $e->getMessage();
+            return FALSE;
+        }
+    }
+
+    /**
+     * Updates the post count for the defined user.
+     * @param string $user The Username to update
+     * @return bool
+    */
+    public function updatePostCount($user) {
+        try {
+            //Get post count
+            $query = $this->db->prepare('SELECT Post_Count FROM ebb_users WHERE Username=:username LIMIT 1');
+            $query->execute(array(":username" => $user));
+
+            //see if we have any records to show.
+            if($query->rowCount() > 0) {
+                $userData = $query->fetch(PDO::FETCH_OBJ);
+                $increasePostCount = $userData->Post_Count + 1;
+
+                $updateQ = $this->db->prepare('UPDATE ebb_users SET Post_Count=:postcount WHERE Username=:username');
+                $updateQ->execute(array(":postcount" => $increasePostCount, ":username" => $user));
+
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } catch (PDOException $e) {
             echo $e->getMessage();
             return FALSE;
         }

@@ -1,10 +1,10 @@
 <?php
-if (!defined('IN_EBB') ) {
+if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /*
 Filename: posting_function.php
-Last Modified: 10/21/2013
+Last Modified: 10/23/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ function getSmilesList() {
         ';)'            =>  array('smiley-wink.png',        '16',   '16',   'winking'),
         ':yell:'        =>  array('smiley-yell.png',        '16',   '16',   'yelling'),
         ':X'            =>  array('smiley-zipper.png',      '16',   '16',   'zipped'),
-        ':%'            =>  array('smiley-zipper.png',      '16',   '16',   'zipped') // no comma after last item
+        ':%'            =>  array('smiley-zipper.png',      '16',   '16',   'zipped')
     );
 }
 
@@ -64,7 +64,7 @@ function smiles($str) {
     $smiles = getSmilesList();
     foreach ($smiles as $key => $val)
     {
-        $str = str_replace($key, "<img src=\"images/smiles/".$smiles[$key][0]."\" width=\"".$smiles[$key][1]."\" height=\"".$smiles[$key][2]."\" alt=\"".$smiles[$key][3]."\" style=\"border:0;\" />", $str);
+        $str = str_replace($key, '<img src="images/smiles/'.$smiles[$key][0].'" width="'.$smiles[$key][1].'" height="'.$smiles[$key][2].'" alt="'.$smiles[$key][3].'" style="border:0;" />', $str);
     }
 
     return $str;
@@ -87,10 +87,7 @@ function form_smiles($val){
         $smiles = getSmilesList();
         $used = array();
         foreach($smiles as $key => $value) {
-            // Keep duplicates from being used, which can happen if the
-            // mapping array contains multiple identical replacements.  For example:
-            // :-) and :) might be replaced with the same image so both smileys
-            // will be in the array.
+            // Keep duplicates from being used.
             if (isset($used[$smiles[$key][0]]))
             {
                 continue;
@@ -112,7 +109,7 @@ function form_smiles($val){
 /**
  * Grabs a list of all available smiles.
  * @return string
- */
+*/
 function showall_smiles() {
 
     global $allowsmile;
@@ -302,171 +299,167 @@ function youtubeParse($vCode) {
     return '<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/'.$vCode.'"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/'.$vCode.'" type="application/x-shockwave-flash" wmode="transparent" width="425" height="350"></embed></object>';
 }
 
-
-#bbcode button output
+/**
+ * builds buttons for our BBCode functionality.
+ * @param $val
+ * @return string
+ * @todo still need to work on this, may move it to template_function.php
+*/
 function bbcode_form($val){
 
-	global $allowbbcode, $allowimg;
+    global $allowbbcode, $allowimg;
 
-	if ($allowbbcode == 0){
-		$bbcode = '';
-	}else{
-		$bbcode = "<input type=\"button\" value=\"B\" onclick=\"javascript:bold('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"I\" onclick=\"javascript:italic('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"U\" onclick=\"javascript:underline('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Url\" onclick=\"javascript:url('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Quote\" onclick=\"javascript:quote('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Code\" onclick=\"javascript:code('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Marque\" onclick=\"javascript:marque('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Superscript\" onclick=\"javascript:sup('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Subscript\" onclick=\"javascript:sub('$val')\" class=\"submit\" />&nbsp;
-		<input type=\"button\" value=\"List\" onclick=\"javascript:list('$val')\" class=\"submit\" />&nbsp;";
-		if ($allowimg == 1){
-			$bbcode .= "<input type=\"button\" value=\"Image\" onclick=\"javascript:img('$val')\" class=\"submit\" />";
-		}
-		$bbcode .= "<input type=\"button\" value=\"Left\" onclick=\"javascript:left('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Center\" onclick=\"javascript:center('$val')\" class=\"submit\" />
-		<input type=\"button\" value=\"Right\" onclick=\"javascript:right('$val')\" class=\"submit\" />";
-	}
-    return ($bbcode);
+    if ($allowbbcode == 0) {
+        $bbcode = '';
+    } else {
+        $bbcode = "<input type=\"button\" value=\"B\" onclick=\"javascript:bold('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"I\" onclick=\"javascript:italic('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"U\" onclick=\"javascript:underline('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Url\" onclick=\"javascript:url('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Quote\" onclick=\"javascript:quote('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Code\" onclick=\"javascript:code('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Marque\" onclick=\"javascript:marque('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Superscript\" onclick=\"javascript:sup('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Subscript\" onclick=\"javascript:sub('$val')\" class=\"submit\" />&nbsp;
+        <input type=\"button\" value=\"List\" onclick=\"javascript:list('$val')\" class=\"submit\" />&nbsp;";
+        if ($allowimg == 1) {
+            $bbcode .= "<input type=\"button\" value=\"Image\" onclick=\"javascript:img('$val')\" class=\"submit\" />";
+        }
+        $bbcode .= "<input type=\"button\" value=\"Left\" onclick=\"javascript:left('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Center\" onclick=\"javascript:center('$val')\" class=\"submit\" />
+        <input type=\"button\" value=\"Right\" onclick=\"javascript:right('$val')\" class=\"submit\" />";
+    }
+    return $bbcode;
 }
-#language filter function - filters words
-function language_filter($string, $type) {
 
-	global $db, $cp;
-	
-	if((!isset($string)) or (empty($string))){
-		die('spam check is null.');
-	}
-	if((!isset($type)) or (empty($type))){
-		die($cp['invalidcensoraction']);
-	}
-	#determine type action.
-   	if($type == 1){
-		$db->run = "SELECT Original_Word FROM `ebb_censor` where action='1'";
-		$words = $db->query();
-		$db->close();
-		#see what to do based on action type.
-		$stars = '';
-		while ($row = mysql_fetch_assoc ($words)) {
-			$obscenities = array ($row['Original_Word']);
-			foreach ($obscenities as $curse_word) {
-				if (stristr(trim($string), $curse_word)) {
-					$length = strlen($curse_word);
-					for ($i = 1; $i <= $length; $i++) {
-						$stars .= "*";
-					}
-					$string = eregi_replace($curse_word,$stars,trim($string));
-					$stars = "";
-				}
-			}
-		}
-	}else{
-		$db->run = "SELECT Original_Word FROM `ebb_censor` where action='2'";
-		$words = $db->query();
-		$db->close();
-		while ($row = mysql_fetch_assoc ($words)) {
-			//see if anything matches the spam word list.
-			if (preg_match("/\b".$row['Original_Word']."\b/i", $string)) {
-				die('SPAMMING ATTEMPT!');
-			}
-		}
-	}
-   return ($string);
+/**
+ * See if a censored word was used in a string.
+ * @param string $string The string we wish to validate.
+ * @return string The string with the censored word(s) starred out.
+*/
+function language_filter($string) {
+
+    global $db;
+
+    //see if an invalid operation was set.
+    if (!isset($string) || empty($string)) {
+        return NULL; //nothing entered, then just return null.
+    }
+
+    try {
+        $stars = '';
+        $query = $db->query('SELECT Original_Word FROM ebb_censor');
+
+        if($query->rowCount() > 0) {
+            foreach ($query->fetch(PDO::FETCH_OBJ) as $row) {
+                if (stristr(trim($string), $row->Original_Word)) {
+                    $length = strlen($row->Original_Word);
+                    for ($i = 1; $i <= $length; $i++) {
+                        $stars .= "*";
+                    }
+                    $string = str_ireplace($row->Original_Word, $stars, trim($string));
+                    $stars = "";
+                }
+            }
+        }
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return NULL;
+    }
+
+    return $string;
 }
-#flood check
-function flood_check($string, $type){
 
-	global $db;
+/**
+ * Prevent users from performing an action too soon from another action.
+ * @param string $type (posting;search).
+ * @param string $LastActivity DB entry for last post time.
+ * @return boolean
+*/
+function flood_check($type, $LastActivity){
 
-   	if((!isset($string)) or (empty($string))){
-		die('No string found.');
-	}
-	if((!isset($type)) or (empty($type))){
-		die('No Type found.');
-	}
+    //see what action to perform based on type.
+    switch($type){
+        case 'posting':
+            //30 second check.
+            $currtime = time() - 30;
 
-	#see what action to perform based on type.
-	switch($type){
-	case 'posting':
-		$currtime = time() - 30;
-		$db->run = "SELECT last_post FROM ebb_users WHERE Username='$string'";
-		$get_time_r = $db->result();
-		$db->close();
-		#see if user is posting too quickly.
-		if ($get_time_r['last_post'] > $currtime){
-			$flood = 1;
-		}else{
-			$flood = 0;
-		}
-	break;
-	case 'search':
-		$currtime = time() - 20;
-		$db->run = "SELECT last_search FROM ebb_users WHERE Username='$string'";
-		$get_time_r = $db->result();
-		$db->close();
-		#see if user is posting too quickly.
-		if ($get_time_r['last_search'] > $currtime){
-			$flood = 1;
-		}else{
-			$flood = 0;
-		}	
-	break;
-	}
-	return ($flood);
+            //see if user is posting too quickly.
+            if ($LastActivity > $currtime){
+                $flood = TRUE;
+            }else{
+                $flood = FALSE;
+            }
+            break;
+        case 'search':
+            //20 second check.
+            $currtime = time() - 20;
+
+            //see if user is posting too quickly.
+            if ($LastActivity > $currtime){
+                $flood = TRUE;
+            }else{
+                $flood = FALSE;
+            }
+            break;
+    }
+    return ($flood);
 }
-#increase user's post count.
-function post_count($string){
 
-	global $db;
-
-   	if((!isset($string)) or (empty($string))){
-		die('No string found.');
-	}
-	//get current post count then add on to it.
-	$db->run = "select Post_Count from ebb_users where Username='$string'";
-	$get_num = $db->result();
-	$db->close();
-	$increase_count = $get_num['Post_Count'] + 1;
-	$db->run = "UPDATE ebb_users SET Post_Count='$increase_count' WHERE Username='$string'";
-	$db->query();
-	$db->close();
-}
-#update board table. error here!!!
+/**
+ * updates the last post field for boards.
+ * @param integer $bid BoardID.
+ * @param string $newlink new topic id.
+ * @param string $user the new posted by user.
+ * @return bool
+*/
 function update_board($bid, $newlink, $user){
 
-	global $db, $time; 
-	#update lasy post details for the selected board.
-	$db->run = "update ebb_boards SET last_update='$time' WHERE id='$bid'";
-	$db->query();
-	$db->close();
-	//update post link for board.
-	$db->run = "Update ebb_boards SET Post_Link='$newlink', Posted_User='$user' WHERE id='$bid'";
-	$db->query();
-	$db->close();
-	#clear data from read table for the board selected.
-	$db->run = "DELETE FROM ebb_read_board WHERE Board='$bid'";
-	$db->query();
-	$db->close();
+    global $db;
+
+    try {
+        $db->prepare("UPDATE ebb_boards SET last_update=:lastUpdate, Post_Link=:postLink, Posted_User=:postedUser WHERE id=:boardId");
+        $db->execute(array(
+            ":lastUpdate" => time(),
+            ":postLink" => $newlink,
+            ":postedUser" => $user,
+            ":boardId" => $bid
+        ));
+
+        return TRUE;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return FALSE;
+    }
 }
-#update topic table. error here!!!
+
+/**
+ * updates the last post field for topics.
+ * @param integer $tid TopicID.
+ * @param string $newlink new topic id.
+ * @param string $user the new posted by user.
+ * @return bool
+*/
 function update_topic($tid, $newlink, $user){
 
-	global $db, $time;
-	#update lasy post details for the selected topic.
-	$db->run = "update ebb_topics SET last_update='$time' WHERE tid='$tid'";
-	$db->query();
-	$db->close();
-	#clear data from read table for the topic selected.
-	$db->run = "DELETE FROM ebb_read_topic WHERE Topic='$tid'";
-	$db->query();
-	$db->close(); 
-	//update post link for topic.
-	$db->run = "Update ebb_topics SET Post_Link='$newlink' WHERE tid='$tid'";
-	$db->query();
-	$db->close();
-	//update last poster for topic.
-	$db->run = "Update ebb_topics SET Posted_User='$user' WHERE tid='$tid'";
-	$db->query();
-	$db->close();
+    global $db;
+
+    try {
+        $db->prepare("UPDATE ebb_topics SET last_update=:lastUpdate, Post_Link=:postLink, Posted_User=:postedUser WHERE tid=:topicId");
+        $db->execute(array(
+            ":lastUpdate" => time(),
+            ":postLink" => $newlink,
+            ":postedUser" => $user,
+            ":topicId" => $tid
+        ));
+
+        //clear read status for this topic.
+        $db->prepare("DELETE FROM ebb_read_topic WHERE Topic=:topicId");
+        $db->execute(array(":topicId" => $tid));
+
+        return TRUE;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return FALSE;
+    }
 }
