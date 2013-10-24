@@ -1,7 +1,10 @@
 <?php
+if (!defined('IN_EBB') ) {
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
+}
 /*
 Filename: user_function.php
-Last Modified: 10/04/2013
+Last Modified: 10/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify

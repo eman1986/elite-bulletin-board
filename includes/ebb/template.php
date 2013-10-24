@@ -7,7 +7,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: template.php
-Last Modified: 10/20/2013
+Last Modified: 10/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ class template {
     /**
      * @param string $file The template file we wish to process.
      * @param string $styleFolder The folder the template resides in.
+     * @throws Exception if template engine cannot load template file.
     */
     public function __construct($file, $styleFolder="clearblue2") {
 

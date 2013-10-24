@@ -4,7 +4,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: template_function.php
-Last Modified: 10/20/2013
+Last Modified: 10/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -12,7 +12,6 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
-#theme_selector.
 
 /**
  * Get template path.
@@ -31,12 +30,13 @@ function theme($id) {
 
 /**
  * Builds the board index list.
-*/
-function index_board(){
+ * @return mixed
+ */
+function index_board() {
 
-    global $db, $index, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result, $rss;
+    global $db, $lang, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result;
 
-    #categopry sql.
+    //category sql.
     $db->run = "select id, Board from ebb_boards where type='1' ORDER BY B_Order";
     $category_query = $db->query();
     $db->close();
@@ -55,10 +55,10 @@ function index_board(){
             $page = new template($template_path ."/board_header.htm");
             $page->replace_tags(array(
             "CAT-NAME" => "$cat[Board]",
-            "LANG-BOARD" => "$index[boards]",
-            "LANG-TOPIC" => "$index[topics]",
-            "LANG-POST" => "$index[posts]",
-            "LANG-LASTPOSTDATE" => "$index[lastposteddate]"));
+            "LANG-BOARD" => "$lang[boards]",
+            "LANG-TOPIC" => "$lang[topics]",
+            "LANG-POST" => "$lang[posts]",
+            "LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
             $board_row = $page->output();
             while ($row = mysql_fetch_assoc ($board_query)) {
                 #guest & non-group members dont need a group-check.
@@ -84,19 +84,19 @@ function index_board(){
                 $subboard = index_subboard($row['id']);
                 #get last post details.
                 if ($row['last_update'] == ""){
-                    $board_date = $index['noposts'];
+                    $board_date = $lang['noposts'];
                     $last_post_link = "";
                 }else{
                     $gmttime = gmdate ($time_format, $row['last_update']);
                     $board_date = date($time_format,strtotime("$gmt hours",strtotime($gmttime)));
-                    $last_post_link = "<a href=\"viewtopic.php?$row[Post_Link]\">$index[Postedby]</a>: $row[Posted_User]";
+                    $last_post_link = "<a href=\"viewtopic.php?$row[Post_Link]\">$lang[Postedby]</a>: $row[Posted_User]";
                 }
                 #get read status on board.
                 $read_ct = read_board_stat($row['id'], $logged_user);
                 if (($read_ct == 1) OR ($row['last_update'] == "") OR ($stat == "guest")){
-                    $icon = "<img src=\"$template_path/images/old.gif\" alt=\"$index[oldpost]\" title=\"$index[oldpost]\" />";
+                    $icon = "<img src=\"$template_path/images/old.gif\" alt=\"$lang[oldpost]\" title=\"$lang[oldpost]\" />";
                 }else{
-                    $icon = "<img src=\"$template_path/images/new.gif\" alt=\"$index[newpost]\" title=\"$index[newpost]\" />";
+                    $icon = "<img src=\"$template_path/images/new.gif\" alt=\"$lang[newpost]\" title=\"$lang[newpost]\" />";
                 }
                 #get permission rules.
                 $db->run = "select B_Read from ebb_board_access WHERE B_id='$row[id]'";
@@ -108,12 +108,12 @@ function index_board(){
                     #get board values.
                     $page = new template($template_path ."/board_data.htm");
                     $page->replace_tags(array(
-                    "LANG-TOPIC" => "$index[topics]",
-                    "LANG-POST" => "$index[posts]",
+                    "LANG-TOPIC" => "$lang[topics]",
+                    "LANG-POST" => "$lang[posts]",
                     "POSTICON" => "$icon",
                     "BOARDID" => "$row[id]",
                     "BOARDNAME" => "$row[Board]",
-                    "LANG-RSS" => "$rss[viewfeed]",
+                    "LANG-RSS" => "$lang[viewfeed]",
                     "BOARDDESCRIPTION" => "$row[Description]",
                     "MODERATORS" => "$board_moderator",
                     "SUBBOARDS" => "$subboard",
@@ -128,12 +128,12 @@ function index_board(){
             $board_row = $page->output();
         }
     }//end of category loop.
-    return($board_row);
+    return $board_row;
 }
 #sub-board grabber
 function index_subboard($bid){
  
-	global $index, $db, $access_level, $stat, $level_result;
+	global $lang, $db, $access_level, $stat, $level_result;
  
 	$db->run = "select id, Board from ebb_boards where type='3' and Category='$bid' ORDER BY B_Order";
 	$subboard_query = $db->query();
@@ -143,7 +143,7 @@ function index_subboard($bid){
 	if($count_sub == 0){
 		$subboard = '';
 	}else{
-		$subboard = $index['subboards']. ":&nbsp;";
+		$subboard = $lang['subboards']. ":&nbsp;";
 		while ($row = mysql_fetch_assoc ($subboard_query)) {
 			#guest & non-group members dont need a group check.
 			if(($stat == "guest") or ($stat == "Member")){
@@ -161,7 +161,7 @@ function index_subboard($bid){
 			$db->close();
 			$view_board = permission_check($board_rule['B_Read']);
 			#see if user can view the board.
-			if($view_board == 1){	
+			if($view_board == 1){
 				$subboard .= "<i><a href=\"viewboard.php?bid=$row[id]\">$row[Board]</a></i>&nbsp;";
 			}
 		}
@@ -171,7 +171,7 @@ function index_subboard($bid){
 #sub display for viewboard.
 function viewboard_subboard($bid){
  
-	global $db, $index, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result, $rss;
+	global $db, $lang, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result;
 	#start variable.
 	$subboard_row = ''; 
 	$db->run = "SELECT id, Board, Description, last_update, Posted_User, Post_Link FROM ebb_boards WHERE type='3' and Category='$bid' ORDER BY B_Order";
@@ -180,10 +180,10 @@ function viewboard_subboard($bid){
 	#subboard header.
 	$page = new template($template_path ."/viewboard_hsubboards.htm");
 	$page->replace_tags(array(
-	"LANG-BOARD" => "$index[boards]",
-	"LANG-TOPIC" => "$index[topics]",
-	"LANG-POST" => "$index[posts]",
-	"LANG-LASTPOSTDATE" => "$index[lastposteddate]"));
+	"LANG-BOARD" => "$lang[boards]",
+	"LANG-TOPIC" => "$lang[topics]",
+	"LANG-POST" => "$lang[posts]",
+	"LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
 	$subboard_row = $page->output();
 	while ($row = mysql_fetch_assoc ($board_query)) {
 		#guest & non-group members dont need group check.
@@ -209,12 +209,12 @@ function viewboard_subboard($bid){
 		$subboard = index_subboard($row['id']);
 		#get last post details.
 		if ($row['last_update'] == ""){
-			$board_date = $index['noposts'];
+			$board_date = $lang['noposts'];
 			$last_post_link = "";
 		}else{
 			$gmttime = gmdate ($time_format, $row['last_update']);
 			$board_date = date($time_format,strtotime("$gmt hours",strtotime($gmttime)));
-			$last_post_link = "<a href=\"viewtopic.php?$row[Post_Link]\">$index[Postedby]</a>: $row[Posted_User]";
+			$last_post_link = "<a href=\"viewtopic.php?$row[Post_Link]\">$lang[Postedby]</a>: $row[Posted_User]";
 		}
 		#get read status on board.
 		$db->run = "select * from ebb_read_board where User='$logged_user'";
@@ -222,9 +222,9 @@ function viewboard_subboard($bid){
 		$db->close();
 		$read_ct = read_board_stat($row['id'], $logged_user);
 		if (($read_ct == 1) OR ($row['last_update'] == "") OR ($stat == "guest")){
-			$icon = "<img src=\"$template_path/images/old.gif\" alt=\"$index[oldpost]\" title=\"$index[oldpost]\" />";
+			$icon = "<img src=\"$template_path/images/old.gif\" alt=\"$lang[oldpost]\" title=\"$lang[oldpost]\" />";
 		}else{
-			$icon = "<img src=\"$template_path/images/new.gif\" alt=\"$index[newpost]\" title=\"$index[newpost]\" />";
+			$icon = "<img src=\"$template_path/images/new.gif\" alt=\"$lang[newpost]\" title=\"$lang[newpost]\" />";
 		}
 		#get permission rules.
 		$db->run = "select B_Read from ebb_board_access WHERE B_id='$row[id]'";
@@ -235,12 +235,12 @@ function viewboard_subboard($bid){
 		if($view_board == 1){
 			$page = new template($template_path ."/viewboard_subboards.htm");
 			$page->replace_tags(array(
-			"LANG-TOPIC" => "$index[topics]",
-			"LANG-POST" => "$index[posts]",
+			"LANG-TOPIC" => "$lang[topics]",
+			"LANG-POST" => "$lang[posts]",
 			"POSTICON" => "$icon",
 			"BOARDID" => "$row[id]",
 			"BOARDNAME" => "$row[Board]",
-			"LANG-RSS" => "$rss[viewfeed]",
+			"LANG-RSS" => "$lang[viewfeed]",
 			"BOARDDESCRIPTION" => "$row[Description]",
 			"MODERATORS" => "$board_moderator",
 			"SUBBOARDS" => "$subboard",
@@ -259,7 +259,7 @@ function viewboard_subboard($bid){
 #moderator listing
 function moderator_boardlist($b_id){
 
-	global $db, $index;
+	global $db, $lang;
 
 	$db->run = "select group_id from ebb_grouplist where board_id='$b_id' order by group_id";
 	$moderator_r = $db->query();
@@ -272,7 +272,7 @@ function moderator_boardlist($b_id){
 	if($chk_group == 0){
 		$board_moderator = ''; 
 	}else{
-		$board_moderator = $index['moderators']. ":&nbsp;";
+		$board_moderator = $lang['moderators']. ":&nbsp;";
 	while ($row = mysql_fetch_assoc ($moderator_r)) {
 		//get group details.
 		$db->run = "select id, Name from ebb_groups where id='$row[group_id]' and Enrollment!='2'";
@@ -322,7 +322,7 @@ function whosonline(){
 #group detail display
 function display_group(){
 
-	global $db, $template_path, $title, $groups;
+	global $db, $template_path, $title;
 
 	$db->run = "select id, Name from ebb_groups where Enrollment!='2'";
 	$query = $db->query();
@@ -333,13 +333,13 @@ function display_group(){
 	$page = new template($template_path ."/grouplist_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-TITLE" => "$groups[title]"));
+	"LANG-TITLE" => "$lang[title]"));
 	$grouplist = $page->output();
 	while ($row = mysql_fetch_assoc ($query)){
 		$page = new template($template_path ."/grouplist.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$groups[title]",
+		"LANG-TITLE" => "$lang[title]",
 		"GROUPID" => "$row[id]",
 		"GROUPNAME" => "$row[Name]"));
 		$grouplist = $page->output();
@@ -352,7 +352,7 @@ function display_group(){
 #view group members
 function view_group(){
 
-	global $groups, $txt, $id, $db, $gmt, $time_format, $template_path, $pm, $members, $index;
+	global $id, $db, $gmt, $time_format, $template_path, $members, $lang;
 
 	$db->run = "select Username from ebb_group_users where gid='$id' and Status='Active'";
 	$query = $db->query();
@@ -362,19 +362,19 @@ function view_group(){
 	if ($gnum == 0){
 		$page = new template($template_path ."/grouplist-viewusers_noresult.htm");
 		$page->replace_tags(array(
-		"LANG-GROUPMEMBERS" => "$groups[groupmembers]",
-		"LANG-USERNAME" => "$txt[username]",
-		"LANG-POSTCOUNT" => "$index[posts]",
+		"LANG-GROUPMEMBERS" => "$lang[groupmembers]",
+		"LANG-USERNAME" => "$lang[username]",
+		"LANG-POSTCOUNT" => "$lang[posts]",
 		"LANG-REGISTRATIONDATE" => "$members[joindate]",
-		"LANG-NOMEMBERS" => "$groups[nomembers]"));
+		"LANG-NOMEMBERS" => "$lang[nomembers]"));
 		$groupmembers = $page->output();
 	}else{
 		#group userlist header.
 		$page = new template($template_path ."/grouplist-viewusers_head.htm");
 		$page->replace_tags(array(
-		"LANG-GROUPMEMBERS" => "$groups[groupmembers]",
-		"LANG-USERNAME" => "$txt[username]",
-		"LANG-POSTCOUNT" => "$index[posts]",
+		"LANG-GROUPMEMBERS" => "$lang[groupmembers]",
+		"LANG-USERNAME" => "$lang[username]",
+		"LANG-POSTCOUNT" => "$lang[posts]",
 		"LANG-REGISTRATIONDATE" => "$members[joindate]"));
 		$groupmembers = $page->output();
 		while ($row = mysql_fetch_assoc ($query)){
@@ -389,8 +389,8 @@ function view_group(){
 			$page = new template($template_path ."/grouplist-viewusers.htm");
 			$page->replace_tags(array(
 			"USERNAME" => "$r[Username]",
-			"LANG-PMALT" => "$pm[postpmalt]",
-			"LANG-POSTCOUNT" => "$index[posts]",
+			"LANG-PMALT" => "$lang[postpmalt]",
+			"LANG-POSTCOUNT" => "$lang[posts]",
 			"POSTCOUNT" => "$r[Post_Count]",
 			"REGISTRATIONDATE" => "$join_date"));
 			$groupmembers = $page->output();
@@ -404,16 +404,16 @@ function view_group(){
 #memberlist display function
 function memberlist(){
 
-	global $title, $txt, $pagenation, $members, $gmt, $query, $template_path, $time_format, $menu, $index;
+	global $title, $pagenation, $members, $gmt, $query, $template_path, $time_format, $lang;
 
 	#memberlist header.
 	$page = new template($template_path ."/memberlist_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-TITLE" => "$menu[members]",
+	"LANG-TITLE" => "$lang[members]",
 	"PAGENATION" => "$pagenation",
-	"LANG-USERNAME" => "$txt[username]",
-	"LANG-POSTCOUNT" => "$index[posts]",
+	"LANG-USERNAME" => "$lang[username]",
+	"LANG-POSTCOUNT" => "$lang[posts]",
 	"LANG-REGISTRATIONDATE" => "$members[joindate]"));
 	$memberlist = $page->output();
 	while ($row = mysql_fetch_assoc ($query)){
@@ -424,7 +424,7 @@ function memberlist(){
 		$page = new template($template_path ."/memberlist.htm");
 		$page->replace_tags(array(
 		"USERNAME" => "$row[Username]",
-		"LANG-POSTCOUNT" => "$index[posts]",
+		"LANG-POSTCOUNT" => "$lang[posts]",
 		"POSTCOUNT" => "$row[Post_Count]",
 		"REGISTATIONDATE" => "$join_date"));
 		$memberlist = $page->output();
@@ -437,19 +437,19 @@ function memberlist(){
 #search results-topics
 function search_results_topic(){
 
-	global $title, $template_path, $pagenation, $search_result, $db, $num, $search, $menu, $index, $stat, $level_result;
+	global $title, $template_path, $pagenation, $search_result, $db, $num, $search, $lang, $stat, $level_result;
 
 	#search results header.
 	$page = new template($template_path ."/searchresults_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-TITLE" => "$menu[search]",
+	"LANG-TITLE" => "$lang[search]",
 	"LANG-SEARCHRESULTS" => "$search[searchresults]",
 	"PAGINATION" => "$pagenation",
 	"NUM-RESULTS" => "$num",
 	"LANG-RESULTS" => "$search[result]",
 	"LANG-USERNAME" => "$search[author]",
-	"LANG-TOPIC" => "$index[topics]",
+	"LANG-TOPIC" => "$lang[topics]",
 	"LANG-POSTEDIN" => "$search[postedin]"));
 	$searchresults = $page->output();
 	while ($row = mysql_fetch_assoc($search_result)) {
@@ -494,19 +494,19 @@ function search_results_topic(){
 #search results-posts
 function search_results_post(){
 
-	global $title, $template_path, $pagenation, $search_result, $db, $num, $search, $menu, $index, $stat, $level_result;
+	global $title, $template_path, $pagenation, $search_result, $db, $num, $search, $lang, $stat, $level_result;
 
 	#search results header.
 	$page = new template($template_path ."/searchresults_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-TITLE" => "$menu[search]",
+	"LANG-TITLE" => "$lang[search]",
 	"LANG-SEARCHRESULTS" => "$search[searchresults]",
 	"PAGINATION" => "$pagenation",
 	"NUM-RESULTS" => "$num",
 	"LANG-RESULTS" => "$search[result]",
 	"LANG-USERNAME" => "$search[author]",
-	"LANG-TOPIC" => "$index[topics]",
+	"LANG-TOPIC" => "$lang[topics]",
 	"LANG-POSTEDIN" => "$search[postedin]"));
 	$searchresults = $page->output();
 	while ($row = mysql_fetch_assoc($search_result)){
@@ -556,19 +556,19 @@ function search_results_post(){
 #search results-new posts
 function search_results_newposts(){
 
-	global $title, $template_path, $search_results, $search_results2, $count, $logged_user, $db, $search, $menu, $index, $stat, $level_result;
+	global $title, $template_path, $search_results, $search_results2, $count, $logged_user, $db, $search, $lang, $stat, $level_result;
 
 	#search results header.
 	$page = new template($template_path ."/searchresults_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-TITLE" => "$menu[search]",
+	"LANG-TITLE" => "$lang[search]",
 	"LANG-SEARCHRESULTS" => "$search[searchresults]",
 	"PAGINATION" => "",
 	"NUM-RESULTS" => "$count",
 	"LANG-RESULTS" => "$search[result]",
 	"LANG-USERNAME" => "$search[author]",
-	"LANG-TOPIC" => "$index[topics]",
+	"LANG-TOPIC" => "$lang[topics]",
 	"LANG-POSTEDIN" => "$search[postedin]"));
 	$page->output();
 	//output any topics
@@ -680,241 +680,88 @@ function board_select(){
 	$boardlist .= "</select>";
 	return ($boardlist);
 }
-#timezone select function
-function timezone_select($tzone){
 
-	$timezone = '<select name="time_zone" class="text">';
-	#see if any settings are set, if not set value at 0.
-	if($tzone == ""){
-		$tzone = 0;
-	}
-	#-12 GMT
-	if ($tzone == "-12"){
-		$timezone .= '<option value="-12" selected=selected>(GMT -12:00) Eniwetok, Kwajalein</option>';
-	}else{
-		$timezone .= '<option value="-12">(GMT -12:00) Eniwetok, Kwajalein</option>';
-	}
-	#-11 GMT
-	if ($tzone == "-11"){
-		$timezone .= '<option value="-11" selected=selected>(GMT -11:00) Midway Island, Samoa</option>';
-	}else{
-		$timezone .= '<option value="-11">(GMT -11:00) Midway Island, Samoa</option>';
-	}
-	#-10 GMT
-	if ($tzone == "-10"){
-		$timezone .= '<option value="-10" selected=selected>(GMT -10:00) Hawaii</option>';
-	}else{
-		$timezone .= '<option value="-10">(GMT -10:00) Hawaii</option>';
-	}
-	#-9 GMT
-	if ($tzone == "-9"){
-		$timezone .= '<option value="-9" selected=selected>(GMT -9:00) Alaska</option>';
-	}else{
-		$timezone .= '<option value="-9">(GMT -9:00) Alaska</option>';
-	}
-	#-8 GMT
-	if ($tzone == "-8"){
-		$timezone .= '<option value="-8" selected=selected>(GMT -8:00) Pacific Time (US &amp; Canada), Tijuana</option>';
-	}else{
-		$timezone .= '<option value="-8">(GMT -8:00) Pacific Time (US &amp; Canada), Tijuana</option>';
-	}
-	#-7 GMT
-	if ($tzone == "-7"){
-		$timezone .= '<option value="-7" selected=selected>(GMT -7:00) Mountain Time (US &amp; Canada), Arizona</option>';
-	}else{
-		$timezone .= '<option value="-7">(GMT -7:00) Mountain Time (US &amp; Canada), Arizona</option>';
-	}
-	#-6 GMT
-	if ($tzone == "-6"){
-		$timezone .= '<option value="-6" selected=selected>(GMT -6:00) Central Time (US &amp; Canada), Mexico City, Central America</option>';
-	}else{
-		$timezone .= '<option value="-6">(GMT -6:00) Central Time (US &amp; Canada), Mexico City, Central America</option>';
-	}
-	#-5 GMT
-	if ($tzone == "-5"){
-		$timezone .= '<option value="-5" selected=selected>(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima, Quito</option>';
-	}else{
-		$timezone .= '<option value="-5">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima, Quito</option>';
-	}
-	#-4 GMT
-	if ($tzone == "-4"){
-		$timezone .= '<option value="-4" selected=selected>(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz, Santiago</option>';
-	}else{
-		$timezone .= '<option value="-4">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz, Santiago</option>';
-	}
-	#-3.5 GMT
-	if ($tzone == "-3.5"){
-		$timezone .= '<option value="-3.5" selected=selected>(GMT -3:30) Newfoundland</option>';
-	}else{
-		$timezone .= '<option value="-3.5">(GMT -3:30) Newfoundland</option>';
-	}
-	#-3 GMT
-	if ($tzone == "-3"){
-		$timezone .= '<option value="-3" selected=selected>(GMT -3:00) Brasilia, Buenos Aires, Georgetown, Greenland</option>';
-	}else{
-		$timezone .= '<option value="-3">(GMT -3:00) Brasilia, Buenos Aires, Georgetown, Greenland</option>';
-	}
-	#-2 GMT
-	if ($tzone == "-2"){
-		$timezone .= '<option value="-2" selected=selected>(GMT -2:00) Mid-Atlantic, Ascension Islands, St. Helena</option>';
-	}else{
-		$timezone .= '<option value="-2">(GMT -2:00) Mid-Atlantic, Ascension Islands, St. Helena</option>';
-	}
-	#-1 GMT
-	if ($tzone == "-1"){
-		$timezone .= '<option value="-1" selected=selected>(GMT -1:00) Azores, Cape Verde Islands</option>';
-	}else{
-		$timezone .= '<option value="-1">(GMT -1:00) Azores, Cape Verde Islands</option>';
-	}
-	#0 GMT
-	if ($tzone == "0"){
-		$timezone .= '<option value="0" selected=selected>(GMT) Casablanca, Dublin, Edinburgh, Lisbon, London, Monrovia</option>';
-	}else{
-		$timezone .= '<option value="0">(GMT) Casablanca, Dublin, Edinburgh, Lisbon, London, Monrovia</option>';
-	}
-	#+1 GMT
-	if ($tzone == "1"){
-		$timezone .= '<option value="1" selected=selected>(GMT +1:00) Amsterdam, Berlin, Brussels, Madrid, Paris, Rome</option>';
-	}else{
-		$timezone .= '<option value="1">(GMT +1:00) Amsterdam, Berlin, Brussels, Madrid, Paris, Rome</option>';
-	}
-	#+2 GMT
-	if ($tzone == "2"){
-		$timezone .= '<option value="2" selected=selected>(GMT +2:00) Cairo, Helsinki, Kaliningrad, South Africa</option>';
-	}else{
-		$timezone .= '<option value="2">(GMT +2:00) Cairo, Helsinki, Kaliningrad, South Africa</option>';
-	}
-	#+3 GMT
-	if ($tzone == "3"){
-		$timezone .= '<option value="3" selected=selected>(GMT +3:00) Baghdad, Riyadh, Moscow, Nairobi</option>';
-	}else{
-		$timezone .= '<option value="3">(GMT +3:00) Baghdad, Riyadh, Moscow, Nairobi</option>';
-	}
-	#+3.5 GMT
-	if ($tzone == "3.5"){
-		$timezone .= '<option value="3.5" selected=selected>(GMT +3:30) Tehran</option>';
-	}else{
-		$timezone .= '<option value="3.5">(GMT +3:30) Tehran</option>';
-	}
-	#+4 GMT
-	if ($tzone == "4"){
-		$timezone .= '<option value="4" selected=selected>(GMT +4:00) Abu Dhabi, Baku, Muscat, Tbilii</option>';
-	}else{
-		$timezone .= '<option value="4">(GMT +4:00) Abu Dhabi, Baku, Muscat, Tbilii</option>';
-	}
-	#+4.5 GMT
-	if ($tzone == "4.5"){
-		$timezone .= '<option value="4.5" selected=selected>(GMT +4:30) Kabul</option>';
-	}else{
-		$timezone .= '<option value="4.5">(GMT +4:30) Kabul</option>';
-	}
-	#+5 GMT
-	if ($tzone == "5"){
-		$timezone .= '<option value="5" selected=selected>(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>';
-	}else{
-		$timezone .= '<option value="5">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>';
-	}
-	#+5.5 GMT
-	if ($tzone == "5.5"){
-		$timezone .= '<option value="5.5" selected=selected>(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>';
-	}else{
-		$timezone .= '<option value="5.5">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>';
-	}
-	#+5.75 GMT
-	if ($tzone == "5.75"){
-		$timezone .= '<option value="5.75" selected=selected>(GMT +5:45) Kathmandu</option>';
-	}else{
-		$timezone .= '<option value="5.75">(GMT +5:45) Kathmandu</option>';
-	}
-	#+6 GMT
-	if ($tzone == "6"){
-		$timezone .= '<option value="6" selected=selected>(GMT +6:00) Almaty, Colombo, Dhaka, Novosibirsk, Sri Jayawardenepura</option>';
-	}else{
-		$timezone .= '<option value="6">(GMT +6:00) Almaty, Colombo, Dhaka, Novosibirsk, Sri Jayawardenepura</option>';
-	}
-	#+6.5 GMT
-	if ($tzone == "6.5"){
-		$timezone .= '<option value="6.5" selected=selected>(GMT +6:30) Rangoon</option>';
-	}else{
-		$timezone .= '<option value="6.5">(GMT +6:30) Rangoon</option>';
-	}
-	#+7 GMT
-	if ($tzone == "7"){
-		$timezone .= '<option value="7" selected=selected>(GMT +7:00) Bangkok, Hanoi, Jakarta, Krasnoyarsk</option>';
-	}else{
-		$timezone .= '<option value="7">(GMT +7:00) Bangkok, Hanoi, Jakarta, Krasnoyarsk</option>';
-	}
-	#+8 GMT
-	if ($tzone == "8"){
-		$timezone .= '<option value="8" selected=selcted>(GMT +8:00) Beijing, Hong Kong, Perth, Singapore, Taipei</option>';
-	}else{
-		$timezone .= '<option value="8">(GMT +8:00) Beijing, Hong Kong, Perth, Singapore, Taipei</option>';
-	}
-	#+9 GMT
-	if ($tzone == "9"){
-		$timezone .= '<option value="9" selected=selected>(GMT +9:00) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>';
-	}else{
-		$timezone .= '<option value="9">(GMT +9:00) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>';
-	}
-	#+9.5 GMT
-	if ($tzone == "9.5"){
-		$timezone .= '<option value="9.5" selected=selected>(GMT +9:30) Adelaide, Darwin</option>';
-	}else{
-		$timezone .= '<option value="9.5">(GMT +9:30) Adelaide, Darwin</option>';
-	}
-	#+10 GMT
-	if ($tzone == "10"){
-		$timezone .= '<option value="10" selected=selected>(GMT +10:00) Canberra, Guam, Melbourne, Sydney, Vladivostok</option>';
-	}else{
-		$timezone .= '<option value="10">(GMT +10:00) Canberra, Guam, Melbourne, Sydney, Vladivostok</option>';
-	}
-	#+11 GMT
-	if ($tzone == "11"){
-		$timezone .= '<option value="11" selected=selected>(GMT +11:00) Magadan, New Caledonia, Solomon Islands</option>';
-	}else{
-		$timezone .= '<option value="11">(GMT +11:00) Magadan, New Caledonia, Solomon Islands</option>';
-	}
-	#+12 GMT
-	if ($tzone == "12"){
-		$timezone .= '<option value="12" selected=selected>(GMT +12:00) Auckland, Fiji, Kamchatka, Marshall Island, Wellington</option>';
-	}else{
-		$timezone .= '<option value="12">(GMT +12:00) Auckland, Fiji, Kamchatka, Marshall Island, Wellington</option>';
-	}
-	#+13 GMT
-	if ($tzone == "13"){
-		$timezone .= '<option value="13" selected=selected>(GMT +13:00) Nuku\' alofa</option>';
-	}else{
-		$timezone .= '<option value="13">(GMT +13:00) Nuku\' alofa</option>';
-	}
-	$timezone .= '</select>';
+/**
+ * Builds our timezone select field.
+ * @param string $tzone Our selected timezone
+ * @return string
+*/
+function timezone_select($tzone="") {
+    //array list of timezones supported by PHP.
+    $tzoneList = array(
+        "Pacific/Kwajalein" => "(GMT -12:00) Eniwetok, Kwajalein",
+        "Pacific/Midway" => "(GMT -11:00) Midway Island, Samoa",
+        "Pacific/Honolulu" => "(GMT -10:00) Honolulu, Hawaii",
+        "America/Anchorage" => "(GMT -9:00) Anchorage, Alaska",
+        "America/Tijuana" => "(GMT -8:00) Pacific Time (US &amp; Canada), Tijuana",
+        "America/Phoenix" => "(GMT -7:00) Mountain Time (US &amp; Canada), Phoenix, Arizona",
+        "America/Mexico_City" => "(GMT -6:00) Central Time (US &amp; Canada), Mexico City, Central America",
+        "America/New_York" => "(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima, New York",
+        "America/Santiago" => "(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz, Santiago",
+        "Buenos_Aires" => "(GMT -3:00) Brasilia, Buenos Aires, Georgetown, Greenland",
+        "Atlantic/St_Helena" => "(GMT -2:00) Mid-Atlantic, Ascension Islands, St. Helena",
+        "Atlantic/Azores" => "(GMT -1:00) Azores, Cape Verde Islands",
+        "Europe/London" => "(GMT) Casablanca, Dublin, Edinburgh, Lisbon, London, Monrovia",
+        "Europe/Paris" => "(GMT +1:00) Amsterdam, Berlin, Brussels, Madrid, Paris, Rome",
+        "Africa/Cairo" => "(GMT +2:00) Cairo, Helsinki, Kaliningrad, South Africa",
+        "Europe/Moscow" => "(GMT +3:00) Baghdad, Riyadh, Moscow, Nairobi",
+        "Asia/Tehran" => "(GMT +3:30) Tehran",
+        "Asia/Muscat" => "(GMT +4:00) Abu Dhabi, Baku, Muscat, Tbilii",
+        "Asia/Kabul" => "(GMT +4:30) Kabul",
+        "Asia/Yekaterinburg" => "(GMT +5:00) Yekaterinburg, Islamabad, Karachi, Tashkent",
+        "Asia/Calcutta" => "(GMT +5:30) Bombay, Calcutta, Madras, New Delhi",
+        "Asia/Kathmandu" => "(GMT +5:45) Kathmandu",
+        "Asia/Dhaka" => "(GMT +6:00) Almaty, Colombo, Dhaka, Novosibirsk, Sri Jayawardenepura",
+        "Asia/Rangoon" => "(GMT +6:30) Rangoon",
+        "Asia/Bangkok" => "(GMT +7:00) Bangkok, Hanoi, Jakarta, Krasnoyarsk",
+        "China/Beijing" => "(GMT +8:00) Beijing, Hong Kong, Perth, Singapore, Taipei",
+        "Asia/Tokyo" => "(GMT +9:00) Osaka, Sapporo, Seoul, Tokyo, Yakutsk",
+        "Australia/Adelaide" => "(GMT +9:30) Adelaide, Darwin",
+        "Australia/Sydney" => "(GMT +10:00) Canberra, Guam, Melbourne, Sydney, Vladivostok",
+        "Asia/Magadan" => "(GMT +11:00) Magadan, New Caledonia, Solomon Islands",
+        "Pacific/Fiji" => "(GMT +12:00) Auckland, Fiji, Kamchatka, Marshall Island, Wellington",
+        "Pacific/Tongatapu" => "(GMT +13:00) Nuku' alofa"
+    );
 
-	return ($timezone);
+    $timezone = '<select name="time_zone" class="text">'."\n";
+
+    foreach($tzoneList as $timezone => $text) {
+        //see if one of these values are selected.
+        if ($timezone == $tzone) {
+            $timezone .= '<option value="'.$timezone.'" selected=selected>'.$text.'</option>'."\n";
+        } else {
+            $timezone .= '<option value="'.$timezone.'">'.$text.'</option>'."\n";
+        }
+    }
+    $timezone .= '</select>';
+
+    return $timezone;
 }
 #style select function
 function style_select($stylesel){
 
-	global $db;
+    global $db;
 
-	$db->run = "SELECT id, Name FROM ebb_style";
-	$style_query = $db->query();
-	$db->close();
-	
-	$style_select = "<select name=\"style\" class=\"text\">";
-	while ($row = mysql_fetch_assoc ($style_query)){
-		#see what is currently selected already.
-		if ($stylesel == ""){
-			$style_select .= "<option value=\"$row[id]\">$row[Name]</option>"; 
-		}else{
-			if ($stylesel == $row['id']){
-				$style_select .= "<option value=\"$row[id]\" selected=selected>$row[Name]</option>";
-			}else{
-				$style_select .= "<option value=\"$row[id]\">$row[Name]</option>";
-			}
-		}
-	}
-	$style_select .= "</select>";
+    $db->run = "SELECT id, Name FROM ebb_style";
+    $style_query = $db->query();
+    $db->close();
 
-	return ($style_select);
+    $style_select = "<select name=\"style\" class=\"text\">";
+    while ($row = mysql_fetch_assoc ($style_query)){
+        #see what is currently selected already.
+        if ($stylesel == ""){
+            $style_select .= "<option value=\"$row[id]\">$row[Name]</option>";
+        }else{
+            if ($stylesel == $row['id']){
+                $style_select .= "<option value=\"$row[id]\" selected=selected>$row[Name]</option>";
+            }else{
+                $style_select .= "<option value=\"$row[id]\">$row[Name]</option>";
+            }
+        }
+    }
+    $style_select .= "</select>";
+
+    return ($style_select);
 }
 #language select function
 function lang_select($langsel){
@@ -944,7 +791,7 @@ function lang_select($langsel){
 #group joined list
 function groups_joined(){
 
-	global $db, $logged_user, $userinfo, $title, $groups, $template_path;
+	global $db, $logged_user, $userinfo, $title, $template_path;
 
 	$db->run = "SELECT Name, id, Enrollment FROM ebb_groups";
 	$joined_q = $db->query();
@@ -956,7 +803,7 @@ function groups_joined(){
 	"LANG-TITLE" => "$userinfo[title]",
 	"LANG-GROUPMANAGE" => "$userinfo[managegroups]",
 	"LANG-TEXT" => "$userinfo[grouptxt]",
-	"LANG-GROUPNAME" => "$groups[name]"));
+	"LANG-GROUPNAME" => "$lang[name]"));
 	$joined_group = $page->output();
 	while ($row = mysql_fetch_assoc ($joined_q)) {
 		//see if user already joined this.
@@ -996,7 +843,7 @@ function groups_joined(){
 #list subscriptions function
 function digest_list(){
 
-	global $template_path, $title, $search, $pagenation, $db, $logged_user, $userinfo, $sub_q, $num, $pm, $mod;
+	global $template_path, $title, $search, $pagenation, $db, $logged_user, $userinfo, $sub_q, $num;
 
 	if ($num == 0){
 	 	#subscription no result output.
@@ -1016,7 +863,7 @@ function digest_list(){
 		#subscription header.
 		$page = new template($template_path ."/editsubscription_head.htm");
 		$page->replace_tags(array(
-		"LANG-DELPROMPT" => "$mod[condel]",
+		"LANG-DELPROMPT" => "$lang[condel]",
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$userinfo[title]",
 		"LANG-EDITSUBSCRIPTION" => "$userinfo[subscriptionsetting]",
@@ -1039,7 +886,7 @@ function digest_list(){
 			$page = new template($template_path ."/editsubscription.htm");
 			$page->replace_tags(array(
 			"TOPICID" => "$row[tid]",
-			"LANG-DELETE" => "$pm[del]",
+			"LANG-DELETE" => "$lang[del]",
 			"LANG-POSTEDIN" => "$search[postedin]",
 			"TOPICNAME" => "$result[Topic]",
 			"BOARDID" => "$board_r[id]",
@@ -1072,7 +919,7 @@ function avatar_gallery(){
 #list board
 function board_listing(){
 
-	global $title, $rules, $index, $pagenation, $posting, $board_policy, $db, $board_rule, $access_level, $stat, $viewboard, $num, $query, $logged_user, $bid, $template_path, $time_format, $level_result, $gmt;
+	global $title, $rules, $lang, $pagenation, $posting, $board_policy, $db, $board_rule, $access_level, $stat, $num, $query, $logged_user, $bid, $template_path, $time_format, $level_result, $gmt;
 	
 	if(($stat == "guest") or ($stat == "Member")){
 		#guest & non-group members dont need group check.
@@ -1086,10 +933,10 @@ function board_listing(){
 	//see if user can read this board.
 	$read_chk = permission_check($board_rule['B_Read']);
 	if ($read_chk == 0){
-		$boardmsg = $viewboard['noread'];
+		$boardmsg = $lang['noread'];
 		$boarderr = 1;
 	}elseif($num == 0){
-		$boardmsg = $viewboard['nopost'];
+		$boardmsg = $lang['nopost'];
 		$boarderr = 1;	
 	}else{
 		$boardmsg = '';
@@ -1101,26 +948,26 @@ function board_listing(){
 		$page->replace_tags(array(
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$rules[Board]",
-		"LANG-BOARD" => "$index[boards]",
-		"LANG-TOPIC" => "$index[topics]",
-		"LANG-POST" => "$index[posts]",
-		"LANG-LASTPOSTDATE" => "$index[lastposteddate]",
+		"LANG-BOARD" => "$lang[boards]",
+		"LANG-TOPIC" => "$lang[topics]",
+		"LANG-POST" => "$lang[posts]",
+		"LANG-LASTPOSTDATE" => "$lang[lastposteddate]",
 		"PAGENATION" => "$pagenation",
 		"POST-RULE" => "$posting",
 		"BOARD-POLICY" => "$board_policy",
-		"LANG-TOPIC" => "$viewboard[topic]",
-		"LANG-POSTEDBY" => "$index[Postedby]",
-		"LANG-REPLIES" => "$viewboard[replies]",
-		"LANG-POSTVIEWS" => "$viewboard[views]",
-		"LANG-LASTPOSTEDBY" => "$viewboard[lastpost]",
+		"LANG-TOPIC" => "$lang[topic]",
+		"LANG-POSTEDBY" => "$lang[Postedby]",
+		"LANG-REPLIES" => "$lang[replies]",
+		"LANG-POSTVIEWS" => "$lang[views]",
+		"LANG-LASTPOSTEDBY" => "$lang[lastpost]",
 		"BOARDMSG" => "$boardmsg",
-		"LANG-ICONGUIDE" => "$index[iconguide]",
-		"LANG-NEW" =>"$viewboard[newtopic]",
-		"LANG-OLD" =>"$viewboard[oldtopic]",
-		"LANG-POLL" =>"$viewboard[polltopic]",
-		"LANG-LOCKED" =>"$viewboard[lockedtopic]",
-		"LANG-IMPORTANT" => "$viewboard[importanttopic]",
-		"LANG-HOTTOPIC" => "$viewboard[hottopic]"));
+		"LANG-ICONGUIDE" => "$lang[iconguide]",
+		"LANG-NEW" =>"$lang[newtopic]",
+		"LANG-OLD" =>"$lang[oldtopic]",
+		"LANG-POLL" =>"$lang[polltopic]",
+		"LANG-LOCKED" =>"$lang[lockedtopic]",
+		"LANG-IMPORTANT" => "$lang[importanttopic]",
+		"LANG-HOTTOPIC" => "$lang[hottopic]"));
 		$board = $page->output();	 
 	}else{
 		#viewboard header.
@@ -1128,17 +975,17 @@ function board_listing(){
 		$page->replace_tags(array(
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$rules[Board]",
-		"LANG-BOARD" => "$index[boards]",
-		"LANG-TOPIC" => "$index[topics]",
-		"LANG-POST" => "$index[posts]",
-		"LANG-LASTPOSTDATE" => "$index[lastposteddate]",
+		"LANG-BOARD" => "$lang[boards]",
+		"LANG-TOPIC" => "$lang[topics]",
+		"LANG-POST" => "$lang[posts]",
+		"LANG-LASTPOSTDATE" => "$lang[lastposteddate]",
 		"PAGENATION" => "$pagenation",
 		"POST-RULE" => "$posting",
-		"LANG-TOPIC" => "$viewboard[topic]",
-		"LANG-POSTEDBY" => "$index[Postedby]",
-		"LANG-REPLIES" => "$viewboard[replies]",
-		"LANG-POSTVIEWS" => "$viewboard[views]",
-		"LANG-LASTPOSTEDBY" => "$viewboard[lastpost]"));
+		"LANG-TOPIC" => "$lang[topic]",
+		"LANG-POSTEDBY" => "$lang[Postedby]",
+		"LANG-REPLIES" => "$lang[replies]",
+		"LANG-POSTVIEWS" => "$lang[views]",
+		"LANG-LASTPOSTEDBY" => "$lang[lastpost]"));
 		$board = $page->output();
 		while ($row = mysql_fetch_assoc ($query)){
 			//grab posted date info
@@ -1157,7 +1004,7 @@ function board_listing(){
 			$attach_ct2 = $db->num_results();
 			$db->close();
 			if(($attach_ct == 1) or ($attach_ct2 == 1)){
-				$attach_icon = "<img src=\"$template_path/images/attach_icon.gif\" alt=\"$viewboard[attachment]\" title=\"$viewboard[attachment]\" />"; 
+				$attach_icon = "<img src=\"$template_path/images/attach_icon.gif\" alt=\"$lang[attachment]\" title=\"$lang[attachment]\" />";
 			}else{
 				$attach_icon = '';
 			}
@@ -1193,13 +1040,13 @@ function board_listing(){
 			"TOPICID" =>"$row[tid]",
 			"TOPICNAME" =>"$row[Topic]",
 			"AUTHOR" =>"$row[author]",
-			"LANG-REPLIES" => "$viewboard[repliedmsg]",
-			"LANG-POSTVIEWS" => "$viewboard[views]",
+			"LANG-REPLIES" => "$lang[repliedmsg]",
+			"LANG-POSTVIEWS" => "$lang[views]",
 			"REPLYCOUNT" => "$reply_num",
 			"POSTVIEWS" => "$row[Views]",
 			"TOPICDATE" => "$topic_date",
 			"POSTLINK" => "$row[Post_Link]",
-			"LANG-POSTEDUSER" => "$index[Postedby]",
+			"LANG-POSTEDUSER" => "$lang[Postedby]",
 			"POSTEDUSER" => "$row[Posted_User]"));
 			$board = $page->output();
 		}
@@ -1207,13 +1054,13 @@ function board_listing(){
 		$page = new template($template_path ."/viewboard_foot.htm");
 		$page->replace_tags(array(
 		"BOARD-POLICY" => "$board_policy",
-		"LANG-ICONGUIDE" => "$index[iconguide]",
-		"LANG-NEW" =>"$viewboard[newtopic]",
-		"LANG-OLD" =>"$viewboard[oldtopic]",
-		"LANG-POLL" =>"$viewboard[polltopic]",
-		"LANG-LOCKED" =>"$viewboard[lockedtopic]",
-		"LANG-IMPORTANT" => "$viewboard[importanttopic]",
-		"LANG-HOTTOPIC" => "$viewboard[hottopic]"));
+		"LANG-ICONGUIDE" => "$lang[iconguide]",
+		"LANG-NEW" =>"$lang[newtopic]",
+		"LANG-OLD" =>"$lang[oldtopic]",
+		"LANG-POLL" =>"$lang[polltopic]",
+		"LANG-LOCKED" =>"$lang[lockedtopic]",
+		"LANG-IMPORTANT" => "$lang[importanttopic]",
+		"LANG-HOTTOPIC" => "$lang[hottopic]"));
 		$board = $page->output();
 	}
 	return ($board);
@@ -1221,7 +1068,7 @@ function board_listing(){
 #reply listing
 function reply_listing(){
 
-	global $db, $query, $gmt, $index, $template_path, $allowsmile, $allowbbcode, $allowimg, $stat, $access_level, $logged_user, $viewtopic, $edit, $time_format, $board_rule, $checkmod, $checkgroup, $permission_type, $t_name;
+	global $db, $query, $gmt, $lang, $template_path, $allowsmile, $allowbbcode, $allowimg, $stat, $access_level, $logged_user, $time_format, $board_rule, $checkmod, $checkgroup, $permission_type, $t_name;
 
 	while ($row = mysql_fetch_assoc ($query)) {
 		#get author's profile information.
@@ -1320,7 +1167,7 @@ function reply_listing(){
 		$permission_chk_attach = access_vaildator($permission_type, 26);
 		$permission_chk_warn = access_vaildator($permission_type, 25);
 		$warn_bar = user_warn($row['author']);
-		$edit_chk = permission_check($board_rule['B_Edit']);
+		$lang_chk = permission_check($board_rule['B_Edit']);
 		$delete_chk = permission_check($board_rule['B_Delete']);
 		#see if user is a moderator or admin
 		if ($checkmod == 1){
@@ -1331,7 +1178,7 @@ function reply_listing(){
 			}else{
 				#see what a moderator can do.
 				if($permission_chk_vip == 1){
-					$view_ip = "$viewtopic[ipmod]&nbsp;<a href=\"manage.php?mode=viewip&amp;ip=$row[IP]&amp;u=$row[author]&amp;tid=$row[tid]&amp;bid=$row[bid]\">$row[IP]</a>";
+					$view_ip = "$lang[ipmod]&nbsp;<a href=\"manage.php?mode=viewip&amp;ip=$row[IP]&amp;u=$row[author]&amp;tid=$row[tid]&amp;bid=$row[bid]\">$row[IP]</a>";
 				}else{
 					$view_ip = '';
 				}
@@ -1358,7 +1205,7 @@ function reply_listing(){
 						$postopt = '';
 						$quickEditStatus = "";
 					}else{ 
-						$postopt = "$viewtopic[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"delete.php?action=del_post&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;type=1&amp;quser=$t_name[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
+						$postopt = "$lang[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"delete.php?action=del_post&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;type=1&amp;quser=$t_name[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
 						$quickEditStatus = "<div align=\"right\"><a href=\"#post$row[pid]\" onclick=\"editor$row[pid].enterEditMode('click')\"><img src=\"$template_path/images/quick_edit.gif\" border=\"0\" alt=\"\" /></a></div>";
 					}
 				}elseif (($logged_user == $t_name['author']) AND ($permission_chk_edit == 1)){
@@ -1367,7 +1214,7 @@ function reply_listing(){
 						$postopt = '';
 						$quickEditStatus = ""; 
 					}else{
-			  			$postopt = "$viewtopic[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$bid&amp;tid=$tid&amp;type=1&amp;quser=$t_name[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
+			  			$postopt = "$lang[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$bid&amp;tid=$tid&amp;type=1&amp;quser=$t_name[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
 			  			$quickEditStatus = "<div align=\"right\"><a href=\"#post$row[pid]\" onclick=\"editor$row[pid].enterEditMode('click')\"><img src=\"$template_path/images/quick_edit.gif\" border=\"0\" alt=\"\" /></a></div>";
 					}
 				}elseif (($logged_user == $t_name['author']) AND ($permission_chk_del == 1)){
@@ -1376,7 +1223,7 @@ function reply_listing(){
 						$postopt = '';
 						$quickEditStatus = ""; 
 					}else{
-						$postopt = "$viewtopic[iplogged]&nbsp;<a href=\"delete.php?action=del_post&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$bid&amp;tid=$tid&amp;type=1&amp;quser=$t_name[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
+						$postopt = "$lang[iplogged]&nbsp;<a href=\"delete.php?action=del_post&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$bid&amp;tid=$tid&amp;type=1&amp;quser=$t_name[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
 						$quickEditStatus = "";
 					}
 				}else{
@@ -1386,13 +1233,13 @@ function reply_listing(){
 			}else{
 		  		#default user permissions.
 		   		if (($logged_user == $row['author']) AND ($edit_chk == 1) AND ($delete_chk == 1)){
-	      	   		$postopt = "$viewtopic[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"delete.php?action=del_post&bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]&amp;type=2&amp;quser=$row[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
+	      	   		$postopt = "$lang[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"delete.php?action=del_post&bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]&amp;type=2&amp;quser=$row[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
 					$quickEditStatus = "<div align=\"right\"><a href=\"#post$row[pid]\" onclick=\"editor$row[pid].enterEditMode('click')\"><img src=\"$template_path/images/quick_edit.gif\" border=\"0\" alt=\"\" /></a></div>";				
 				}elseif (($logged_user == $row['author']) AND ($edit_chk == 1)){
-	  				$postopt = "$viewtopic[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]&amp;type=2&amp;quser=$row[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
+	  				$postopt = "$lang[iplogged]&nbsp;<a href=\"edit.php?mode=editpost&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/edit.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]&amp;type=2&amp;quser=$row[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
 	  				$quickEditStatus = "<div align=\"right\"><a href=\"#post$row[pid]\" onclick=\"editor$row[pid].enterEditMode('click')\"><img src=\"$template_path/images/quick_edit.gif\" border=\"0\" alt=\"\" /></a></div>";
 				}elseif (($logged_user == $row['author']) AND ($delete_chk == 1)){
-					$postopt = "$viewtopic[iplogged]&nbsp;<a href=\"delete.php?action=del_post&bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]&amp;type=2&amp;quser=$row[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
+					$postopt = "$lang[iplogged]&nbsp;<a href=\"delete.php?action=del_post&bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]\"><img src=\"$template_path/images/delete.gif\" border=\"0\" alt=\"\" /></a><a href=\"Post.php?mode=Reply&amp;bid=$row[bid]&amp;tid=$row[tid]&amp;pid=$row[pid]&amp;type=2&amp;quser=$row[author]\"><img src=\"$template_path/images/quote.gif\" border=\"0\" alt=\"\" /></a>";
 					$quickEditStatus = "";
 				}else{
 					$postopt = '';
@@ -1404,7 +1251,7 @@ function reply_listing(){
 		$page = new template($template_path ."/replylisting.htm");
 		$page->replace_tags(array(
 		"POSTOPTIONS" => "$postopt",
-		"LANG-POSTEDON" => "$viewtopic[postedon]",
+		"LANG-POSTEDON" => "$lang[postedon]",
 		"POSTEDON" => "$post_date",
 		"POSTID" => "$row[pid]",
 		"AUTHOR" => "$row[author]",
@@ -1412,13 +1259,13 @@ function reply_listing(){
 		"RANKNAME" => "$rank",
 		"RANKICON" => "$rankicon",
 		"AVATAR" => "$avatar",
-		"LANG-POSTCOUNT" => "$index[posts]",
+		"LANG-POSTCOUNT" => "$lang[posts]",
 		"POSTCOUNT" => "$re_user[Post_Count]",
 		"WARNINGBAR" => "$warn_bar",
 		"QUICKEDIT" => "$quickEditStatus",
-		"LANG-QUICKEDIT" => "$edit[editpost]",
-  		"LANG-CANCELEDIT" => "$viewtopic[canceledit]",
-		"LANG-PROCESSINGEDIT" => "$viewtopic[processingedit]",
+		"LANG-QUICKEDIT" => "$lang[editpost]",
+  		"LANG-CANCELEDIT" => "$lang[canceledit]",
+		"LANG-PROCESSINGEDIT" => "$lang[processingedit]",
 		"POSTBODY" => "$re_msg",
 		"ATTACHMENTS"=> "$attachment",
 		"SIGNATURE" => "$sig"));
@@ -1447,7 +1294,7 @@ function reply_listing_print(){
 }
 #attachment manager.
 function attach_manager($mode){
-	global $template_path, $title, $mod, $txt, $userinfo, $pagenation, $attach, $search, $post, $uploads, $topic_q, $post_q, $attach_q, $bid, $db;
+	global $template_path, $title, $userinfo, $pagenation, $search, $post, $uploads, $topic_q, $post_q, $attach_q, $bid, $db;
 	#see if mode was left empty.
 	if(!isset($mode)){
 		die("Incorrect use of Function.");
@@ -1460,9 +1307,9 @@ function attach_manager($mode){
 		$page->replace_tags(array(
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$post[manageattach]",
-		"LANG-DELPROMPT" => "$mod[condel]",
-		"LANG-FILENAME" => "$attach[filename]",
-		"LANG-FILESIZE" => "$attach[filesize]"));
+		"LANG-DELPROMPT" => "$lang[condel]",
+		"LANG-FILENAME" => "$lang[filename]",
+		"LANG-FILESIZE" => "$lang[filesize]"));
 		$attachments = $page->output();
 		#loop data.
 		while ($manage_t = mysql_fetch_assoc ($topic_q)) {
@@ -1481,7 +1328,7 @@ function attach_manager($mode){
 		#manager footer.
 		$page = new template($template_path ."/upload_foot.htm");
 		$page->replace_tags(array(
-		"LANG-CLOSEWINDOW" => "$txt[closewindow]"));
+		"LANG-CLOSEWINDOW" => "$lang[closewindow]"));
 		$attachments = $page->output(); 
 	break;
 	case 'post':
@@ -1490,9 +1337,9 @@ function attach_manager($mode){
 		$page->replace_tags(array(
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$post[manageattach]",
-		"LANG-DELPROMPT" => "$mod[condel]",
-		"LANG-FILENAME" => "$attach[filename]",
-		"LANG-FILESIZE" => "$attach[filesize]"));
+		"LANG-DELPROMPT" => "$lang[condel]",
+		"LANG-FILENAME" => "$lang[filename]",
+		"LANG-FILESIZE" => "$lang[filesize]"));
 		$attachments = $page->output();
 		#loop data.
 		while ($manage_p = mysql_fetch_assoc ($post_q)) {
@@ -1511,7 +1358,7 @@ function attach_manager($mode){
 		#manager footer.
 		$page = new template($template_path ."/upload_foot.htm");
 		$page->replace_tags(array(
-		"LANG-CLOSEWINDOW" => "$txt[closewindow]"));
+		"LANG-CLOSEWINDOW" => "$lang[closewindow]"));
 		$attachments = $page->output();
 	break;
 	case 'newentry':
@@ -1520,9 +1367,9 @@ function attach_manager($mode){
 		$page->replace_tags(array(
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$post[manageattach]",
-		"LANG-DELPROMPT" => "$mod[condel]",
-		"LANG-FILENAME" => "$attach[filename]",
-		"LANG-FILESIZE" => "$attach[filesize]"));
+		"LANG-DELPROMPT" => "$lang[condel]",
+		"LANG-FILENAME" => "$lang[filename]",
+		"LANG-FILESIZE" => "$lang[filesize]"));
 		$attachments = $page->output();
 		#loop data.
 		while ($r = mysql_fetch_assoc ($uploads)) {
@@ -1541,7 +1388,7 @@ function attach_manager($mode){
 		#manager footer.
 		$page = new template($template_path ."/upload_foot.htm");
 		$page->replace_tags(array(
-		"LANG-CLOSEWINDOW" => "$txt[closewindow]"));
+		"LANG-CLOSEWINDOW" => "$lang[closewindow]"));
 		$attachments = $page->output();
 	break;
 	case 'profile':
@@ -1551,11 +1398,11 @@ function attach_manager($mode){
 		"TITLE" => "$title",
 		"LANG-TITLE" => "$userinfo[title]",
 		"LANG-MANAGEATTACHMENTS" => "$post[manageattach]",
-		"LANG-DELPROMPT" => "$mod[condel]",
+		"LANG-DELPROMPT" => "$lang[condel]",
 		"PAGINATION" => "$pagenation",
 		"LANG-TEXT" => "$userinfo[attachmenttext]",
-		"LANG-FILENAME" => "$attach[filename]",
-		"LANG-FILESIZE" => "$attach[filesize]",
+		"LANG-FILENAME" => "$lang[filename]",
+		"LANG-FILESIZE" => "$lang[filesize]",
 		"LANG-POSTEDIN" => "$search[postedin]"));
 		$attachments = $page->output();
 		while ($r = mysql_fetch_assoc ($attach_q)) {
@@ -1598,14 +1445,14 @@ function attach_manager($mode){
 		$attachments = $page->output();
 	break;
 	default:
-		die($txt['invalidaction']); 
+		die($lang['invalidaction']);
 	}
 	return ($attachments);
 }
 #view attachment function.
 function attachment_stat($type, $user, $id){
 
-	global $db, $attach;
+	global $db, $lang;
 
 	if($type == "topic"){
 		#see if user attached a file.
@@ -1614,12 +1461,12 @@ function attachment_stat($type, $user, $id){
 		$attach_q = $db->query();
 		$db->close();
 		if($attach_ct > 0){
-	 		$attachment = "<br /><div class=\"attachheader\">$attach[attachments]</div><div class=\"attachment\">";
+	 		$attachment = "<br /><div class=\"attachheader\">$lang[attachments]</div><div class=\"attachment\">";
 			while ($r = mysql_fetch_assoc ($attach_q)) {
 	 			#get filesize in Kb.
 	 			$file_size = ceil($r['File_Size'] / 1024) . " Kb";
 				#output results
-				$attachment .= "<a href=\"download.php?id=$r[id]\">$r[Filename]</a> ($file_size) $attach[downloadct]: $r[Download_Count]<br />";
+				$attachment .= "<a href=\"download.php?id=$r[id]\">$r[Filename]</a> ($file_size) $lang[downloadct]: $r[Download_Count]<br />";
 			}
 			$attachment .= "</div>";	 
 		}else{
@@ -1632,12 +1479,12 @@ function attachment_stat($type, $user, $id){
 		$attach_q = $db->query();
 		$db->close();
 		if($attach_ct > 0){
-	 		$attachment = "<br /><div class=\"attachheader\">$attach[attachments]</div><div class=\"attachment\">";
+	 		$attachment = "<br /><div class=\"attachheader\">$lang[attachments]</div><div class=\"attachment\">";
 			while ($r = mysql_fetch_assoc ($attach_q)) {
 	 			#get filesize in Kb.
 	 			$file_size = ceil($r['File_Size'] / 1024) . " Kb";
 				#output results
-				$attachment .= "<a href=\"download.php?id=$r[id]\">$r[Filename]</a> ($file_size) $attach[downloadct]: $r[Download_Count]<br />";
+				$attachment .= "<a href=\"download.php?id=$r[id]\">$r[Filename]</a> ($file_size) $lang[downloadct]: $r[Download_Count]<br />";
 			}
 			$attachment .= "</div>";	 
 		}else{
@@ -1645,18 +1492,18 @@ function attachment_stat($type, $user, $id){
 		}	 
 	}else{
 	 	#function not called correctly.
-		die($txt['invalidaction']); 
+		die($lang['invalidaction']);
 	}
 	return ($attachment); 
 }
 #pm inbox function
 function pm_inbox($folder){
 
-	global $title, $menu, $pagenation, $settings, $pm, $num, $query, $time_format, $gmt, $template_path, $index;
+	global $title, $pagenation, $settings, $num, $query, $time_format, $gmt, $template_path, $lang;
 	
 	#see if folder name are valid.
 	if (!isset($folder)){
-		$error = $pm['invalidfolder'];
+		$error = $lang['invalidfolder'];
 		echo error($error, "error");
 	}
 		
@@ -1664,17 +1511,17 @@ function pm_inbox($folder){
 	if ($folder == "Inbox"){
 		$percentageUsed = Round(($num / $settings['PM_Quota']) * 100);
 		$pm_quota = $settings['PM_Quota'];
-		$pm_lang_quota = $pm['pmquota'];
+		$pm_lang_quota = $lang['pmquota'];
 	}elseif ($folder == "Outbox"){
 		$percentageUsed = '&#8734;';
 		$pm_quota = '&#8734;';
-		$pm_lang_quota = $pm['pmquota'];
+		$pm_lang_quota = $lang['pmquota'];
 	}elseif ($folder == "Archive"){
 		$percentageUsed = Round(($num / $settings['Archive_Quota']) * 100);
 		$pm_quota = $settings['Archive_Quota'];
-		$pm_lang_quota = $pm['archivequota'];
+		$pm_lang_quota = $lang['archivequota'];
 	}else{
-		$error = $pm['invalidfolder'];
+		$error = $lang['invalidfolder'];
 		echo error($error, "error");	
 	}
 		
@@ -1683,41 +1530,41 @@ function pm_inbox($folder){
 		$page = new template($template_path ."/pm-inbox_noresult.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$menu[pm]",
+		"LANG-TITLE" => "$lang[pm]",
 		"PAGENATION" => "$pagenation",
-		"LANG-VIEWBANLIST" => "$pm[banlist]",
-		"LANG-POSTPM" => "$pm[postpmalt]",
+		"LANG-VIEWBANLIST" => "$lang[banlist]",
+		"LANG-POSTPM" => "$lang[postpmalt]",
 		"LANG-PMRULE" => "$pm_lang_quota",
 		"PMRULE" => "$pm_quota",
-		"LANG-CURRENTAMOUNT" => "$pm[curquota]",
+		"LANG-CURRENTAMOUNT" => "$lang[curquota]",
 		"CURRENTAMOUNT" => "$percentageUsed",
-		"LANG-INBOX" => "$pm[inbox]",
-		"LANG-OUTBOX" => "$pm[outbox]",
-		"LANG-ARCHIVE" => "$pm[archive]",
-		"LANG-SUBJECT" => "$pm[subject]",
-		"LANG-SENDER" => "$pm[sender]",
-		"LANG-PMDATE" => "$pm[date]",
-		"LANG-NOPM" => "$pm[nopm]"));
+		"LANG-INBOX" => "$lang[inbox]",
+		"LANG-OUTBOX" => "$lang[outbox]",
+		"LANG-ARCHIVE" => "$lang[archive]",
+		"LANG-SUBJECT" => "$lang[subject]",
+		"LANG-SENDER" => "$lang[sender]",
+		"LANG-PMDATE" => "$lang[date]",
+		"LANG-NOPM" => "$lang[nopm]"));
 		$inbox = $page->output();
 	}else{
 	 	#pm inbox header.
 		$page = new template($template_path ."/pm-inbox_head.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$menu[pm]",
+		"LANG-TITLE" => "$lang[pm]",
 		"PAGENATION" => "$pagenation",
-		"LANG-VIEWBANLIST" => "$pm[banlist]",
-		"LANG-POSTPM" => "$pm[postpmalt]",
+		"LANG-VIEWBANLIST" => "$lang[banlist]",
+		"LANG-POSTPM" => "$lang[postpmalt]",
 		"LANG-PMRULE" => "$pm_lang_quota",
 		"PMRULE" => "$pm_quota",
-		"LANG-CURRENTAMOUNT" => "$pm[curquota]",
+		"LANG-CURRENTAMOUNT" => "$lang[curquota]",
 		"CURRENTAMOUNT" => "$percentageUsed",
-		"LANG-INBOX" => "$pm[inbox]",
-		"LANG-OUTBOX" => "$pm[outbox]",
-		"LANG-ARCHIVE" => "$pm[archive]",
-		"LANG-SUBJECT" => "$pm[subject]",
-		"LANG-SENDER" => "$pm[sender]",
-		"LANG-PMDATE" => "$pm[date]"));
+		"LANG-INBOX" => "$lang[inbox]",
+		"LANG-OUTBOX" => "$lang[outbox]",
+		"LANG-ARCHIVE" => "$lang[archive]",
+		"LANG-SUBJECT" => "$lang[subject]",
+		"LANG-SENDER" => "$lang[sender]",
+		"LANG-PMDATE" => "$lang[date]"));
 		$inbox = $page->output();
 		while ($row = mysql_fetch_assoc($query)) {
 			$gmttime = gmdate ($time_format, $row['Date']);
@@ -1734,7 +1581,7 @@ function pm_inbox($folder){
 			"PMID" => "$row[id]",
 			"SUBJECT" => "$row[Subject]",
 			"SENDER" => "$row[Sender]",
-			"LANG-POSTEDBY" => "$index[Postedby]",
+			"LANG-POSTEDBY" => "$lang[Postedby]",
 			"POSTDATE" => "$pm_date"));
 			$inbox = $page->output();
 		}
@@ -1748,7 +1595,7 @@ function pm_inbox($folder){
 #banlist
 function view_banlist(){
 
-	global $template_path, $title, $menu, $pm, $logged_user;
+	global $template_path, $title, $lang, $logged_user;
 
 	$sql = "SELECT Banned_User, id FROM ebb_pm_banlist WHERE Ban_Creator='$logged_user'";
 	$errorq = $sql;
@@ -1759,26 +1606,26 @@ function view_banlist(){
 		$page = new template($template_path ."/pm-viewbanlist_noresult.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$menu[pm]",
-		"LANG-BANLIST" => "$pm[banlisttitle]",
-		"TEXT" => "$pm[text2]",
-		"LANG-BANUSER" => "$pm[banusertitle]",
-		"LANG-BANNEDUSER" => "$pm[banneduser]",
-		"LANG-DELETE" => "$pm[del]",
-		"LANG-NOBAN" => "$pm[noban]"));
+		"LANG-TITLE" => "$lang[pm]",
+		"LANG-BANLIST" => "$lang[banlisttitle]",
+		"TEXT" => "$lang[text2]",
+		"LANG-BANUSER" => "$lang[banusertitle]",
+		"LANG-BANNEDUSER" => "$lang[banneduser]",
+		"LANG-DELETE" => "$lang[del]",
+		"LANG-NOBAN" => "$lang[noban]"));
 		$banlist = $page->output();
 	}else{
 		#pm banlist header.
 		$page = new template($template_path ."/pm-viewbanlist_head.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$menu[pm]",
-		"LANG-BANLIST" => "$pm[banlisttitle]",
-		"LANG-DELPROMPT" => "$pm[banlistconfirm]",
-		"TEXT" => "$pm[text2]",
-		"LANG-BANUSER" => "$pm[banusertitle]",
-		"LANG-BANNEDUSER" => "$pm[banneduser]",
-		"LANG-DELETE" => "$pm[del]"));
+		"LANG-TITLE" => "$lang[pm]",
+		"LANG-BANLIST" => "$lang[banlisttitle]",
+		"LANG-DELPROMPT" => "$lang[banlistconfirm]",
+		"TEXT" => "$lang[text2]",
+		"LANG-BANUSER" => "$lang[banusertitle]",
+		"LANG-BANNEDUSER" => "$lang[banneduser]",
+		"LANG-DELETE" => "$lang[del]"));
 		$banlist = $page->output();
 		#loop data.
 		while ($row = mysql_fetch_assoc($banlistquery)) {
@@ -1786,7 +1633,7 @@ function view_banlist(){
 			$page->replace_tags(array(
 			"BANNEDUSER" => "$row[Banned_User]",
 			"ID" => "$row[id]",
-			"LANG-DELETEUSER" => "$pm[del]"));
+			"LANG-DELETEUSER" => "$lang[del]"));
 			$banlist = $page->output();
 		}
 		#pm banlist footer.
@@ -1795,4 +1642,3 @@ function view_banlist(){
 	}
 	return ($banlist);
 }
-?>
