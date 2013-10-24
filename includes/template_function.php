@@ -4,7 +4,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: template_function.php
-Last Modified: 10/21/2013
+Last Modified: 10/23/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -29,12 +29,84 @@ function theme($id) {
 }
 
 /**
+ * Get a list of categories & boards to show on the index page.
+ * @return array an array of both the parent boards & the child boards.
+ */
+public function loadBoardIndex() {
+
+    global $db;
+
+    $parent = $child = array();
+
+    try {
+        //check against the database to see if the username  match.
+        $categoryQ = $db->query("SELECT id, Board FROM ebb_boards WHERE type='1' ORDER BY B_Order");
+
+        while($cat = $categoryQ->fetch(PDO::FETCH_OBJ)) {
+            //board rules
+            $bAccess = $db->prepare('SELECT B_Read FROM ebb_board_access WHERE B_id=:boardId');
+            $bAccess->execute(array("" => $cat->id));
+        }
+
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $this->db->select('id, Board')->from('ebb_boards')->where('type', 1)->order_by("B_Order", "asc");
+    $query = $this->db->get();
+    foreach ($query->result() as $row) {
+        #board rules
+        $this->Boardaccessmodel->GetBoardAccess($row->id);
+
+        #see if user can view the board.
+        if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())) {
+            $parent[] = $row;
+
+            //build second query.
+            $this->db->select('b.id, b.Board, b.Description, b.last_update, u.Username, b.tid, b.last_page, b.Category')
+                ->from('ebb_boards b')
+                ->join('ebb_users u', 'b.Posted_User=u.id', 'LEFT')
+                ->where('b.type', 2)
+                ->where('b.Category',$row->id)
+                ->order_by("b.B_Order", "asc");
+            $query2 = $this->db->get();
+            foreach ($query2->result() as $row2) {
+
+                #board rules
+                $this->Boardaccessmodel->GetBoardAccess($row2->id);
+
+                #see if user can view the board.
+                if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())){
+                    $child[] = $row2;
+                }
+
+            }
+        }
+    }
+    return array("Parent_Boards" => $parent, "Child_Boards" => $child);
+}
+
+/**
  * Builds the board index list.
  * @return mixed
  */
 function index_board() {
 
     global $db, $lang, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result;
+
+    try {
+        //check against the database to see if the username  match.
+        $categoryQ = $db->query("SELECT id, Board FROM ebb_boards WHERE type='1' ORDER BY B_Order");
+
+        while($cat = $categoryQ->fetch(PDO::FETCH_OBJ)) {
+            //
+        }
+
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 
     //category sql.
     $db->run = "select id, Board from ebb_boards where type='1' ORDER BY B_Order";
@@ -352,7 +424,7 @@ function display_group(){
 #view group members
 function view_group(){
 
-	global $id, $db, $gmt, $time_format, $template_path, $members, $lang;
+	global $id, $db, $gmt, $time_format, $template_path, $lang;
 
 	$db->run = "select Username from ebb_group_users where gid='$id' and Status='Active'";
 	$query = $db->query();
@@ -365,7 +437,7 @@ function view_group(){
 		"LANG-GROUPMEMBERS" => "$lang[groupmembers]",
 		"LANG-USERNAME" => "$lang[username]",
 		"LANG-POSTCOUNT" => "$lang[posts]",
-		"LANG-REGISTRATIONDATE" => "$members[joindate]",
+		"LANG-REGISTRATIONDATE" => "$lang[joindate]",
 		"LANG-NOMEMBERS" => "$lang[nomembers]"));
 		$groupmembers = $page->output();
 	}else{
@@ -375,7 +447,7 @@ function view_group(){
 		"LANG-GROUPMEMBERS" => "$lang[groupmembers]",
 		"LANG-USERNAME" => "$lang[username]",
 		"LANG-POSTCOUNT" => "$lang[posts]",
-		"LANG-REGISTRATIONDATE" => "$members[joindate]"));
+		"LANG-REGISTRATIONDATE" => "$lang[joindate]"));
 		$groupmembers = $page->output();
 		while ($row = mysql_fetch_assoc ($query)){
 			#get user's detail.
@@ -404,7 +476,7 @@ function view_group(){
 #memberlist display function
 function memberlist(){
 
-	global $title, $pagenation, $members, $gmt, $query, $template_path, $time_format, $lang;
+	global $title, $pagenation, $gmt, $query, $template_path, $time_format, $lang;
 
 	#memberlist header.
 	$page = new template($template_path ."/memberlist_head.htm");
@@ -414,7 +486,7 @@ function memberlist(){
 	"PAGENATION" => "$pagenation",
 	"LANG-USERNAME" => "$lang[username]",
 	"LANG-POSTCOUNT" => "$lang[posts]",
-	"LANG-REGISTRATIONDATE" => "$members[joindate]"));
+	"LANG-REGISTRATIONDATE" => "$lang[joindate]"));
 	$memberlist = $page->output();
 	while ($row = mysql_fetch_assoc ($query)){
 
@@ -437,20 +509,20 @@ function memberlist(){
 #search results-topics
 function search_results_topic(){
 
-	global $title, $template_path, $pagenation, $search_result, $db, $num, $search, $lang, $stat, $level_result;
+	global $title, $template_path, $pagenation, $search_result, $db, $num, $lang, $stat, $level_result;
 
 	#search results header.
 	$page = new template($template_path ."/searchresults_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
 	"LANG-TITLE" => "$lang[search]",
-	"LANG-SEARCHRESULTS" => "$search[searchresults]",
+	"LANG-SEARCHRESULTS" => "$lang[searchresults]",
 	"PAGINATION" => "$pagenation",
 	"NUM-RESULTS" => "$num",
-	"LANG-RESULTS" => "$search[result]",
-	"LANG-USERNAME" => "$search[author]",
+	"LANG-RESULTS" => "$lang[result]",
+	"LANG-USERNAME" => "$lang[author]",
 	"LANG-TOPIC" => "$lang[topics]",
-	"LANG-POSTEDIN" => "$search[postedin]"));
+	"LANG-POSTEDIN" => "$lang[postedin]"));
 	$searchresults = $page->output();
 	while ($row = mysql_fetch_assoc($search_result)) {
 	
@@ -481,7 +553,7 @@ function search_results_topic(){
 			"TID" => "$row[tid]",
 			"TOPICNAME" => "$row[Topic]",
 			"AUTHOR" => "$row[author]",
-			"LANG-POSTEDIN" => "$search[postedin]",
+			"LANG-POSTEDIN" => "$lang[postedin]",
 			"BOARDNAME" => "$board_r[Board]"));
 			$searchresults = $page->output();
 		}
@@ -494,20 +566,20 @@ function search_results_topic(){
 #search results-posts
 function search_results_post(){
 
-	global $title, $template_path, $pagenation, $search_result, $db, $num, $search, $lang, $stat, $level_result;
+	global $title, $template_path, $pagenation, $search_result, $db, $num, $lang, $stat, $level_result;
 
 	#search results header.
 	$page = new template($template_path ."/searchresults_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
 	"LANG-TITLE" => "$lang[search]",
-	"LANG-SEARCHRESULTS" => "$search[searchresults]",
+	"LANG-SEARCHRESULTS" => "$lang[searchresults]",
 	"PAGINATION" => "$pagenation",
 	"NUM-RESULTS" => "$num",
-	"LANG-RESULTS" => "$search[result]",
-	"LANG-USERNAME" => "$search[author]",
+	"LANG-RESULTS" => "$lang[result]",
+	"LANG-USERNAME" => "$lang[author]",
 	"LANG-TOPIC" => "$lang[topics]",
-	"LANG-POSTEDIN" => "$search[postedin]"));
+	"LANG-POSTEDIN" => "$lang[postedin]"));
 	$searchresults = $page->output();
 	while ($row = mysql_fetch_assoc($search_result)){
 	
@@ -543,7 +615,7 @@ function search_results_post(){
 			"PID" => "$row[pid]",
 			"TOPICNAME" => "$topic_r[Topic]",
 			"AUTHOR" => "$row[author]",
-			"LANG-POSTEDIN" => "$search[postedin]",
+			"LANG-POSTEDIN" => "$lang[postedin]",
 			"BOARDNAME" => "$board_r[Board]"));
 			$searchresults = $page->output();
 		}
@@ -556,20 +628,20 @@ function search_results_post(){
 #search results-new posts
 function search_results_newposts(){
 
-	global $title, $template_path, $search_results, $search_results2, $count, $logged_user, $db, $search, $lang, $stat, $level_result;
+	global $title, $template_path, $search_results, $search_results2, $count, $logged_user, $db, $lang, $stat, $level_result;
 
 	#search results header.
 	$page = new template($template_path ."/searchresults_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
 	"LANG-TITLE" => "$lang[search]",
-	"LANG-SEARCHRESULTS" => "$search[searchresults]",
+	"LANG-SEARCHRESULTS" => "$lang[searchresults]",
 	"PAGINATION" => "",
 	"NUM-RESULTS" => "$count",
-	"LANG-RESULTS" => "$search[result]",
-	"LANG-USERNAME" => "$search[author]",
+	"LANG-RESULTS" => "$lang[result]",
+	"LANG-USERNAME" => "$lang[author]",
 	"LANG-TOPIC" => "$lang[topics]",
-	"LANG-POSTEDIN" => "$search[postedin]"));
+	"LANG-POSTEDIN" => "$lang[postedin]"));
 	$page->output();
 	//output any topics
 	while ($row = mysql_fetch_assoc($search_results)) {
@@ -607,7 +679,7 @@ function search_results_newposts(){
 				"TID" => "$row[tid]",
 				"TOPICNAME" => "$row[Topic]",
 				"AUTHOR" => "$row[author]",
-				"LANG-POSTEDIN" => "$search[postedin]",
+				"LANG-POSTEDIN" => "$lang[postedin]",
 				"BOARDNAME" => "$board_r[Board]"));
 				$page->output();			
 			}//end promission check.
@@ -653,7 +725,7 @@ function search_results_newposts(){
 				"PID" => "$row2[pid]",
 				"TOPICNAME" => "$topic_r[Topic]",
 				"AUTHOR" => "$row2[author]",
-				"LANG-POSTEDIN" => "$search[postedin]",
+				"LANG-POSTEDIN" => "$lang[postedin]",
 				"BOARDNAME" => "$board_r2[Board]"));
 				$page->output();
 			}//end permission check. 
@@ -667,13 +739,13 @@ function search_results_newposts(){
 #board select function
 function board_select(){
 
-	global $search, $db;
+	global $lang, $db;
 
 	$db->run = "SELECT id, Board FROM ebb_boards where type='2' or type='3'";
 	$board_search = $db->query();
 	$db->close();
 	$boardlist = "<select name=\"board\" class=\"text\" id=\"board\">
-	<option value=\"\">$search[selboard]</option>";
+	<option value=\"\">$lang[selboard]</option>";
 	while ($row = mysql_fetch_assoc ($board_search)){
 		$boardlist .= "<option value=\"$row[id]\">$row[Board]</option>";
 	}
@@ -791,7 +863,7 @@ function lang_select($langsel){
 #group joined list
 function groups_joined(){
 
-	global $db, $logged_user, $userinfo, $title, $template_path;
+	global $db, $logged_user, $lang, $title, $template_path;
 
 	$db->run = "SELECT Name, id, Enrollment FROM ebb_groups";
 	$joined_q = $db->query();
@@ -800,9 +872,9 @@ function groups_joined(){
     $page = new template($template_path ."/editgrouplist_head.htm");
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-TITLE" => "$userinfo[title]",
-	"LANG-GROUPMANAGE" => "$userinfo[managegroups]",
-	"LANG-TEXT" => "$userinfo[grouptxt]",
+	"LANG-TITLE" => "$lang[title]",
+	"LANG-GROUPMANAGE" => "$lang[managegroups]",
+	"LANG-TEXT" => "$lang[grouptxt]",
 	"LANG-GROUPNAME" => "$lang[name]"));
 	$joined_group = $page->output();
 	while ($row = mysql_fetch_assoc ($joined_q)) {
@@ -814,14 +886,14 @@ function groups_joined(){
 		#see if a user joined a group and see if their pending still.
 		if($join_chk == 1){
 			if ($result['Status'] == "Pending"){
-				$group_status = $userinfo['pending'];
+				$group_status = $lang['pending'];
 			}else{
-				$group_status = "<a href=\"Profile?mode=unjoin_group&amp;id=$result[gid]\">[$userinfo[unjoingroup]]</a>";
+				$group_status = "<a href=\"Profile?mode=unjoin_group&amp;id=$result[gid]\">[$lang[unjoingroup]]</a>";
 			}
 		}else{
 		 	#See if a group is opened or locked or hidden.
 			if ($row['Enrollment'] == 1){
-				$group_status = "<a href=\"Profile?mode=join_group&amp;id=$row[id]\">[$userinfo[joingroup]]</a>";
+				$group_status = "<a href=\"Profile?mode=join_group&amp;id=$row[id]\">[$lang[joingroup]]</a>";
 			}elseif($row['Enrollment'] == 0){
 				$group_status = "";
 			}else{
@@ -843,21 +915,21 @@ function groups_joined(){
 #list subscriptions function
 function digest_list(){
 
-	global $template_path, $title, $search, $pagenation, $db, $logged_user, $userinfo, $sub_q, $num;
+	global $template_path, $title, $lang, $pagenation, $db, $logged_user, $sub_q, $num;
 
 	if ($num == 0){
 	 	#subscription no result output.
 		$page = new template($template_path ."/editsubscription_noresult.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$userinfo[title]",
-		"LANG-EDITSUBSCRIPTION" => "$userinfo[subscriptionsetting]",
+		"LANG-TITLE" => "$lang[title]",
+		"LANG-EDITSUBSCRIPTION" => "$lang[subscriptionsetting]",
 		"PAGINATION" => "$pagenation",
-		"LANG-TEXT" => "$userinfo[digesttxt]",
-		"LANG-SUBSCRIBED" => "$userinfo[scription]",
-		"LANG-POSTEDIN" => "$search[postedin]",
-		"LANG-DELETE" => "$userinfo[delsubscription]",
-		"LANG-NORESULT" => "$userinfo[nosubscription]"));
+		"LANG-TEXT" => "$lang[digesttxt]",
+		"LANG-SUBSCRIBED" => "$lang[scription]",
+		"LANG-POSTEDIN" => "$lang[postedin]",
+		"LANG-DELETE" => "$lang[delsubscription]",
+		"LANG-NORESULT" => "$lang[nosubscription]"));
 		$sub = $page->output();
 	}else{
 		#subscription header.
@@ -865,13 +937,13 @@ function digest_list(){
 		$page->replace_tags(array(
 		"LANG-DELPROMPT" => "$lang[condel]",
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$userinfo[title]",
-		"LANG-EDITSUBSCRIPTION" => "$userinfo[subscriptionsetting]",
+		"LANG-TITLE" => "$lang[title]",
+		"LANG-EDITSUBSCRIPTION" => "$lang[subscriptionsetting]",
 		"PAGINATION" => "$pagenation",
-		"LANG-TEXT" => "$userinfo[digesttxt]",
-		"LANG-SUBSCRIBED" => "$userinfo[scription]",
-		"LANG-POSTEDIN" => "$search[postedin]",
-		"LANG-DELETE" => "$userinfo[delsubscription]"));
+		"LANG-TEXT" => "$lang[digesttxt]",
+		"LANG-SUBSCRIBED" => "$lang[scription]",
+		"LANG-POSTEDIN" => "$lang[postedin]",
+		"LANG-DELETE" => "$lang[delsubscription]"));
 		$sub = $page->output();
 		while ($row = mysql_fetch_assoc ($sub_q)) {
 			#get topic details
@@ -887,7 +959,7 @@ function digest_list(){
 			$page->replace_tags(array(
 			"TOPICID" => "$row[tid]",
 			"LANG-DELETE" => "$lang[del]",
-			"LANG-POSTEDIN" => "$search[postedin]",
+			"LANG-POSTEDIN" => "$lang[postedin]",
 			"TOPICNAME" => "$result[Topic]",
 			"BOARDID" => "$board_r[id]",
 			"BOARDNAME" => "$board_r[Board]"));
@@ -1294,7 +1366,7 @@ function reply_listing_print(){
 }
 #attachment manager.
 function attach_manager($mode){
-	global $template_path, $title, $userinfo, $pagenation, $search, $post, $uploads, $topic_q, $post_q, $attach_q, $bid, $db;
+	global $template_path, $title, $pagenation, $lang, $uploads, $topic_q, $post_q, $attach_q, $bid, $db;
 	#see if mode was left empty.
 	if(!isset($mode)){
 		die("Incorrect use of Function.");
@@ -1306,7 +1378,7 @@ function attach_manager($mode){
 		$page = new template($template_path ."/upload_head.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$post[manageattach]",
+		"LANG-TITLE" => "$lang[manageattach]",
 		"LANG-DELPROMPT" => "$lang[condel]",
 		"LANG-FILENAME" => "$lang[filename]",
 		"LANG-FILESIZE" => "$lang[filesize]"));
@@ -1320,7 +1392,7 @@ function attach_manager($mode){
 			$page->replace_tags(array(
 			"ATTACHID" => "$manage_t[id]",
 			"BID" => "$bid",
-			"LANG-DELETE" => "$post[delattach]",
+			"LANG-DELETE" => "$lang[delattach]",
 			"FILENAME" => "$manage_t[Filename]",
 			"FILESIZE" => "$file_size"));
 			$attachments = $page->output();
@@ -1336,7 +1408,7 @@ function attach_manager($mode){
 		$page = new template($template_path ."/upload_head.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$post[manageattach]",
+		"LANG-TITLE" => "$lang[manageattach]",
 		"LANG-DELPROMPT" => "$lang[condel]",
 		"LANG-FILENAME" => "$lang[filename]",
 		"LANG-FILESIZE" => "$lang[filesize]"));
@@ -1350,7 +1422,7 @@ function attach_manager($mode){
 			$page->replace_tags(array(
 			"ATTACHID" => "$manage_p[id]",
 			"BID" => "$bid",
-			"LANG-DELETE" => "$post[delattach]",
+			"LANG-DELETE" => "$lang[delattach]",
 			"FILENAME" => "$manage_p[Filename]",
 			"FILESIZE" => "$file_size"));
 			$attachments = $page->output();
@@ -1366,7 +1438,7 @@ function attach_manager($mode){
 		$page = new template($template_path ."/upload_head.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$post[manageattach]",
+		"LANG-TITLE" => "$lang[manageattach]",
 		"LANG-DELPROMPT" => "$lang[condel]",
 		"LANG-FILENAME" => "$lang[filename]",
 		"LANG-FILESIZE" => "$lang[filesize]"));
@@ -1380,7 +1452,7 @@ function attach_manager($mode){
 			$page->replace_tags(array(
 			"ATTACHID" => "$r[id]",
 			"BID" => "$bid",
-			"LANG-DELETE" => "$post[delattach]",
+			"LANG-DELETE" => "$lang[delattach]",
 			"FILENAME" => "$r[Filename]",
 			"FILESIZE" => "$file_size"));
 			$attachments = $page->output();
@@ -1396,14 +1468,14 @@ function attach_manager($mode){
 		$page = new template($template_path ."/attachmanager_head.htm");
 		$page->replace_tags(array(
 		"TITLE" => "$title",
-		"LANG-TITLE" => "$userinfo[title]",
-		"LANG-MANAGEATTACHMENTS" => "$post[manageattach]",
+		"LANG-TITLE" => "$lang[title]",
+		"LANG-MANAGEATTACHMENTS" => "$lang[manageattach]",
 		"LANG-DELPROMPT" => "$lang[condel]",
 		"PAGINATION" => "$pagenation",
-		"LANG-TEXT" => "$userinfo[attachmenttext]",
+		"LANG-TEXT" => "$lang[attachmenttext]",
 		"LANG-FILENAME" => "$lang[filename]",
 		"LANG-FILESIZE" => "$lang[filesize]",
-		"LANG-POSTEDIN" => "$search[postedin]"));
+		"LANG-POSTEDIN" => "$lang[postedin]"));
 		$attachments = $page->output();
 		while ($r = mysql_fetch_assoc ($attach_q)) {
 	 		#get filesize in Kb.
@@ -1432,10 +1504,10 @@ function attach_manager($mode){
 			$page = new template($template_path ."/editattachments.htm");
 			$page->replace_tags(array(
 			"ATTACHID" => "$r[id]",
-			"LANG-DELETE" => "$post[delattach]",
+			"LANG-DELETE" => "$lang[delattach]",
 			"FILENAME" => "$r[Filename]",
 			"FILESIZE" => "$file_size",
-			"LANG-POSTEDIN" => "$search[postedin]",
+			"LANG-POSTEDIN" => "$lang[postedin]",
 			"POSTLINK" => "$link",
 			"TOPICNAME" => "$attachdetails[Topic]"));
 			$attachments = $page->output();
