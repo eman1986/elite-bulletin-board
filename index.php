@@ -15,31 +15,30 @@ require "header.php";
 $page = new \ebb\template("header", $template_path);
 $page->replace_tags(array(
   "TITLE" => "$title",
-  "PAGETITLE" => "$index[title]"));
+  "PAGETITLE" => "$lang[title]"));
 
 $page->output();
 //check to see if the install file is still on the user's server.
-$setupexist = checkinstall();
-if ($setupexist){
-	if ($access_level == 1){
-		$error = $txt['installadmin'];
-		echo error($error, "error");
-	}else{
-		$error = $txt['install'];
-		echo error($error, "general");
-		exit();
-	}
-}
-//check to see if this user is able to access this board.
-echo check_ban();
+//$setupexist = checkinstall();
+// if ($setupexist){
+//    if ($access_level == 1){
+//        $error = $lang['installadmin'];
+//        echo error($error, "error");
+//    }else{
+//        $error = $lang['install'];
+//        echo error($error, "general");
+//        exit();
+//    }
+// }
+
 //check to see if the board is on or off.
 if ($board_status == 0){
 	$offline_msg = nl2br($off_msg);
 	$error = $offline_msg;
 	if ($access_level == 1){
-		$error .= "<p class=\"td\">[<a href=\"acp/index.php\">$menu[cp]</a>]</p>";
+		$error .= "<p class=\"td\">[<a href=\"acp/index.php\">$lang[cp]</a>]</p>";
 	}else{
-		$error .= "<p class=\"td\">[<a href=\"login.php\">$txt[login]</a>]</p>"; 
+		$error .= "<p class=\"td\">[<a href=\"login.php\">$lang[login]</a>]</p>";
 	}
 	echo error($error, "general");
 	#terminate program after message appears.
@@ -51,132 +50,123 @@ $pm_msg = DetectNewPM($logged_user);
 
 //output top
 if ($access_level == 1){
-	#output.
-	$page = new template($template_path ."/top-admin.htm");
+    $page = new \ebb\template("top-admin", $template_path);
+    $page->replace_tags(array(
+        "TITLE" => $title,
+        "LANG-WELCOME" => $lang['welcome'],
+        "LOGGEDUSER" => $logged_user,
+        "LANG-LOGOUT" => $lang['logout'],
+        "NEWPM" => $pm_msg,
+        "LANG-CP" => $lang['cp'],
+        "LANG-NEWPOSTS" => $lang['newposts'],
+        "ADDRESS" => $address,
+        "LANG-HOME" => $lang['home'],
+        "LANG-SEARCH" => $lang['search'],
+        "LANG-CLOSE" => $lang['closewindow'],
+        "LANG-QUICKSEARCH" => $lang['quicksearch'],
+        "LANG-ADVANCEDSEARCH" => $lang['advsearch'],
+        "LANG-FAQ" => $lang['faq'],
+        "LANG-MEMBERLIST" => $lang['members'],
+        "LANG-GROUPLIST"=> $lang['groups'],
+        "LANG-PROFILE" => $lang['profile']));
+    $page->output();
+}
+if ($access_level == 2 || $access_level == 3) {
+	$page = new \ebb\template("top-logged", $template_path);
 	$page->replace_tags(array(
 	"TITLE" => "$title",
-	"LANG-WELCOME" => "$txt[welcome]",
+	"LANG-WELCOME" => "$lang[welcome]",
 	"LOGGEDUSER" => "$logged_user",
-	"LANG-LOGOUT" => "$txt[logout]",
+	"LANG-LOGOUT" => "$lang[logout]",
 	"NEWPM" => "$pm_msg",
-	"LANG-CP" => "$menu[cp]",
-	"LANG-NEWPOSTS" => "$index[newposts]",
+	"LANG-NEWPOSTS" => "$lang[newposts]",
 	"ADDRESS" => "$address",
-	"LANG-HOME" => "$menu[home]",
-	"LANG-SEARCH" => "$menu[search]",
-	"LANG-CLOSE" => "$txt[closewindow]",
-	"LANG-QUICKSEARCH" => "$search[quicksearch]",
-	"LANG-ADVANCEDSEARCH" => "$search[advsearch]",
-	"LANG-FAQ" => "$menu[faq]",
-	"LANG-MEMBERLIST" => "$menu[members]",
-	"LANG-GROUPLIST"=> "$menu[groups]",
-	"LANG-PROFILE" => "$menu[profile]"));
+	"LANG-HOME" => "$lang[home]",
+	"LANG-SEARCH" => "$lang[search]",
+	"LANG-CLOSE" => "$lang[closewindow]",
+	"LANG-QUICKSEARCH" => "$lang[quicksearch]",
+	"LANG-ADVANCEDSEARCH" => "$lang[advsearch]",
+	"LANG-FAQ" => "$lang[faq]",
+	"LANG-MEMBERLIST" => "$lang[members]",
+	"LANG-GROUPLIST"=> "$lang[groups]",
+	"LANG-PROFILE" => "$lang[profile]"));
 	$page->output();
-	//update user's activity.
-	echo update_whosonline_reg($logged_user);
 }
-if (($stat == "Member") OR ($access_level == 2) OR ($access_level == 3)){
-	$page = new template($template_path ."/top-logged.htm");
-	$page->replace_tags(array(
-	"TITLE" => "$title",
-	"LANG-WELCOME" => "$txt[welcome]",
-	"LOGGEDUSER" => "$logged_user",
-	"LANG-LOGOUT" => "$txt[logout]",
-	"NEWPM" => "$pm_msg",
-	"LANG-NEWPOSTS" => "$index[newposts]",
-	"ADDRESS" => "$address",
-	"LANG-HOME" => "$menu[home]",
-	"LANG-SEARCH" => "$menu[search]",
-	"LANG-CLOSE" => "$txt[closewindow]",
-	"LANG-QUICKSEARCH" => "$search[quicksearch]",
-	"LANG-ADVANCEDSEARCH" => "$search[advsearch]",
-	"LANG-FAQ" => "$menu[faq]",
-	"LANG-MEMBERLIST" => "$menu[members]",
-	"LANG-GROUPLIST"=> "$menu[groups]",
-	"LANG-PROFILE" => "$menu[profile]"));
-	$page->output();
-	//update user's activity.
-	echo update_whosonline_reg($logged_user);
+if ($access_level == 0) {
+    $page = new \ebb\template("top-guest", $template_path);
+    $page->replace_tags(array(
+    "TITLE" => "$title",
+    "LANG-WELCOME" => "$lang[welcomeguest]",
+    "LANG-LOGIN" => "$lang[login]",
+    "LANG-REGISTER" => "$lang[register]",
+    "ADDRESS" => "$address",
+    "LANG-HOME" => "$lang[home]",
+    "LANG-SEARCH" => "$lang[search]",
+    "LANG-FAQ" => "$lang[faq]",
+    "LANG-MEMBERLIST" => "$lang[members]",
+    "LANG-GROUPLIST"=> "$lang[groups]",));
+    $page->output();
 }
-if ($stat == "guest"){
-	$page = new template($template_path ."/top-guest.htm");
-	$page->replace_tags(array(
-	"TITLE" => "$title",
-	"LANG-WELCOME" => "$txt[welcomeguest]",
-	"LANG-LOGIN" => "$txt[login]",
-	"LANG-REGISTER" => "$txt[register]",
-	"ADDRESS" => "$address",
-	"LANG-HOME" => "$menu[home]",
-	"LANG-SEARCH" => "$menu[search]",
-	"LANG-FAQ" => "$menu[faq]",
-	"LANG-MEMBERLIST" => "$menu[members]",
-	"LANG-GROUPLIST"=> "$menu[groups]",));
-	$page->output();
-	//update guest's activity.
-	echo update_whosonline_guest();
-}
-#call board setting function.
-$colume = 'Announcement_Status, Announcements';
-$settings = board_settings($colume);
-//show announcement, if admins wants them on.
-if ($settings['Announcement_Status'] == 1){
 
-	$string = nl2p(smiles(BBCode($settings['Announcements'])));
-	//load template
-	$page = new template($template_path ."/announcement.htm");
-	$page->replace_tags(array(
-	"TITLE" => "$title",
-	"LANG-ANNOUNCEMENT" => "$index[announcements]",
-	"LANG-TICKER" => "$index[ticker_txt]",
-	"ANNOUNCEMENT" => "$string"));
-	$page->output();
+//@TODO rebuild this if we go jQuery.
+//show announcement, if admins wants them on.
+if ($boardPref->getPreferenceValue('infobox_status') == 1) {
+    $string = nl2p(smiles(BBCode("Hi TESTING!")));
+    //load template
+    $page = new \ebb\template("announcement", $template_path);
+    $page->replace_tags(array(
+    "TITLE" => "$title",
+    "LANG-ANNOUNCEMENT" => "$lang[announcements]",
+    "LANG-TICKER" => "$lang[ticker_txt]",
+    "ANNOUNCEMENT" => "$string"));
+    $page->output();
 }
 #display board listings.
 $board_row = index_board();
 #get board stats.
-$b_stats = board_stats();
+//$b_stats = board_stats();
 $new_user = newuser();
 //load board stat-icon
-$page = new template($template_path ."/boardstat.htm");
+$page = new \ebb\template("boardstat", $template_path);
 $page->replace_tags(array(
-  "LANG-BOARDSTAT" => "$index[boardstatus]",
-  "LANG-ICONGUIDE" => "$index[iconguide]",
-  "LANG-NEWESTMEMBER" => "$index[newestmember]",
+  "LANG-BOARDSTAT" => "$lang[boardstatus]",
+  "LANG-ICONGUIDE" => "$lang[iconguide]",
+  "LANG-NEWESTMEMBER" => "$lang[newestmember]",
   "NEWESTMEMBER" => "$new_user[Username]",
-  "TOTAL-TOPIC" => "$b_stats[1]",
-  "LANG-TOTALTOPIC" => "$index[topics]",
-  "TOTAL-POST" => "$b_stats[2]",
-  "LANG-TOTALPOST" => "$index[posts]",
-  "TOTAL-USER" => "$b_stats[0]",
-  "LANG-TOTALUSER" => "$index[membernum]",
-  "LANG-NEWPOST" => "$index[newpost]",
-  "LANG-OLDPOST" => "$index[oldpost]"));
+  //"TOTAL-TOPIC" => "$b_stats[1]",
+  "LANG-TOTALTOPIC" => "$lang[topics]",
+  //"TOTAL-POST" => "$b_stats[2]",
+  "LANG-TOTALPOST" => "$lang[posts]",
+  //"TOTAL-USER" => "$b_stats[0]",
+  "LANG-TOTALUSER" => "$lang[membernum]",
+  "LANG-NEWPOST" => "$lang[newpost]",
+  "LANG-OLDPOST" => "$lang[oldpost]"));
 $page->output();
 
 //grab total online currently
-$db->run = "select DISTINCT Username from ebb_online where ip=''";
-$online_logged_count = $db->num_results();
-$db->close();
-$db->run = "select DISTINCT ip from ebb_online where Username=''";
-$online_guest_count = $db->num_results();
-$db->close();
+//$db->run = "select DISTINCT Username from ebb_online where ip=''";
+//$online_logged_count = $db->num_results();
+//$db->close();
+//$db->run = "select DISTINCT ip from ebb_online where Username=''";
+//$online_guest_count = $db->num_results();
+//$db->close();
 //call the whos online function
-$online = whosonline();
+//$online = whosonline();
 //output who's online.
-$page = new template($template_path ."/whosonline.htm");
+$page = new \ebb\template("whosonline", $template_path);
 $page->replace_tags(array(
-  "LANG-WHOSONLINE" => "$index[whosonline]",
-  "LANG-ONLINEKEY" => "$index[onlinekey]",
-  "LOGGED-ONLINE" => "$online_logged_count",
-  "LANG-LOGGED-ONLINE" => "$index[membernum]",
-  "GUEST-ONLINE" => "$online_guest_count",
-  "LANG-GUEST-ONLINE" => "$index[guestonline]",
-  "WHOSONLINE"=> "$online"));
+  "LANG-WHOSONLINE" => "$lang[whosonline]",
+  "LANG-ONLINEKEY" => "$lang[onlinekey]",
+  "LOGGED-ONLINE" => "0",
+  "LANG-LOGGED-ONLINE" => "$lang[membernum]",
+  "GUEST-ONLINE" => "0",
+  "LANG-GUEST-ONLINE" => "$lang[guestonline]",
+  "WHOSONLINE"=> ""));
 
 $page->output();
 //display footer
-$page = new template($template_path ."/footer.htm");
+$page = new \ebb\template("footer", $template_path);
 $page->replace_tags(array(
-  "LANG-POWERED" => "$index[poweredby]"));
+  "LANG-POWERED" => "$lang[poweredby]"));
 $page-> output();
 ob_end_flush();

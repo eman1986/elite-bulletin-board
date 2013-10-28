@@ -300,6 +300,31 @@ class groupPolicy {
     }
 
     /**
+     * @param $boardId
+     * @param $permission
+     * @return bool
+    */
+    public function validateBoardAccess($boardId, $permission) {
+        try {
+            $boardAclQ = $this->db->prepare('SELECT :permission FROM ebb_board_access WHERE B_id=:boardId');
+            $boardAclQ->execute(array(
+                ":permission" => $permission,
+                ":boardId" => $boardId));
+
+            if ($boardAclQ->rowCount() == 0) {
+                return FALSE;
+            } else {
+                $permissionData = $boardAclQ->fetch(PDO::FETCH_OBJ);
+                return $this->validateAccess(0, $permissionData->$permission);
+            }
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return FALSE;
+        }
+    }
+
+    /**
      * Validate to see if user can access the requested area.
      * @param string $action action in check.
      * @return boolean

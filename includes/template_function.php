@@ -32,9 +32,9 @@ function theme($id) {
  * Get a list of categories & boards to show on the index page.
  * @return array an array of both the parent boards & the child boards.
  */
-public function loadBoardIndex() {
+function loadBoardIndex() {
 
-    global $db;
+    global $db, $groupData;
 
     $parent = $child = array();
 
@@ -44,47 +44,28 @@ public function loadBoardIndex() {
 
         while($cat = $categoryQ->fetch(PDO::FETCH_OBJ)) {
             //board rules
-            $bAccess = $db->prepare('SELECT B_Read FROM ebb_board_access WHERE B_id=:boardId');
-            $bAccess->execute(array("" => $cat->id));
-        }
+            //if ($groupData->validateBoardAccess($cat->id, "B_Read")) {
+                $parent[] = $cat;
 
+                //get child boards of the category.
+                $childQ = $db->prepare("SELECT b.id, b.Board, b.Description, b.last_update, u.Username, b.last_update, b.Category
+                                      FROM ebb_boards b
+                                      LEFT JOIN ebb_users u ON b.Posted_User=u.id
+                                      WHERE b.type='2' AND b.Category=:category
+                                      ORDER BY b.B_Order");
+                $childQ->execute(array(":category" => $cat->id));
+                while($board = $childQ->fetch(PDO::FETCH_OBJ)) {
+                    $child[] = $board;
+                }
+
+            //}
+
+        }
+        return array("Parent_Boards" => $parent, "Child_Boards" => $child);
     }
     catch (PDOException $e) {
         echo $e->getMessage();
     }
-
-    $this->db->select('id, Board')->from('ebb_boards')->where('type', 1)->order_by("B_Order", "asc");
-    $query = $this->db->get();
-    foreach ($query->result() as $row) {
-        #board rules
-        $this->Boardaccessmodel->GetBoardAccess($row->id);
-
-        #see if user can view the board.
-        if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())) {
-            $parent[] = $row;
-
-            //build second query.
-            $this->db->select('b.id, b.Board, b.Description, b.last_update, u.Username, b.tid, b.last_page, b.Category')
-                ->from('ebb_boards b')
-                ->join('ebb_users u', 'b.Posted_User=u.id', 'LEFT')
-                ->where('b.type', 2)
-                ->where('b.Category',$row->id)
-                ->order_by("b.B_Order", "asc");
-            $query2 = $this->db->get();
-            foreach ($query2->result() as $row2) {
-
-                #board rules
-                $this->Boardaccessmodel->GetBoardAccess($row2->id);
-
-                #see if user can view the board.
-                if ($this->Groupmodel->validateAccess(0, $this->Boardaccessmodel->getBRead())){
-                    $child[] = $row2;
-                }
-
-            }
-        }
-    }
-    return array("Parent_Boards" => $parent, "Child_Boards" => $child);
 }
 
 /**
@@ -93,16 +74,29 @@ public function loadBoardIndex() {
  */
 function index_board() {
 
-    global $db, $lang, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result;
+    global $db, $lang, $time_format, $gmt, $template_path, $logged_user;
 
     try {
-        //check against the database to see if the username  match.
-        $categoryQ = $db->query("SELECT id, Board FROM ebb_boards WHERE type='1' ORDER BY B_Order");
+        $bInx = loadBoardIndex();
 
-        while($cat = $categoryQ->fetch(PDO::FETCH_OBJ)) {
-            //
+        foreach($bInx['Parent_Boards'] as $parent) {
+
+            $page = new \ebb\template("board_header", $template_path);
+            $page->replace_tags(array(
+                "CAT-NAME" => $parent->Board,
+                "LANG-BOARD" => "$lang[boards]",
+                "LANG-TOPIC" => "$lang[topics]",
+                "LANG-POST" => "$lang[posts]",
+                "LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
+            $board_row = $page->output();
+
+            //foreach($bInx['Child_Boards'] as $children) {
+
+            //}
+
         }
 
+        return $board_row;
     }
     catch (PDOException $e) {
         echo $e->getMessage();
@@ -124,14 +118,7 @@ function index_board() {
             $db->run = "SELECT id, Board, Description, last_update, Posted_User, Post_Link FROM ebb_boards WHERE type='2' and Category='$cat[id]' ORDER BY B_Order";
             $board_query = $db->query();
             $db->close();
-            $page = new template($template_path ."/board_header.htm");
-            $page->replace_tags(array(
-            "CAT-NAME" => "$cat[Board]",
-            "LANG-BOARD" => "$lang[boards]",
-            "LANG-TOPIC" => "$lang[topics]",
-            "LANG-POST" => "$lang[posts]",
-            "LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
-            $board_row = $page->output();
+
             while ($row = mysql_fetch_assoc ($board_query)) {
                 #guest & non-group members dont need a group-check.
                 if(($stat == "guest") or ($stat == "Member")){
