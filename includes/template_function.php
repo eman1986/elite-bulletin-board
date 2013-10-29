@@ -34,7 +34,7 @@ function theme($id) {
  */
 function loadBoardIndex() {
 
-    global $db, $groupData;
+    global $db, $groupData, $template_path;
 
     $parent = $child = array();
 
@@ -44,18 +44,29 @@ function loadBoardIndex() {
 
         while($cat = $categoryQ->fetch(PDO::FETCH_OBJ)) {
             //board rules
-            if ($groupData->validateBoardAccess($cat->id, "B_Read")) {
+            $parentAclQ = $db->prepare('SELECT B_Read FROM ebb_board_access WHERE B_id=:boardId');
+            $parentAclQ->execute(array(":boardId" => $cat->id));
+            $parentAclR = $parentAclQ->fetch(PDO::FETCH_OBJ);
+
+            if ($groupData->validateAccess(0, $parentAclR->B_Read)) {
                 $parent[] = $cat;
 
                 //get child boards of the category.
-                $childQ = $db->prepare("SELECT b.id, b.Board, b.Description, b.last_update, u.Username, b.last_update, b.Category
+                $childQ = $db->prepare("SELECT b.id, b.Board, b.Description, b.last_update, b.Post_Link, u.Username, b.last_update, b.Category
                                       FROM ebb_boards b
-                                      LEFT JOIN ebb_users u ON b.Posted_User=u.id
+                                      LEFT JOIN ebb_users u ON b.Posted_User=u.Username
                                       WHERE b.type='2' AND b.Category=:category
                                       ORDER BY b.B_Order");
                 $childQ->execute(array(":category" => $cat->id));
                 while($board = $childQ->fetch(PDO::FETCH_OBJ)) {
-                    if ($groupData->validateBoardAccess($board->id, "B_Read")) {
+                    //board rules
+                    $boardAclQ = $db->prepare('SELECT B_Read FROM ebb_board_access WHERE B_id=:boardId');
+                    $boardAclQ->execute(array(":boardId" => $board->id));
+                    $boardAclR = $boardAclQ->fetch(PDO::FETCH_OBJ);
+                    if ($groupData->validateAccess(0, $boardAclR->B_Read)) {
+                        $postLnkQs = explode("&amp;", $board->Post_Link);
+
+                        $board->postIcon = isNewTopics($board->last_update, $board->Username, substr($postLnkQs[1], 4)) ? "template/".$template_path."/images/new.gif" : "template/".$template_path."/images/old.gif";
                         $child[] = $board;
                     }
                 }
@@ -65,6 +76,28 @@ function loadBoardIndex() {
     }
     catch (PDOException $e) {
         echo $e->getMessage();
+    }
+}
+
+/**
+ * See if a board has new topics
+ * @param $lastUpdate
+ * @param $username
+ * @param $tid
+ * @return bool
+*/
+function isNewTopics($lastUpdate, $username, $tid) {
+
+    global $logged_user;
+
+    if ($lastUpdate < time()-3600*24*30) {
+        return FALSE;
+    } elseif ($logged_user == $username) {
+        return FALSE;
+    } elseif (readTopicStat($tid, $username) == 1) {
+        return FALSE;
+    } else {
+        return TRUE;
     }
 }
 
@@ -96,7 +129,7 @@ function index_board() {
                     $page->replace_tags(array(
                         "LANG-TOPIC" => "$lang[topics]",
                         "LANG-POST" => "$lang[posts]",
-                        //"POSTICON" => "$icon",
+                        "POSTICON" => $children->postIcon,
                         "BOARDID" => $children->id,
                         "BOARDNAME" => $children->Board,
                         "LANG-RSS" => "$lang[viewfeed]",

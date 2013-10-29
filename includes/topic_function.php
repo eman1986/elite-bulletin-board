@@ -1,7 +1,10 @@
 <?php
+if (!defined('IN_EBB') ) {
+    die("<b>!!ACCESS DENIED HACKER!!</b>");
+}
 /*
 Filename: topic_function.php
-Last Modified: 10/20/2013
+Last Modified: 10/29/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -10,17 +13,36 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 
-#check read status on topic.
-function read_topic_stat($tid, $user){
+/**
+ * Check read status on a selected board.
+ * @param integer $tid Topic ID to select a board.
+ * @param string $user Username to check against.
+ * @return integer 1, topic is read; 0, topic unread.
+*/
+function readTopicStat($tid, $user) {
 
-	global $db;
+    global $db;
 
-	$db->run = "select Topic from ebb_read_topic WHERE Topic='$tid' and User='$user'";
-	$read_ct = $db->num_results();
-	$db->close();
+    if ($user == "guest"){
+        return 1;
+    } else {
+        try {
+            $query = $db->prepare("SELECT t.tid
+                                      FROM ebb_topics t
+                                      LEFT JOIN ebb_read_topic rt ON t.tid=rt.Topic
+                                      WHERE rt.User=:user AND t.tid=:tid");
+            $query->execute(array(
+                ":user" => $user,
+                ":tid" => $tid));
 
-	return ($read_ct);
+            return $query->rowCount();
+        }catch (PDOException $e) {
+            echo $e->getMessage();
+            return 1;
+        }
+    }
 }
+
 #board policy.
 function board_policy(){
 
