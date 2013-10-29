@@ -2,7 +2,7 @@
 define('IN_EBB', true);
 /*
 Filename: index.php
-Last Modified: 2/9/2012
+Last Modified: 10/24/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify

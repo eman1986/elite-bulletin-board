@@ -13,7 +13,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: header.php
-Last Modified: 10/20/2013
+Last Modified: 10/24/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -118,7 +118,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
             //$stat = $userpref['Status']; //TODO: should replace with $access_level
             $template = $userInfo->getStyle();
             $time_format = $userInfo->getTimeFormat();
-            $lang = $userInfo->getLanguage();
+            $lng = $userInfo->getLanguage();
             $gmt = $userInfo->getTimeZone();
             $last_visit = $userInfo->getLastVisit();
             $suspend_length = $userInfo->getSuspendLength();
@@ -141,7 +141,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     $access_level = 0;
     $template = $boardPref->getPreferenceValue("default_style");
     $time_format = $boardPref->getPreferenceValue("time_format");
-    $lang = $boardPref->getPreferenceValue("default_language");
+    $lng = $boardPref->getPreferenceValue("default_language");
     $gmt = $boardPref->getPreferenceValue("timezone");
     $last_visit = NULL;
     $suspend_length = NULL;
@@ -159,4 +159,4 @@ $boardDir = $boardPref->getPreferenceValue("board_directory");
 $template_path = theme($template);
 
 //language loading
-require_once FULLPATH."/lang/".$lang.".lang.php";
+require_once FULLPATH."/lang/".$lng.".lang.php";

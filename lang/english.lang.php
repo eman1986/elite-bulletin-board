@@ -186,7 +186,6 @@ $lang['reg'] = 'Need to register?';
 $lang['offlinemsg'] = 'Board is disabled, only Administrators will be allowed to login.';
 $lang['rememberlogin'] = 'Automatically Login';
 $lang['remembertxt'] = 'Tick this to always be logged on';
-$lang['login'] = 'Login';
 $lang['alreadylogged'] = 'you are already logged in.';
 $lang['forgot'] = 'Forgot your password?';
 $lang['passwordrecovery'] = 'Password Recovery';
