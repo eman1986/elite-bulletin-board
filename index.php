@@ -132,7 +132,7 @@ $page->replace_tags(array(
   "LANG-BOARDSTAT" => "$lang[boardstatus]",
   "LANG-ICONGUIDE" => "$lang[iconguide]",
   "LANG-NEWESTMEMBER" => "$lang[newestmember]",
-  "NEWESTMEMBER" => "$new_user[Username]",
+  //"NEWESTMEMBER" => "$new_user[Username]",
   //"TOTAL-TOPIC" => "$b_stats[1]",
   "LANG-TOTALTOPIC" => "$lang[topics]",
   //"TOTAL-POST" => "$b_stats[2]",

@@ -44,7 +44,7 @@ function loadBoardIndex() {
 
         while($cat = $categoryQ->fetch(PDO::FETCH_OBJ)) {
             //board rules
-            //if ($groupData->validateBoardAccess($cat->id, "B_Read")) {
+            if ($groupData->validateBoardAccess($cat->id, "B_Read")) {
                 $parent[] = $cat;
 
                 //get child boards of the category.
@@ -55,11 +55,11 @@ function loadBoardIndex() {
                                       ORDER BY b.B_Order");
                 $childQ->execute(array(":category" => $cat->id));
                 while($board = $childQ->fetch(PDO::FETCH_OBJ)) {
-                    $child[] = $board;
+                    if ($groupData->validateBoardAccess($board->id, "B_Read")) {
+                        $child[] = $board;
+                    }
                 }
-
-            //}
-
+            }
         }
         return array("Parent_Boards" => $parent, "Child_Boards" => $child);
     }
@@ -90,10 +90,29 @@ function index_board() {
                 "LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
             $board_row = $page->output();
 
-            //foreach($bInx['Child_Boards'] as $children) {
-
-            //}
-
+            foreach($bInx['Child_Boards'] as $children) {
+                if ($children->Category == $parent->id) {
+                    $page = new \ebb\template("board_data", $template_path);
+                    $page->replace_tags(array(
+                        "LANG-TOPIC" => "$lang[topics]",
+                        "LANG-POST" => "$lang[posts]",
+                        //"POSTICON" => "$icon",
+                        "BOARDID" => $children->id,
+                        "BOARDNAME" => $children->Board,
+                        "LANG-RSS" => "$lang[viewfeed]",
+                        "BOARDDESCRIPTION" => $children->Description
+                        //"MODERATORS" => "$board_moderator",
+                        //"SUBBOARDS" => "$subboard",
+                        //"TOPICCOUNT" => "$topic_num",
+                        //"POSTCOUNT" => "$post_num",
+                        //"POSTDATE" => "$board_date",
+                        //"POSTLINK" => "$last_post_link"
+                    ));
+                    $board_row = $page->output();
+                }
+            }
+            $page = new \ebb\template("board_footer", $template_path);
+            $board_row = $page->output();
         }
 
         return $board_row;

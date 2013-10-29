@@ -235,7 +235,7 @@ class groupPolicy {
     public function changeGroupID($user, $newGID){
 
         //see if user is guest, if so, exit without result.
-        if ($this->IsGuest) {
+        if ($this->isGuest) {
             return FALSE;
         } else {
             try {
@@ -259,7 +259,7 @@ class groupPolicy {
     private function accessVaildator($permissionAction) {
 
         //see if user is guest, if so, deny any requests.
-        if ($this->IsGuest) {
+        if ($this->isGuest) {
             return FALSE;
         } else {
             //see if user ID is incorrect or Null.
@@ -333,7 +333,7 @@ class groupPolicy {
     private function permissionCheck($action){
 
         //automatically fail check if user is a guest, and its not set to public.
-        if(($this->IsGuest) AND ($action != 0)) {
+        if(($this->isGuest) AND ($action != 0)) {
             return FALSE;
         } else {
             if(($action == 1) AND ($this->getLevel() == 1)) { //ADMIN ONLY
