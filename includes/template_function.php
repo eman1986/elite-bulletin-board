@@ -34,7 +34,7 @@ function theme($id) {
  */
 function loadBoardIndex() {
 
-    global $db, $groupData, $template_path;
+    global $db, $lang, $groupData, $template_path, $time_format, $gmt;
 
     $parent = $child = array();
 
@@ -66,6 +66,21 @@ function loadBoardIndex() {
                     if ($groupData->validateAccess(0, $boardAclR->B_Read)) {
                         $postLnkQs = explode("&amp;", $board->Post_Link);
 
+                        #get topic & post count from board.
+                        $topicCountQ = $db->prepare('SELECT tid FROM ebb_topics WHERE bid=:boardId');
+                        $topicCountQ->execute(array(":boardId" => $board->id));
+                        $topicCount = $topicCountQ->rowCount();
+
+                        $postCountQ = $db->prepare('SELECT pid FROM ebb_posts WHERE bid=:boardId');
+                        $postCountQ->execute(array(":boardId" => $board->id));
+                        $postCount = $topicCountQ->rowCount();
+
+                        $board->topicCount = $topicCount;
+                        $board->postCount = $postCount;
+                        $board->postLink = is_null($board->last_update) ? "" : '<a href="viewtopic.php?'.$board->Post_Link.'">'.$lang['Postedby'].'</a>:'. $board->Username;
+                        $board->lastUpdate = is_null($board->last_update) ? formatTime($time_format, $board->last_update, $gmt) : $lang['noposts'];
+                        //$board->subBoards = index_subboard($board->id);
+                        //$board->moderators = moderator_boardlist($board->id);
                         $board->postIcon = isNewTopics($board->last_update, $board->Username, substr($postLnkQs[1], 4)) ? "template/".$template_path."/images/new.gif" : "template/".$template_path."/images/old.gif";
                         $child[] = $board;
                     }
@@ -129,15 +144,17 @@ function index_board() {
                     $page->replace_tags(array(
                         "LANG-TOPIC" => "$lang[topics]",
                         "LANG-POST" => "$lang[posts]",
+                        "LANG-OLDPOST" => $lang['oldpost'],
+                        "LANG-NEWPOST" => $lang['newpost'],
                         "POSTICON" => $children->postIcon,
                         "BOARDID" => $children->id,
                         "BOARDNAME" => $children->Board,
                         "LANG-RSS" => "$lang[viewfeed]",
-                        "BOARDDESCRIPTION" => $children->Description
+                        "BOARDDESCRIPTION" => $children->Description,
                         //"MODERATORS" => "$board_moderator",
                         //"SUBBOARDS" => "$subboard",
-                        //"TOPICCOUNT" => "$topic_num",
-                        //"POSTCOUNT" => "$post_num",
+                        "TOPICCOUNT" => $children->topicCount,
+                        "POSTCOUNT" => $children->postCount,
                         //"POSTDATE" => "$board_date",
                         //"POSTLINK" => "$last_post_link"
                     ));
@@ -153,93 +170,6 @@ function index_board() {
     catch (PDOException $e) {
         echo $e->getMessage();
     }
-
-    //category sql.
-    $db->run = "select id, Board from ebb_boards where type='1' ORDER BY B_Order";
-    $category_query = $db->query();
-    $db->close();
-    while ($cat = mysql_fetch_assoc ($category_query)) {
-        #get permission rules.
-        $db->run = "select B_Read from ebb_board_access WHERE B_id='$cat[id]'";
-        $board_rule = $db->result();
-        $db->close();
-        $view_category = permission_check($board_rule['B_Read']);
-
-        //see if user can see category.
-        if($view_category == 1) {
-            $db->run = "SELECT id, Board, Description, last_update, Posted_User, Post_Link FROM ebb_boards WHERE type='2' and Category='$cat[id]' ORDER BY B_Order";
-            $board_query = $db->query();
-            $db->close();
-
-            while ($row = mysql_fetch_assoc ($board_query)) {
-                #guest & non-group members dont need a group-check.
-                if(($stat == "guest") or ($stat == "Member")){
-                    #get group access information.
-                    $checkgroup = 0;
-                    $checkmod = 0;
-                }else{
-                    #get group access information.
-                    $checkgroup = group_validate($row['id'], $level_result['id'], 2);
-                    $checkmod = group_validate($row['id'], $level_result['id'], 1);
-                }
-                #get topic & post count from board.
-                $db->run = "select tid from ebb_topics WHERE bid='$row[id]'";
-                $topic_num = $db->num_results();
-                $db->close();
-                $db->run = "select pid from ebb_posts WHERE bid='$row[id]'";
-                $post_num = $db->num_results();
-                $db->close();
-                #get group moderators for this board.
-                $board_moderator = moderator_boardlist($row['id']);
-                #get sub-boards.
-                $subboard = index_subboard($row['id']);
-                #get last post details.
-                if ($row['last_update'] == ""){
-                    $board_date = $lang['noposts'];
-                    $last_post_link = "";
-                }else{
-                    $gmttime = gmdate ($time_format, $row['last_update']);
-                    $board_date = date($time_format,strtotime("$gmt hours",strtotime($gmttime)));
-                    $last_post_link = "<a href=\"viewtopic.php?$row[Post_Link]\">$lang[Postedby]</a>: $row[Posted_User]";
-                }
-                #get read status on board.
-                $read_ct = read_board_stat($row['id'], $logged_user);
-                if (($read_ct == 1) OR ($row['last_update'] == "") OR ($stat == "guest")){
-                    $icon = "<img src=\"$template_path/images/old.gif\" alt=\"$lang[oldpost]\" title=\"$lang[oldpost]\" />";
-                }else{
-                    $icon = "<img src=\"$template_path/images/new.gif\" alt=\"$lang[newpost]\" title=\"$lang[newpost]\" />";
-                }
-                #get permission rules.
-                $db->run = "select B_Read from ebb_board_access WHERE B_id='$row[id]'";
-                $board_rule = $db->result();
-                $db->close();
-                $view_board = permission_check($board_rule['B_Read']);
-                #see if user can view the board.
-                if($view_board == 1){
-                    #get board values.
-                    $page = new template($template_path ."/board_data.htm");
-                    $page->replace_tags(array(
-                    "LANG-TOPIC" => "$lang[topics]",
-                    "LANG-POST" => "$lang[posts]",
-                    "POSTICON" => "$icon",
-                    "BOARDID" => "$row[id]",
-                    "BOARDNAME" => "$row[Board]",
-                    "LANG-RSS" => "$lang[viewfeed]",
-                    "BOARDDESCRIPTION" => "$row[Description]",
-                    "MODERATORS" => "$board_moderator",
-                    "SUBBOARDS" => "$subboard",
-                    "TOPICCOUNT" => "$topic_num",
-                    "POSTCOUNT" => "$post_num",
-                    "POSTDATE" => "$board_date",
-                    "POSTLINK" => "$last_post_link"));
-                    $board_row = $page->output();
-                }
-            }//end of board loop.
-            $page = new template($template_path ."/board_footer.htm");
-            $board_row = $page->output();
-        }
-    }//end of category loop.
-    return $board_row;
 }
 #sub-board grabber
 function index_subboard($bid){

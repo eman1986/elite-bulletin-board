@@ -90,7 +90,7 @@ function trailingSlashRemover($str) {
 */
 function formatTime($format, $time, $tmZn){
     $date = new DateTime(); //create the DateTime Object.
-    return $date->setTimestamp($time)->setTimezone(new DateTimeZone($tmZn))->format($format); //format and present formattinged date/time
+    return $date->setTimestamp($time)->setTimezone(new DateTimeZone($tmZn))->format($format); //format and present formatting date/time
 }
 
 /**

@@ -37,16 +37,16 @@ require_once "config.php";
 //composer autoloader
 require_once FULLPATH.'/includes/autoload.php';
 
-$run = new \Whoops\Run;
-$errorPage = new \Whoops\Handler\PrettyPageHandler;
+//$run = new \Whoops\Run;
+//$errorPage = new \Whoops\Handler\PrettyPageHandler;
 
-$errorPage->setPageTitle("System Failure!");
+//$errorPage->setPageTitle("System Failure!");
 
 //$JsonHandler = new \Whoops\Handler\JsonResponseHandler;
 
 //$run->pushHandler($JsonHandler);
-$run->pushHandler($errorPage);
-$run->register();
+//$run->pushHandler($errorPage);
+//$run->register();
 
 
 // setup our database object.
