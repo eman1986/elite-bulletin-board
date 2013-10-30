@@ -88,7 +88,7 @@ function trailingSlashRemover($str) {
  * @param int $tmZn GMT timezone to offset by.
  * @return string
 */
-function formatTime($format, $time, $tmZn){
+function dateTimeFormatter($format, $time, $tmZn){
     $date = new DateTime(); //create the DateTime Object.
     return $date->setTimestamp($time)->setTimezone(new DateTimeZone($tmZn))->format($format); //format and present formatting date/time
 }

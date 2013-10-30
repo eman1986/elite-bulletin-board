@@ -1,0 +1,114 @@
+{% extends "master.twig" %}
+
+{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+
+{% block bodyRender %}
+
+    {% if showInfoBox == 1 %}
+        <!-- JS for Information Ticker -->
+        <script type="text/javascript" src="{{BOARD_URL}}js/jquery.newsticker.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $("#news").newsticker(5000); //newsticker plugin.
+            }); //END function.
+        </script>
+        <div class="block" id="block-text">
+            <div class="content">
+                <h2 class="title">{{LANG_TICKER}}</h2>
+                <div class="inner">
+                    {{ANNOUNCEMENT|raw}}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <div class="block" id="block-tables">
+        <div class="content">
+
+            <div class="inner"><br />
+                {% for c in Category %}
+                    <table class="table">
+                        <tr>
+                            <th colspan="5">::{{c.Board}}::</th>
+                        </tr><tr>
+                            <th width="4%">&nbsp;</th>
+                            <th width="56%">{{LANG_BOARD}}</th>
+                            <th width="10%">{{LANG_TOPIC}}</th>
+                            <th width="10%">{{LANG_POST}}</th>
+                            <th width="20%" class="last">{{LANG_LASTPOSTDATE}}</th>
+                        </tr>
+                        {% for b in Boards %}
+                            {# make sure we get the correct data in the right spots. #}
+                            {% if c.id == b.Category %}
+                                <tr>
+                                    <td class="centerText">
+                                        {% if b.last_update < LAST30DAYS %}
+                                            <div class="icon-comment-alt icon-2x"></div>
+                                        {% elseif LOGGEDUSER == b.Username %}
+                                            <div class="icon-comment-alt icon-2x"></div>
+                                        {% elseif b.tid|TopicReadStat(LOGGEDUSERID) == 1 %}
+                                            <div class="icon-comment-alt icon-2x"></div>
+                                        {% else %}
+                                            <div class="icon-comment icon-2x"></div>
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="floatLeft"><strong>{{URL_TAG("/viewboard/"~ b.id, b.Board)|raw}}</strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br />{{b.id|SubBoards|raw}}</td>
+                                    <td class="centerText">{{b.id|counter("TopicCount")}}</td>
+                                    <td class="centerText">{{b.id|counter("PostCount")}}</td>
+                                    <td>
+                                        {% if b.last_update == "" %}
+                                            {{LANG_NOPOSTS}}
+                                        {% else %}
+                                            {{b.last_update|PostedDate(TimeFormat, TimeZone)}}<br />{{URL_TAG("/viewtopic/"~ b.tid~"/"~b.last_page, LANG_POSTEDBY)|raw}} {{b.Username}}
+                                        {%endif%}
+                                    </td>
+                                </tr>
+                            {%- endif -%}
+                        {% endfor %}
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="block" id="block-text">
+        <div class="content">
+            <h2 class="title">{{LANG_BOARDSTAT}}</h2>
+            <div class="inner">
+                {{LANG_NEWESTMEMBER}}: {{boardInfo("newuser")}}<br />
+                <b>{{ boardInfo("topic") }}</b> {{LANG_TOTALTOPIC}} /
+                <b>{{ boardInfo("post") }}</b> {{LANG_TOTALPOST}} /
+                <b>{{ boardInfo("member") }}</b> {{LANG_TOTALUSER}}
+            </div>
+            <h2 class="title">{{LANG_ICONGUIDE}}</h2>
+            <div class="inner">
+                <div class="icon-comment-alt icon-2x floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
+                <div class="icon-comment icon-2x floatLeft"></div><div class="floatLeft">{{LANG_OLDPOST}}</div>
+            </div><br />
+        </div>
+    </div>
+
+    <div class="block" id="block-tables">
+        <div class="content">
+            <h2 class="title">{{LANG_WHOSONLINE}}</h2>
+            <div class="inner">
+                <table class="table">
+                    <tr>
+                        <td width="12%" rowspan="3" class="ui-widget-content">
+                            {{LANG_ONLINEKEY|raw}}
+                        </td>
+                    </tr><tr>
+                        <td width="88%" class="ui-widget-content" valign="top">
+                            <b>{{boardInfo("memberonline")}}</b> {{LANG_LOGGED_ONLINE}} &amp; <b>{{boardInfo("guestonline")}}</b> {{LANG_GUEST_ONLINE}}
+                        </td>
+                    </tr><tr>
+                        <td class="ui-widget-content">
+                            {{WHOSONLINE|raw}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
