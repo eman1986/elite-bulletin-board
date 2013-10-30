@@ -13,7 +13,7 @@ if (!defined('IN_EBB')) {
 }
 /*
 Filename: header.php
-Last Modified: 10/24/2013
+Last Modified: 10/30/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -37,17 +37,14 @@ require_once "config.php";
 //composer autoloader
 require_once FULLPATH.'/includes/autoload.php';
 
-//$run = new \Whoops\Run;
-//$errorPage = new \Whoops\Handler\PrettyPageHandler;
-
-//$errorPage->setPageTitle("System Failure!");
-
-//$JsonHandler = new \Whoops\Handler\JsonResponseHandler;
-
-//$run->pushHandler($JsonHandler);
-//$run->pushHandler($errorPage);
-//$run->register();
-
+//see if xdebug is installed
+if (!function_exists("xdebug_get_code_coverage")) {
+    $run = new \Whoops\Run;
+    $errorPage = new \Whoops\Handler\PrettyPageHandler;
+    $errorPage->setPageTitle("System Failure!");
+    $run->pushHandler($errorPage);
+    $run->register();
+}
 
 // setup our database object.
 $options = array(
