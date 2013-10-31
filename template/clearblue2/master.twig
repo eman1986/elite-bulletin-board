@@ -2,20 +2,16 @@
 <html lang="en">
 <head>
     <title>{% block title %}{% endblock %}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <!--  Base CSS -->
-    {{LinkTag("themes/"~THEME_NAME~"/base.css")|raw}}
-    {{LinkTag("themes/"~THEME_NAME~"/style.css")|raw}}
-    {{LinkTag("themes/"~THEME_NAME~"/jui.css")|raw}}
-    {{LinkTag("themes/"~THEME_NAME~"/bootstrap.css")|raw}}
-
-    <!--  jTables CSS -->
-    {{LinkTag("themes/"~THEME_NAME~"/grid.css")|raw}}
+    <link rel="stylesheet" href="template/clearblue2/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="template/clearblue2/font-awesome.css" media="screen">
+    <link rel="stylesheet" href="template/clearblue2/style.css" media="screen">
 
     <!--RSS & ICO -->
-    {{LinkTag("themes/"~THEME_NAME~"/images/favicon.ico", "shortcut icon", "image/ico")|raw}}
-    {{LinkTag(INDEX_PAGE~"/latesttopics", "alternate", "application/rss+xml", boardName)|raw}}
+    <link rel="shortcut icon" href="template/clearblue2/favicon.ico">
+    <link rel="alternate" href="latestposts.php" type="application/rss+xml">
 
     <!-- Get the folder this is installed on. -->
     <script type="text/javascript">
@@ -23,292 +19,293 @@
     </script>
 
     <!-- Language JS File. -->
-    <script type="text/javascript" src="{{BOARD_URL}}js/lang/{{LANG}}/{{LANG}}.lang.js"></script>
+    <script type="text/javascript" src="includes/js/lang/{{LANG}}/{{LANG}}.lang.js"></script>
 
     <!-- REQUIRED, CORE -->
     <!--[if lt IE 9]>
-    <script src="{{BOARD_URL}}js/jquery-1.10.1.min.js"></script>
+    <script src="includes/js/jquery-1.10.1.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-    <!--[if gte IE 9]><!-->
-    <script src="{{BOARD_URL}}js/jquery-2.0.2.min.js"></script>
+    <!--[if gte IE 9]>
+    <script src="includes/js/jquery-2.0.2.min.js"></script>
     <!--[endif]-->
-    <script type="text/javascript" src="{{BOARD_URL}}js/jquery-ui-1.10.2.min.js"></script>
-    <script type="text/javascript" src="{{BOARD_URL}}js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="includes/js/jquery-ui-1.10.2.min.js"></script>
+    <script type="text/javascript" src="includes/js/bootstrap.min.js"></script>
 
     <!-- PLUGINS USED ALL AROUND EBB -->
-    <script type="text/javascript" src="{{BOARD_URL}}js/bootbox.min.js"></script>
-    <script type="text/javascript" src="{{BOARD_URL}}js/dialog.js"></script>
-    <script type="text/javascript" src="{{BOARD_URL}}js/common.js"></script>
-    <script type="text/javascript" src="{{BOARD_URL}}js/jquery.functions.js"></script>
+    <script type="text/javascript" src="includes/js/bootbox.min.js"></script>
+    <script type="text/javascript" src="includes/js/dialog.js"></script>
+    <script type="text/javascript" src="includes/js/common.js"></script>
+    <script type="text/javascript" src="includes/js/jquery.functions.js"></script>
 
     <!-- notification plug-in. -->
-    <script type="text/javascript" src="{{BOARD_URL}}js/jquery.jnotify.min.js"></script>
+    <script type="text/javascript" src="includes/js/jquery.jnotify.min.js"></script>
 
     <!-- validation js -->
-    <script type="text/javascript" src="{{BOARD_URL}}js/validate.min.js"></script>
+    <script type="text/javascript" src="includes/js/validate.min.js"></script>
     <!-- /JAVASCRIPT FILES -->
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 </head>
 <body>
-<!--[if lt IE 8]>
-<div id="DlgOldIE">
-    Your version of Internet Explorer is too old, We recommend IE 8 or newer.<br /><br />
-    <u><a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie">Download Latest Version of IE</a></u>
-</div>
-<script type="text/javascript">
-    $("#DlgOldIE").dialog({
-        title: "IE Compatibility Error",
-        modal: true,
-        resizable: false,
-        draggable: false,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close", ui.dialog).hide();
-        }
-    });
-</script>
-<![endif]-->
-
-<!-- No javascript? let user know its required. -->
-<noscript>
-    <div id="loadingBackGround_nojs">
-        <div id="loadingMessage_nojs">
-            <strong>{{LANG_INFO}}</strong><br />
-            <strong>{{LANG_JSDISABLED}}</strong>
-        </div>
-    </div>
-</noscript>
-
-{# Used for our notification system #}
-{% if NOTIFY_MSG != "" %}
-    <script type="text/javascript">
-        FormResults("{{NOTIFY_TYPE}}", "{{NOTIFY_MSG}}"); //display message.
-    </script>
-{% endif %}
-
-<div id="notifyContainer" class="hideElement"></div>
-
-<!-- Used to confirm actions (will replace older method) -->
-<div id="confirmDlg">
-    <div id="confirmMsg"></div>
-</div>
-
-<!-- PM Containers -->
-<div id="newPM"></div>
-<div id="moreSmiles"></div>
-
-{# toggle login panel based on rank. #}
-{% if groupAccess == 1 or groupAccess == 2 or groupAccess == 3 %}
-    <div id="topTab">
-        <ul>
-            <li>
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <a href="{{BOARD_URL}}"><span class="icon-home floatLeft icon-large"></span>&nbsp;{{LANG_HOME}}</a>
-                </div>
-            </li>
-            <li id="PMBtn"> {# TODO use this badge when we get PMs in place  data-notifications="10" #}
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <span class="icon-envelope-alt floatLeft icon-large"></span>&nbsp;{{LANG_PMS}}
-                </div>
-            </li>
-            <li class="usrMenu" id="loginButton">
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <span class="icon-cogs floatLeft icon-large"></span>&nbsp;{{LANG_UOPTIONS}}
-                </div>
-            </li>
-            <li class="usrMenu" id="searchBtn">
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <span class="icon-search floatLeft icon-large"></span>&nbsp;{{LANG_SEARCH}}
-                </div>
-            </li>
-            <li class="usrMenu" onclick="$('#styleListDialog').modal('show');">
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <span class="icon-list-alt floatLeft icon-large"></span>&nbsp;{{LANG_CHANGETHEME}}
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div id="styleListDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3 id="myModalLabel">{{LANG_CHANGETHEME}}</h3>
-        </div>
-        <div class="modal-body">
-            {% for s in STYLELIST %}
-                {# create new row if the index is odd or the first record. #}
-                {% if loop.index is odd or loop.first %}
-                    <div class="row-fluid">
-                {% endif %}
-                <div class="span6">
-                    {{URL_TAG("users/changetheme/"~s.id, IMG(BOARD_URL~"themes/"~THEME_NAME~"/images/style_thumb.gif"))|raw}}<br />{{s.Name}}
-                </div>
-                {# close row if the index is even or the last record. #}
-                {% if loop.index is even or loop.last %}
-                    </div><br />
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-
-    <div id="PMBox">
-        <div id="loginForm">
-            <fieldset id="body">
-                <fieldset>
-                    <div class="icon-inbox floatLeft icon-large"></div>&nbsp;{{URL_TAG("users/messages/Inbox", LANG_PMINBOX)|raw}} <small><em>{{UNREADPMCOUNT}} {{LANG_UNREADPM}}</em></small>
-                </fieldset>
-                <fieldset>
-                    <div class="icon-folder-open floatLeft icon-large"></div>&nbsp;{{URL_TAG("users/messages/Archive", LANG_PMARCHIVE)|raw}}
-                </fieldset>
-            </fieldset>
-            <span>
-            	<a href="#" onclick="buildModal('newPM', '{{LANG_POSTPM}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/newpm/',720);">{{LANG_POSTPM}}</a>
-            </span>
-        </div>
-    </div>
-
-    <div id="searchBox">
-        <div id="loginForm">
-            <fieldset id="body">
-                <fieldset>
-                    <label for="qSearch">{{LANG_QUICKSEARCH}}</label>
-                    <input type="text" name="qSearch" id="qSearch" />
-                </fieldset>
-                <input type="submit" id="iSearch" value="{{LANG_SEARCH}}" />
-                <div id="lsloading" class="hideElement">
-                    {{IMG("themes/"~THEME_NAME~"/images/smloader.gif")|raw}}
-                </div>
-                <div id="searchResults"></div>
-            </fieldset>
-            <span>
-				{{URL_TAG("/search", LANG_ADVSEARCH)|raw}}
-            </span>
-        </div>
-    </div>
-
-    <div id="loginBox">
-        <div id="loginForm">
-            <fieldset id="body">
-                <fieldset>
-                    <div class="icon-wrench floatLeft icon-large"></div>&nbsp;{{URL_TAG("users/", LANG_UOPTIONS)|raw}}<br />
-                </fieldset>
-                <fieldset>
-                    <div class="icon-search floatLeft icon-large"></div>&nbsp;{{URL_TAG("search/newposts/", LANG_NEWPOSTS)|raw}}
-                </fieldset>
-            </fieldset>
-            <span>
-                {{URL_TAG("/logout", LANG_LOGOUT)|raw}}
-            </span>
-        </div>
-    </div>
-{% else %}
-    <div id="topTab">
-        <ul>
-            <li>
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <a href="{{BOARD_URL}}"><span class="icon-home floatLeft icon-large"></span>&nbsp;{{LANG_HOME}}</a>
-                </div>
-            </li>
-            <li class="usrMenu" id="loginButton">
-                <div class="ui-widget ui-helper-clearfix ui-widget-header ui-corner-all" style="padding: .2em 1em;text-align:left;">
-                    <span class="icon-signin floatLeft icon-large"></span>&nbsp;{{LANG_LOGIN}}
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div id="loginBox">
-        {{LOGINFORM|raw}}
-        <fieldset id="body">
-            <!-- validation box. -->
-            <div class="hideElement centerContainer alert alert-error" id="div_ErrMsg_QLogin" style="width: 82%;">
-                <span id="validateQLogin"></span>
-            </div>
-            <fieldset>
-                <label for="username">{{LANG_USERNAME}}</label>
-                <input type="text" name="username" id="username" tabindex="1" />
-            </fieldset>
-            <fieldset>
-                <label for="password">{{LANG_PASSWORD}}</label>
-                <input type="password" name="password" id="password" tabindex="2"/>
-            </fieldset>
-            <input type="submit" id="login" value="{{LANG_LOGIN}}" />
-            <label for="checkbox"><input type="checkbox" id="checkbox" name="auto_login" value="1" />{{LANG_REMEMBERTXT}}</label>
-        </fieldset>
-            <span>
-                {{URL_TAG("/resetpassword", LANG_FORGOT)|raw}}<br />
-                {{URL_TAG("/register", LANG_REGISTER)|raw}}
-            </span>
-        </form>
+    <!--[if lt IE 8]>
+    <div id="DlgOldIE">
+        Your version of Internet Explorer is too old, We recommend IE 8 or newer.<br /><br />
+        <u><a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie">Download Latest Version of IE</a></u>
     </div>
     <script type="text/javascript">
-        new FormValidator('frmQLogin', [{
-            name: 'username',
-            display: '{{LANG_USERNAME}}',
-            rules: 'required'
-        }, {
-            name: 'password',
-            display: '{{LANG_PASSWORD}}',
-            rules: 'required'
-        }], function(errors, event) {
-
-            if (errors.length > 0) {
-                $('#validateQLogin').empty();
-                $('#validateQLogin').append(errors.join('<br />'));
-                $('#div_ErrMsg_QLogin').show();
-            } else {
-                event.returnValue = true; //allow form to process.
+        $("#DlgOldIE").dialog({
+            title: "IE Compatibility Error",
+            modal: true,
+            resizable: false,
+            draggable: false,
+            open: function(event, ui) {
+                $(".ui-dialog-titlebar-close", ui.dialog).hide();
             }
-
         });
     </script>
-{% endif %}
+    <![endif]-->
 
-<div id="container">
-    <div id="header">
-        <div class="board-common-icons logo"></div>
-        <div id="user-navigation">
-            <ul class="buffer">
-                <li class="loggedUser">
+    <!-- No javascript? let user know its required. -->
+    <noscript>
+        <div id="loadingBackGround_nojs">
+            <div id="loadingMessage_nojs">
+                <strong>{{LANG_INFO}}</strong><br />
+                <strong>{{LANG_JSDISABLED}}</strong>
+            </div>
+        </div>
+    </noscript>
+
+    {# Used for our notification system #}
+    {% if NOTIFY_MSG != "" %}
+        <script type="text/javascript">
+            FormResults("{{NOTIFY_TYPE}}", "{{NOTIFY_MSG}}"); //display message.
+        </script>
+    {% endif %}
+
+    <div id="notifyContainer" class="hideElement"></div>
+
+    <!-- Used to confirm actions (will replace older method) -->
+    <div id="confirmDlg">
+        <div id="confirmMsg"></div>
+    </div>
+
+    <!-- PM Containers -->
+    <div id="newPM"></div>
+    <div id="moreSmiles"></div>
+
+    <!-- Wrap all page content here -->
+    <div id="wrap">
+        {# toggle login panel based on rank. #}
+        {% if groupAccess == 1 or groupAccess == 2 or groupAccess == 3 %}
+        <div class="navbar navbar-inverse">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                  <li><a href="{{BOARD_URL}}">{{LANG_HOME}}</a></li>
+                  <li><a href="Members.php">{{LANG_MEMBERLIST}}</a></li>
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{LANG_PMS}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">{{LANG_PMINBOX}} ({{UNREADPMCOUNT}})</a></li>
+                      <li><a href="#">{{LANG_PMARCHIVE}}</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#" onclick="buildModal('newPM', '{{LANG_POSTPM}}', '{{BOARD_URL}}{{INDEX_PAGE}}ucpform/newpm/',720);">{{LANG_POSTPM}}</a></li>
+                    </ul>
+                  </li>
+                </ul>
+                          
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" onclick="$('#styleListDialog').modal('show');">{{LANG_CHANGETHEME}}</a></li>
+                <li><a href="#" id="search" data-placement="bottom" data-original-title="{{LANG_QUICKSEARCH}}">{{LANG_SEARCH}}</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{LANG_UOPTIONS}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="Search.php?action=lastposts">{{LANG_NEWPOSTS}}</a></li>
+                      <li><a href="Profile.php">{{LANG_UOPTIONS}}</a></li>
+                      {% if groupAccess == 1 %}
+                      <li><a href="acp/">{{LANG_ACP}}</a></li>
+                      {% endif %}
+                      <li class="divider"></li>
+                      <li><a href="logout.php">{{LANG_LOGOUT}}</a></li>
+                    </ul>
+                </li>
+              </ul>
+            </div><!--/.navbar-collapse -->
+          </div>
+        </div>
+
+        <!-- Our style modal -->
+        <div id="styleListDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 id="myModalLabel">{{LANG_CHANGETHEME}}</h3>
+            </div>
+            <div class="modal-body">
+                {% for s in STYLELIST %}
+                    {# create new row if the index is odd or the first record. #}
+                    {% if loop.index is odd or loop.first %}
+                        <div class="row-fluid">
+                    {% endif %}
+                    <div class="span6">
+                        {{URL_TAG("users/changetheme/"~s.id, IMG(BOARD_URL~"themes/"~THEME_NAME~"/images/style_thumb.gif"))|raw}}<br />{{s.Name}}
+                    </div>
+                    {# close row if the index is even or the last record. #}
+                    {% if loop.index is even or loop.last %}
+                        </div><br />
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="qsearch" style="display:none;">
+            <div class="form-group">
+                <input type="text" name="qSearch" id="qSearch" class="form-control" style="width:250px;" />
+            </div>
+            <input type="submit" id="iSearch" value="{{LANG_SEARCH}}" class="btn btn-primary btn-xs" />
+            <!-- {{LANG_ADVSEARCH}} -->
+            <div id="lsloading" class="hideElement">
+                <img src="template/clearblue2/images/smloader.gif" alt=""/>
+            </div>
+            <div id="searchResults"></div>
+        </div> 
+        <script type="text/javascript">
+            $(function() {
+                $('#search').popover({ 
+                    html : true, 
+                    content: function() {
+                      return $('#qsearch').html();
+                    }
+                });
+            });
+        </script>                 
+        {% else %}
+        <div class="navbar navbar-inverse">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                  <li><a href="{{BOARD_URL}}">{{LANG_HOME}}</a></li>
+                </ul>
+                          
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" id="login" data-placement="bottom" data-original-title="{{LANG_LOGIN}}">{{LANG_LOGIN}}</a></li>
+                <li><a href="#" id="register" data-placement="bottom">{{LANG_REGISTER}}</a></li>
+              </ul>
+            </div><!--/.navbar-collapse -->
+          </div>
+        </div>
+
+        <div id="qlogin" style="display:none;">
+            <form role="form">
+              <div class="form-group">
+                <label for="exampleInputEmail1">{{LANG_USERNAME}}</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" style="width:250px;">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">{{LANG_PASSWORD}}</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" style="width:250px;">
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"> {{LANG_REMEMBERTXT}}
+                </label>
+              </div>
+              <button type="submit" class="btn btn-primary btn-xs btn-block">{{LANG_LOGIN}}</button>
+              <button type="button" class="btn btn-default btn-xs btn-block">{{LANG_FORGOT}}</button>
+            </form>
+        </div>        
+
+        <div id="frmRegister" name="frmRegister" style="display:none;">
+            <form role="form">
+              <div class="form-group">
+                <label for="exampleInputEmail1">{{LANG_USERNAME}}</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" style="width:250px;">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">{{LANG_PASSWORD}}</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" style="width:250px;">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">{{LANG_EMAIL}}</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" style="width:250px;">
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"> {{LANG_AGREETERMS}}
+                </label>
+              </div>
+              <button type="submit" class="btn btn-primary btn-xs btn-block">{{LANG_REGISTER}}</button>
+            </form>
+        </div>
+        <script type="text/javascript">
+            new FormValidator('frmQLogin', [{
+                name: 'username',
+                display: '{{LANG_USERNAME}}',
+                rules: 'required'
+            }, {
+                name: 'password',
+                display: '{{LANG_PASSWORD}}',
+                rules: 'required'
+            }], function(errors, event) {
+
+                if (errors.length > 0) {
+                    $('#validateQLogin').empty();
+                    $('#validateQLogin').append(errors.join('<br />'));
+                    $('#div_ErrMsg_QLogin').show();
+                } else {
+                    event.returnValue = true; //allow form to process.
+                }
+
+            });
+            $(function() {
+                $('#login').popover({ 
+                    html : true, 
+                    content: function() {
+                      return $('#qlogin').html();
+                    }
+                });
+                $('#register').popover({ 
+                    html : true, 
+                    content: function() {
+                      return $('#qregister').html();
+                    }
+                });
+            });
+        </script>        
+        {% endif %}
+
+      <!-- Begin page content -->
+        <div class="content">
+            <div style="background-color: #4B6C9E;">
+                <img src="logo.gif" />
+                <span style="float:right;font-weight:bold;color: #fff;">
                     {% if groupAccess == 1 or groupAccess == 2 or groupAccess == 3 %}
                         {{LANG_WELCOME}} <strong>{{LOGGEDUSER}}</strong>
                     {% else %}
                         {{LANG_WELCOMEGUEST}}
                     {% endif %}
-                </li>
-            </ul>
-        </div>
-        {% if groupAccess == 1 or groupAccess == 2 or groupAccess == 3 %}
-            <div id="main-navigation">
-                <ul class="buffer">
-                    <li>
-                        {{URL_TAG("users/memberslist/", LANG_MEMBERLIST)|raw}}
-                    </li>
-                    <li>
-                        {{URL_TAG("users/", LANG_UOPTIONS)|raw}}
-                    </li>
-                    {% if groupAccess == 1 %}
-                        <li>
-                            {{URL_TAG("ACP", LANG_CP)|raw}}
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
-    </div>
-    <div id="wrapper" class="buffer">
-        <div id="main">
+                <span>
+            </div><br />
             {% block bodyRender %}{% endblock %}
         </div>
     </div>
-</div>
-<!-- Footer -->
-<div id="footer">
-    <div class="block">
-        <p>{{LANG_POWERED}}: <a href="http://elite-board.us/" target="_blank">Elite Bulletin Board</a> &#169; 2006-2015</p>
+    <div id="footer">
+        <div class="container">
+            <p>{{LANG_POWERED}}: <a href="http://elite-board.us/" target="_blank">Elite Bulletin Board</a> &#169; 2006-2015</p>
+        </div>
     </div>
-</div>
 </body>
 </html>
