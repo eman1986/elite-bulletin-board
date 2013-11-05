@@ -2,15 +2,13 @@
 if (!defined('IN_EBB')){
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
-/*
-Filename: english.lang.php
-Last Modified: 10/23/2013
-
-Term of Use:
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+/**
+ * english.lang.php
+ * @package Elite Bulletin Board
+ * @author Elite Bulletin Board Team <http://elite-board.us>
+ * @copyright (c) 2006-2015
+ * @version 11/04/2013
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
 #Common language tags.
@@ -38,6 +36,7 @@ $lang['queryused'] = 'Query Used';
 $lang['goback'] = 'Go Back';
 $lang['errormsg'] = 'An error has occurred:';
 $lang['accessdenied'] = 'You do not have permission to access this area.';
+$lang['common:poweredby'] = 'Powered by';
 #ID-checking language tags.
 $lang['nobid'] = 'No Board ID was Located.';
 $lang['notid'] = 'No Topic ID was Located.';
@@ -63,29 +62,28 @@ $lang['groups'] = 'Grouplist';
 $lang['pm'] = ' Private Messages';
 $lang['profile'] = 'Profile';
 #language tags for index.php
-$lang['title'] = 'Index';
-$lang['announcements'] = 'Announcements';
-$lang['ticker_txt'] = 'Information Ticker';
+$lang['index:title'] = 'Index';
+$lang['index:announcements'] = 'Announcements';
+$lang['index:ticker_txt'] = 'Information Ticker';
 $lang['newposts'] = 'New posts since last visit';
-$lang['boards'] = 'Boardlist';
-$lang['description'] = 'Description';
-$lang['topics'] = 'Topics';
-$lang['posts'] = 'Posts';
-$lang['moderators'] = 'Moderators';
-$lang['subboards'] = 'Sub-Boards';
-$lang['lastposteddate'] = 'Last Posted Date';
-$lang['Postedby'] = 'Posted by';
-$lang['noposts'] = 'No Posts';
-$lang['boardstatus'] = 'Board Status';
-$lang['membernum'] = 'Members';
-$lang['newestmember'] = 'Welcome our newest member';
-$lang['iconguide'] = 'Icon Guide';
-$lang['newpost'] = 'New Post';
-$lang['oldpost'] = 'Old Post';
-$lang['whosonline'] = 'Currently Online';
-$lang['onlinekey'] = '[Key]<br /><b>Administrator</b><br /><i>Moderator</i><br />Member';
-$lang['guestonline'] = 'guests are online currently.';
-$lang['poweredby'] = 'Powered by';
+$lang['index:boards'] = 'Boardlist';
+$lang['index:description'] = 'Description';
+$lang['index:topics'] = 'Topics';
+$lang['index:posts'] = 'Posts';
+$lang['index:moderators'] = 'Moderators';
+$lang['index:subboards'] = 'Sub-Boards';
+$lang['index:lastposteddate'] = 'Last Posted Date';
+$lang['index:Postedby'] = 'Posted by';
+$lang['index:noposts'] = 'No Posts';
+$lang['index:boardstatus'] = 'Board Status';
+$lang['index:membernum'] = 'Members';
+$lang['index:newestmember'] = 'Welcome our newest member';
+$lang['index:iconguide'] = 'Icon Guide';
+$lang['index:newpost'] = 'New Post';
+$lang['index:oldpost'] = 'Old Post';
+$lang['index:whosonline'] = 'Currently Online';
+$lang['index:onlinekey'] = '[Key]<br /><b>Administrator</b><br /><i>Moderator</i><br />Member';
+$lang['index:guestonline'] = 'guests are online currently.';
 #RSS language tags.
 $lang['viewfeed'] = 'View RSS Feed for this board.';
 $lang['latestposts'] = 'Latest Topics created.';

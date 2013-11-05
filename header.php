@@ -1,4 +1,12 @@
 <?php
+/**
+ * header.php
+ * @package Elite Bulletin Board
+ * @author Elite Bulletin Board Team <http://elite-board.us>
+ * @copyright (c) 2006-2015
+ * @version 11/04/2013
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
+*/
 session_start();
 
 if (phpversion() < "5.3") {
@@ -11,16 +19,7 @@ session_regenerate_id(TRUE);
 if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
-/*
-Filename: header.php
-Last Modified: 10/30/2013
 
-Term of Use:
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-*/
 if (phpversion() >= "5.4") {
     error_reporting(E_ALL ^ E_DEPRECATED ^ E_STRICT); //to remove all DEPRECATED & STRICT STANDARDS errors in production for PHP 5.4 users.
 } elseif (phpversion() >= "5.3") {

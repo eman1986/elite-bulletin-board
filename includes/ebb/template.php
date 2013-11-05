@@ -6,14 +6,12 @@ if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /**
-Filename: template.php
-Last Modified: 10/30/2013
-
-Term of Use:
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+ * template.php
+ * @package Elite Bulletin Board
+ * @author Elite Bulletin Board Team <http://elite-board.us>
+ * @copyright (c) 2006-2015
+ * @version 11/04/2013
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
 class template {

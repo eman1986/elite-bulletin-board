@@ -1,23 +1,34 @@
 <?php
 define('IN_EBB', true);
-/*
-Filename: index.php
-Last Modified: 10/24/2013
-
-Term of Use:
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+/**
+ * index.php
+ * @package Elite Bulletin Board
+ * @author Elite Bulletin Board Team <http://elite-board.us>
+ * @copyright (c) 2006-2015
+ * @version 11/04/2013
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 require "header.php";
 
-$page = new \ebb\template("header", $template_path);
-$page->replace_tags(array(
-  "TITLE" => "$title",
-  "PAGETITLE" => "$lang[title]"));
+// load board index data.
+$bInx = loadBoardIndex();
 
-$page->output();
+$page = new \ebb\template($template_path);
+$page->output("index", array(
+    "TITLE" => $title,
+    "PAGETITLE" => outputLanguageTag("index:title"),
+
+
+
+    "LANG-WHOSONLINE" => outputLanguageTag("index:whosonline"),
+    "LANG-ONLINEKEY" => outputLanguageTag("index:onlinekey"),
+    "LOGGED-ONLINE" => 0,
+    "LANG-LOGGED-ONLINE" => outputLanguageTag("index:membernum"),
+    "GUEST-ONLINE" => 0,
+    "LANG-GUEST-ONLINE" => outputLanguageTag("index:guestonline"),
+    "WHOSONLINE"=> "",
+    "LANG-POWERED" => outputLanguageTag("common:poweredby")
+));
 //check to see if the install file is still on the user's server.
 //$setupexist = checkinstall();
 // if ($setupexist){
@@ -153,20 +164,5 @@ $page->output();
 //call the whos online function
 //$online = whosonline();
 //output who's online.
-$page = new \ebb\template("whosonline", $template_path);
-$page->replace_tags(array(
-  "LANG-WHOSONLINE" => "$lang[whosonline]",
-  "LANG-ONLINEKEY" => "$lang[onlinekey]",
-  "LOGGED-ONLINE" => "0",
-  "LANG-LOGGED-ONLINE" => "$lang[membernum]",
-  "GUEST-ONLINE" => "0",
-  "LANG-GUEST-ONLINE" => "$lang[guestonline]",
-  "WHOSONLINE"=> ""));
 
-$page->output();
-//display footer
-$page = new \ebb\template("footer", $template_path);
-$page->replace_tags(array(
-  "LANG-POWERED" => "$lang[poweredby]"));
-$page-> output();
 ob_end_flush();
