@@ -47,19 +47,33 @@
     <!-- /JAVASCRIPT FILES -->
 </head>
 <body>
-    <!--[if lt IE 8]>
-    <div id="DlgOldIE">
-        Your version of Internet Explorer is too old, We recommend IE 8 or newer.<br /><br />
-        <u><a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie">Download Latest Version of IE</a></u>
-    </div>
+    <!--[if lt IE 9]>
     <script type="text/javascript">
-        $("#DlgOldIE").dialog({
+        bootbox.dialog({
+            message: "Your version of Internet Explorer is too old, We recommend IE 9 or newer.<br /><br />For better results we recommend either Google Chrome or Firefox.",
             title: "IE Compatibility Error",
-            modal: true,
-            resizable: false,
-            draggable: false,
-            open: function(event, ui) {
-                $(".ui-dialog-titlebar-close", ui.dialog).hide();
+            buttons: {
+                ie: {
+                    label: "Get Internet Explorer",
+                    className: "btn-primary",
+                    callback: function() {
+                        location.href = "http://windows.microsoft.com/en-us/internet-explorer/ie-9-worldwide-languages";
+                    }
+                },
+                chrome: {
+                    label: "Get Google Chrome",
+                    className: "btn-success",
+                    callback: function() {
+                        location.href = "https://www.google.com/intl/en/chrome/browser/";
+                    }
+                },
+                firefox: {
+                    label: "Get Firefox",
+                    className: "btn-warning",
+                    callback: function() {
+                        location.href = "http://www.mozilla.org/en-US/firefox/fx/#desktop";
+                    }
+                }
             }
         });
     </script>
