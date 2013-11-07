@@ -7,7 +7,7 @@ if (!defined('IN_EBB')) {
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/04/2013
+ * @version 11/06/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
@@ -276,12 +276,33 @@ function checkInstall() {
 }
 
 /**
- * php parsing function for information ticker.
- * @param string $string the content from our news feed.
- * @return string
+ * loads data for announcements.
+ * @return array announcement data.
 */
-function nl2p($string) {
-    return '<p align="center">' . str_replace("\n", '</p><p align="center">', $string) . '</p>';
+function informationPanel() {
+
+    global $db;
+
+    $infoData = array();
+
+    try {
+        $infoQ = $db->query("SELECT information FROM ebb_information_ticker");
+
+        //
+        if ($infoQ->rowCount() == 0) {
+            $infoData[] = outputLanguageTag("index:nonews");
+        } else {
+            while($infoR = $infoQ->fetch(PDO::FETCH_OBJ)) {
+                $infoData[] = smiles(BBCode($infoR->information));
+            }
+        }
+
+        return $infoData;
+    }
+    catch (PDOException $e) {
+        $infoData[] =  $e->getMessage();
+        return $infoData;
+    }
 }
 
 /**

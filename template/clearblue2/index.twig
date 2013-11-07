@@ -6,19 +6,18 @@
 
     {% if showInfoBox == 1 %}
         <!-- JS for Information Ticker -->
-        <script type="text/javascript" src="{{BOARD_URL}}js/jquery.newsticker.js"></script>
+        <script type="text/javascript" src="includes/js/jquery.ticker.min.js"></script>
         <script type="text/javascript">
-            $(function(){
-                $("#news").newsticker(5000); //newsticker plugin.
-            }); //END function.
+            $(function () {
+                $('#announcements').ticker({ titleText:"{{TITLE}} :: {{LANG_ANNOUNCEMENTS}}" });
+            });
         </script>
-        <div class="block" id="block-text">
-            <div class="content">
-                <h2 class="title">{{LANG_TICKER}}</h2>
-                <div class="inner">
-                    {{ANNOUNCEMENT|raw}}
-                </div>
-            </div>
+        <div class="well">
+            <ul id="announcements">
+                {% for a in ANNOUNCEMENTS %}
+                    <li>a.information</li>
+                {% endfor  %}
+            </ul>
         </div>
     {% endif %}
 
@@ -72,43 +71,25 @@
         </div>
     </div>
 
-    <div class="block" id="block-text">
-        <div class="content">
-            <h2 class="title">{{LANG_BOARDSTAT}}</h2>
-            <div class="inner">
-                {{LANG_NEWESTMEMBER}}: {{boardInfo("newuser")}}<br />
-                <b>{{ boardInfo("topic") }}</b> {{LANG_TOTALTOPIC}} /
-                <b>{{ boardInfo("post") }}</b> {{LANG_TOTALPOST}} /
-                <b>{{ boardInfo("member") }}</b> {{LANG_TOTALUSER}}
-            </div>
-            <h2 class="title">{{LANG_ICONGUIDE}}</h2>
-            <div class="inner">
-                <div class="icon-comment-alt icon-2x floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
-                <div class="icon-comment icon-2x floatLeft"></div><div class="floatLeft">{{LANG_OLDPOST}}</div>
-            </div><br />
-        </div>
+    <div class="well">
+        <h4>{{LANG_BOARDSTAT}}</h4>
+        {{LANG_NEWESTMEMBER}}: {{boardInfo("newuser")}}<br />
+        <b>{{ boardInfo("topic") }}</b> {{LANG_TOTALTOPIC}} /
+        <b>{{ boardInfo("post") }}</b> {{LANG_TOTALPOST}} /
+        <b>{{ boardInfo("member") }}</b> {{LANG_TOTALUSER}}
+
+        <h4>{{LANG_ICONGUIDE}}</h4>
+        <div class="fa fa-comment-o fa-2x floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
+        <div class="fa fa-comment fa-2x floatLeft"></div><div class="floatLeft">{{LANG_OLDPOST}}</div><br />
     </div>
 
-    <div class="block" id="block-tables">
-        <div class="content">
-            <h2 class="title">{{LANG_WHOSONLINE}}</h2>
-            <div class="inner">
-                <table class="table">
-                    <tr>
-                        <td width="12%" rowspan="3" class="ui-widget-content">
-                            {{LANG_ONLINEKEY|raw}}
-                        </td>
-                    </tr><tr>
-                        <td width="88%" class="ui-widget-content" valign="top">
-                            <b>{{boardInfo("memberonline")}}</b> {{LANG_LOGGED_ONLINE}} &amp; <b>{{boardInfo("guestonline")}}</b> {{LANG_GUEST_ONLINE}}
-                        </td>
-                    </tr><tr>
-                        <td class="ui-widget-content">
-                            {{WHOSONLINE|raw}}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+    <div class="well col-xs-4 col-md-1">
+        {{LANG_ONLINEKEY|raw}}
+    </div>
+    <div class="well col-xs-12 col-sm-8 col-md-11">
+        <b>{{boardInfo("memberonline")}}</b> {{LANG_LOGGED_ONLINE}} &amp; <b>{{boardInfo("guestonline")}}</b> {{LANG_GUEST_ONLINE}}
+        <hr />
+        {{WHOSONLINE|raw}}
+        <br />
     </div>
 {% endblock %}

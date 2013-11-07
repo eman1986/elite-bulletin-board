@@ -63,6 +63,7 @@ $lang['pm'] = ' Private Messages';
 $lang['profile'] = 'Profile';
 #language tags for index.php
 $lang['index:title'] = 'Index';
+$lang['index:nonews'] = 'No announcements at this time...';
 $lang['index:announcements'] = 'Announcements';
 $lang['index:ticker_txt'] = 'Information Ticker';
 $lang['newposts'] = 'New posts since last visit';
