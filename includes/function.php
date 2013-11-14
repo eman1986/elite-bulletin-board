@@ -167,13 +167,12 @@ function outputLanguageTag($tag) {
 
     global $lang;
 
-    //@TODO this isn't working for some reason, will need to figure out why.
     //see if tag exists.
-    //if (!in_array($tag, $lang)) {
-    //    return $tag." is an invalid language tag.";
-    //}  else {
+    if (!array_key_exists($tag, $lang)) {
+        return $tag." is an invalid language tag.";
+    }  else {
         return $lang[$tag];
-    //}
+    }
 }
 
 /**
