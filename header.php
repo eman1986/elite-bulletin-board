@@ -4,7 +4,7 @@
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/04/2013
+ * @version 11/14/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 session_start();
@@ -56,7 +56,7 @@ try {
     $db = new \PDO(DB_DSN, DB_USER, DB_PASS, $options);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo $e->getMessage();
+    exit( $e->getMessage());
 }
 
 //update online data.
@@ -136,7 +136,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     //get default values.
     $access_level = 0;
     $template = $boardPref->getPreferenceValue("default_style");
-    $time_format = $boardPref->getPreferenceValue("time_format");
+    $time_format = 0;//$boardPref->getPreferenceValue("time_format");
     $lng = $boardPref->getPreferenceValue("default_language");
     $gmt = $boardPref->getPreferenceValue("timezone");
     $last_visit = NULL;

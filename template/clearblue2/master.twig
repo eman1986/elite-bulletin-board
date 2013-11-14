@@ -168,7 +168,7 @@
                         <div class="row-fluid">
                     {% endif %}
                     <div class="span6">
-                        {{URL_TAG("users/changetheme/"~s.id, IMG(BOARD_URL~"themes/"~THEME_NAME~"/images/style_thumb.gif"))|raw}}<br />{{s.Name}}
+                        {#{{URL_TAG("users/changetheme/"~s.id, IMG(BOARD_URL~"themes/"~THEME_NAME~"/images/style_thumb.gif"))|raw}}<br />{{s.Name}}#}
                     </div>
                     {# close row if the index is even or the last record. #}
                     {% if loop.index is even or loop.last %}

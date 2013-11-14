@@ -14,20 +14,21 @@ require "header.php";
 $bInx = loadBoardIndex();
 
 $page = new \ebb\template($template_path);
-$page->output("index", array(
+echo $page->output("index", array(
     "TITLE" => $title,
     "PAGETITLE" => outputLanguageTag("index:title"),
 
+    "CATEGORY" => $bInx['Parent_Boards'],
+    "BOARDS" => $bInx['Parent_Boards'],
 
-
-    "LANG-WHOSONLINE" => outputLanguageTag("index:whosonline"),
-    "LANG-ONLINEKEY" => outputLanguageTag("index:onlinekey"),
-    "LOGGED-ONLINE" => 0,
-    "LANG-LOGGED-ONLINE" => outputLanguageTag("index:membernum"),
-    "GUEST-ONLINE" => 0,
-    "LANG-GUEST-ONLINE" => outputLanguageTag("index:guestonline"),
+    "LANG_WHOSONLINE" => outputLanguageTag("index:onlinekey"),
+    "LANG_ONLINEKEY" => outputLanguageTag("index:onlinekey"),
+    "LOGGED_ONLINE" => 0,
+    "LANG_LOGGED_ONLINE" => outputLanguageTag("index:membernum"),
+    "GUEST_ONLINE" => 0,
+    "LANG_GUEST_ONLINE" => outputLanguageTag("index:guestonline"),
     "WHOSONLINE"=> "",
-    "LANG-POWERED" => outputLanguageTag("common:poweredby")
+    "LANG_POWERED" => outputLanguageTag("common:poweredby")
 ));
 //check to see if the install file is still on the user's server.
 //$setupexist = checkinstall();
@@ -57,102 +58,102 @@ if ($board_status == 0){
 }
 
 //detect new PMs.
-$pm_msg = DetectNewPM($logged_user);
+//$pm_msg = DetectNewPM($logged_user);
 
 //output top
 if ($access_level == 1){
-    $page = new \ebb\template("top-admin", $template_path);
-    $page->replace_tags(array(
-        "TITLE" => $title,
-        "LANG-WELCOME" => $lang['welcome'],
-        "LOGGEDUSER" => $logged_user,
-        "LANG-LOGOUT" => $lang['logout'],
-        "NEWPM" => $pm_msg,
-        "LANG-CP" => $lang['cp'],
-        "LANG-NEWPOSTS" => $lang['newposts'],
-        "ADDRESS" => $address,
-        "LANG-HOME" => $lang['home'],
-        "LANG-SEARCH" => $lang['search'],
-        "LANG-CLOSE" => $lang['closewindow'],
-        "LANG-QUICKSEARCH" => $lang['quicksearch'],
-        "LANG-ADVANCEDSEARCH" => $lang['advsearch'],
-        "LANG-FAQ" => $lang['faq'],
-        "LANG-MEMBERLIST" => $lang['members'],
-        "LANG-GROUPLIST"=> $lang['groups'],
-        "LANG-PROFILE" => $lang['profile']));
-    $page->output();
+//    $page = new \ebb\template("top-admin", $template_path);
+//    $page->replace_tags(array(
+//        "TITLE" => $title,
+//        "LANG-WELCOME" => $lang['welcome'],
+//        "LOGGEDUSER" => $logged_user,
+//        "LANG-LOGOUT" => $lang['logout'],
+//        "NEWPM" => $pm_msg,
+//        "LANG-CP" => $lang['cp'],
+//        "LANG-NEWPOSTS" => $lang['newposts'],
+//        "ADDRESS" => $address,
+//        "LANG-HOME" => $lang['home'],
+//        "LANG-SEARCH" => $lang['search'],
+//        "LANG-CLOSE" => $lang['closewindow'],
+//        "LANG-QUICKSEARCH" => $lang['quicksearch'],
+//        "LANG-ADVANCEDSEARCH" => $lang['advsearch'],
+//        "LANG-FAQ" => $lang['faq'],
+//        "LANG-MEMBERLIST" => $lang['members'],
+//        "LANG-GROUPLIST"=> $lang['groups'],
+//        "LANG-PROFILE" => $lang['profile']));
+//    $page->output();
 }
 if ($access_level == 2 || $access_level == 3) {
-	$page = new \ebb\template("top-logged", $template_path);
-	$page->replace_tags(array(
-	"TITLE" => "$title",
-	"LANG-WELCOME" => "$lang[welcome]",
-	"LOGGEDUSER" => "$logged_user",
-	"LANG-LOGOUT" => "$lang[logout]",
-	"NEWPM" => "$pm_msg",
-	"LANG-NEWPOSTS" => "$lang[newposts]",
-	"ADDRESS" => "$address",
-	"LANG-HOME" => "$lang[home]",
-	"LANG-SEARCH" => "$lang[search]",
-	"LANG-CLOSE" => "$lang[closewindow]",
-	"LANG-QUICKSEARCH" => "$lang[quicksearch]",
-	"LANG-ADVANCEDSEARCH" => "$lang[advsearch]",
-	"LANG-FAQ" => "$lang[faq]",
-	"LANG-MEMBERLIST" => "$lang[members]",
-	"LANG-GROUPLIST"=> "$lang[groups]",
-	"LANG-PROFILE" => "$lang[profile]"));
-	$page->output();
+//	$page = new \ebb\template("top-logged", $template_path);
+//	$page->replace_tags(array(
+//	"TITLE" => "$title",
+//	"LANG-WELCOME" => "$lang[welcome]",
+//	"LOGGEDUSER" => "$logged_user",
+//	"LANG-LOGOUT" => "$lang[logout]",
+//	"NEWPM" => "$pm_msg",
+//	"LANG-NEWPOSTS" => "$lang[newposts]",
+//	"ADDRESS" => "$address",
+//	"LANG-HOME" => "$lang[home]",
+//	"LANG-SEARCH" => "$lang[search]",
+//	"LANG-CLOSE" => "$lang[closewindow]",
+//	"LANG-QUICKSEARCH" => "$lang[quicksearch]",
+//	"LANG-ADVANCEDSEARCH" => "$lang[advsearch]",
+//	"LANG-FAQ" => "$lang[faq]",
+//	"LANG-MEMBERLIST" => "$lang[members]",
+//	"LANG-GROUPLIST"=> "$lang[groups]",
+//	"LANG-PROFILE" => "$lang[profile]"));
+//	$page->output();
 }
 if ($access_level == 0) {
-    $page = new \ebb\template("top-guest", $template_path);
-    $page->replace_tags(array(
-    "TITLE" => "$title",
-    "LANG-WELCOME" => "$lang[welcomeguest]",
-    "LANG-LOGIN" => "$lang[login]",
-    "LANG-REGISTER" => "$lang[register]",
-    "ADDRESS" => "$address",
-    "LANG-HOME" => "$lang[home]",
-    "LANG-SEARCH" => "$lang[search]",
-    "LANG-FAQ" => "$lang[faq]",
-    "LANG-MEMBERLIST" => "$lang[members]",
-    "LANG-GROUPLIST"=> "$lang[groups]",));
-    $page->output();
+//    $page = new \ebb\template("top-guest", $template_path);
+//    $page->replace_tags(array(
+//    "TITLE" => "$title",
+//    "LANG-WELCOME" => "$lang[welcomeguest]",
+//    "LANG-LOGIN" => "$lang[login]",
+//    "LANG-REGISTER" => "$lang[register]",
+//    "ADDRESS" => "$address",
+//    "LANG-HOME" => "$lang[home]",
+//    "LANG-SEARCH" => "$lang[search]",
+//    "LANG-FAQ" => "$lang[faq]",
+//    "LANG-MEMBERLIST" => "$lang[members]",
+//    "LANG-GROUPLIST"=> "$lang[groups]",));
+//    $page->output();
 }
 
 //@TODO rebuild this if we go jQuery.
 //show announcement, if admins wants them on.
 if ($boardPref->getPreferenceValue('infobox_status') == 1) {
-    $string = nl2p(smiles(BBCode("Hi TESTING!")));
-    //load template
-    $page = new \ebb\template("announcement", $template_path);
-    $page->replace_tags(array(
-    "TITLE" => "$title",
-    "LANG-ANNOUNCEMENT" => "$lang[announcements]",
-    "LANG-TICKER" => "$lang[ticker_txt]",
-    "ANNOUNCEMENT" => "$string"));
-    $page->output();
+//    $string = nl2p(smiles(BBCode("Hi TESTING!")));
+//    //load template
+//    $page = new \ebb\template("announcement", $template_path);
+//    $page->replace_tags(array(
+//    "TITLE" => "$title",
+//    "LANG-ANNOUNCEMENT" => "$lang[announcements]",
+//    "LANG-TICKER" => "$lang[ticker_txt]",
+//    "ANNOUNCEMENT" => "$string"));
+//    $page->output();
 }
-#display board listings.
-$board_row = index_board();
-#get board stats.
-//$b_stats = board_stats();
-$new_user = newuser();
-//load board stat-icon
-$page = new \ebb\template("boardstat", $template_path);
-$page->replace_tags(array(
-  "LANG-BOARDSTAT" => "$lang[boardstatus]",
-  "LANG-ICONGUIDE" => "$lang[iconguide]",
-  "LANG-NEWESTMEMBER" => "$lang[newestmember]",
-  //"NEWESTMEMBER" => "$new_user[Username]",
-  //"TOTAL-TOPIC" => "$b_stats[1]",
-  "LANG-TOTALTOPIC" => "$lang[topics]",
-  //"TOTAL-POST" => "$b_stats[2]",
-  "LANG-TOTALPOST" => "$lang[posts]",
-  //"TOTAL-USER" => "$b_stats[0]",
-  "LANG-TOTALUSER" => "$lang[membernum]",
-  "LANG-NEWPOST" => "$lang[newpost]",
-  "LANG-OLDPOST" => "$lang[oldpost]"));
-$page->output();
+//#display board listings.
+//$board_row = index_board();
+//#get board stats.
+////$b_stats = board_stats();
+//$new_user = newuser();
+////load board stat-icon
+//$page = new \ebb\template("boardstat", $template_path);
+//$page->replace_tags(array(
+//  "LANG-BOARDSTAT" => "$lang[boardstatus]",
+//  "LANG-ICONGUIDE" => "$lang[iconguide]",
+//  "LANG-NEWESTMEMBER" => "$lang[newestmember]",
+//  //"NEWESTMEMBER" => "$new_user[Username]",
+//  //"TOTAL-TOPIC" => "$b_stats[1]",
+//  "LANG-TOTALTOPIC" => "$lang[topics]",
+//  //"TOTAL-POST" => "$b_stats[2]",
+//  "LANG-TOTALPOST" => "$lang[posts]",
+//  //"TOTAL-USER" => "$b_stats[0]",
+//  "LANG-TOTALUSER" => "$lang[membernum]",
+//  "LANG-NEWPOST" => "$lang[newpost]",
+//  "LANG-OLDPOST" => "$lang[oldpost]"));
+//$page->output();
 
 //grab total online currently
 //$db->run = "select DISTINCT Username from ebb_online where ip=''";

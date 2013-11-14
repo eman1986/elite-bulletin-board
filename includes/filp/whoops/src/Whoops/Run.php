@@ -15,14 +15,14 @@ use Exception;
 
 class Run
 {
-    const EXCEPTION_HANDLER = 'handleException';
-    const ERROR_HANDLER     = 'handleError';
-    const SHUTDOWN_HANDLER  = 'handleShutdown';
+    const EXCEPTION_HANDLER = "handleException";
+    const ERROR_HANDLER     = "handleError";
+    const SHUTDOWN_HANDLER  = "handleShutdown";
 
     protected $isRegistered;
-    protected $allowQuit  = true;
-    protected $sendOutput = true;
-    protected $sendHttpCode = 500;
+    protected $allowQuit       = true;
+    protected $sendOutput      = true;
+    protected $sendHttpCode    = 500;
 
     /**
      * @var HandlerInterface[]
@@ -46,8 +46,8 @@ class Run
 
         if(!$handler instanceof HandlerInterface) {
             throw new InvalidArgumentException(
-                  'Argument to ' . __METHOD__ . ' must be a callable, or instance of'
-                . 'Whoops\\Handler\\HandlerInterface'
+                  "Argument to " . __METHOD__ . " must be a callable, or instance of"
+                . "Whoops\\Handler\\HandlerInterface"
             );
         }
 
@@ -57,7 +57,7 @@ class Run
 
     /**
      * Removes the last handler in the stack and returns it.
-     * Returns null if there's nothing else to pop.
+     * Returns null if there"s nothing else to pop.
      * @return null|HandlerInterface
      */
     public function popHandler()
@@ -104,10 +104,10 @@ class Run
         if(!$this->isRegistered) {
             // Workaround PHP bug 42098
             // https://bugs.php.net/bug.php?id=42098
-            class_exists('\\Whoops\\Exception\\ErrorException');
-            class_exists('\\Whoops\\Exception\\FrameCollection');
-            class_exists('\\Whoops\\Exception\\Frame');
-            class_exists('\\Whoops\\Exception\\Inspector');
+            class_exists("\\Whoops\\Exception\\ErrorException");
+            class_exists("\\Whoops\\Exception\\FrameCollection");
+            class_exists("\\Whoops\\Exception\\Frame");
+            class_exists("\\Whoops\\Exception\\Inspector");
 
             set_error_handler(array($this, self::ERROR_HANDLER));
             set_exception_handler(array($this, self::EXCEPTION_HANDLER));
@@ -162,8 +162,8 @@ class Run
             array_map(
                 function ($pattern) use ($levels) {
                     return array(
-                        'pattern' => $pattern,
-                        'levels' => $levels,
+                        "pattern" => $pattern,
+                        "levels" => $levels,
                     );
                 },
                 (array) $patterns
@@ -176,6 +176,7 @@ class Run
      * Should Whoops send HTTP error code to the browser if possible?
      * Whoops will by default send HTTP code 500, but you may wish to
      * use 502, 503, or another 5xx family code.
+     *
      * @param bool|int $code
      * @return bool
      */
@@ -193,9 +194,9 @@ class Run
             $code = 500;
         }
 
-        if(!is_numeric($code) || $code < 500 || 600 <= $code) {
-            throw new \Exception(
-                'Only status codes 500-599 should be used in case of a server error'
+        if ($code < 400 || 600 <= $code) {
+            throw new InvalidArgumentException(
+                 "Invalid status code '$code', must be 4xx or 5xx"
             );
         }
 
@@ -269,8 +270,23 @@ class Run
                 while (ob_get_level() > 0) ob_end_clean();
             }
 
-            if ($this->sendHttpCode() && isset($_SERVER['REQUEST_URI']) && !headers_sent()) {
-                header(' ', true, $this->sendHttpCode());
+            if($this->sendHttpCode() && isset($_SERVER["REQUEST_URI"]) && !headers_sent()) {
+                $httpCode   = $this->sendHttpCode();
+
+                if (function_exists('http_response_code')) {
+                    http_response_code($httpCode);
+                } else {
+                    // http_response_code is added in 5.4.
+                    // For compatibility with 5.3 we use the third argument in header call
+                    // First argument must be a real header.
+                    // If it is empty, PHP will ignore the third argument.
+                    // If it is invalid, such as a single space, Apache will handle it well,
+                    // but the PHP development server will hang.
+                    // Setting a full status line would require us to hardcode
+                    // string values for all different status code, and detect the protocol.
+                    // which is an extra error-prone complexity.
+                    header('X-Ignore-This: 1', true, $httpCode);
+                }
             }
 
             echo $output;
@@ -303,18 +319,14 @@ class Run
     {
         if ($level & error_reporting()) {
             foreach ($this->silencedPatterns as $entry) {
-                $pathMatches = (bool) preg_match($entry['pattern'], $file);
-                $levelMatches = $level & $entry['levels'];
+                $pathMatches = (bool) preg_match($entry["pattern"], $file);
+                $levelMatches = $level & $entry["levels"];
                 if ($pathMatches && $levelMatches)  {
                     // Ignore the error, abort handling
                     return true;
                 }
             }
-            $this->handleException(
-                new ErrorException(
-                    $message, $level, 0, $file, $line
-                )
-            );
+            throw new ErrorException($message, $level, 0, $file, $line);
         }
     }
 
@@ -325,10 +337,10 @@ class Run
     {
         if($error = error_get_last()) {
             $this->handleError(
-                $error['type'],
-                $error['message'],
-                $error['file'],
-                $error['line']
+                $error["type"],
+                $error["message"],
+                $error["file"],
+                $error["line"]
             );
         }
     }

@@ -26,7 +26,7 @@
         <div class="content">
 
             <div class="inner"><br />
-                {% for c in Category %}
+                {% for c in CATEGORY %}
                     <table class="table">
                         <tr>
                             <th colspan="5">::{{c.Board}}::</th>
@@ -37,29 +37,21 @@
                             <th width="10%">{{LANG_POST}}</th>
                             <th width="20%" class="last">{{LANG_LASTPOSTDATE}}</th>
                         </tr>
-                        {% for b in Boards %}
+                        {% for b in BOARDS %}
                             {# make sure we get the correct data in the right spots. #}
                             {% if c.id == b.Category %}
                                 <tr>
                                     <td class="centerText">
-                                        {% if b.last_update < LAST30DAYS %}
-                                            <div class="icon-comment-alt icon-2x"></div>
-                                        {% elseif LOGGEDUSER == b.Username %}
-                                            <div class="icon-comment-alt icon-2x"></div>
-                                        {% elseif b.tid|TopicReadStat(LOGGEDUSERID) == 1 %}
-                                            <div class="icon-comment-alt icon-2x"></div>
-                                        {% else %}
-                                            <div class="icon-comment icon-2x"></div>
-                                        {% endif %}
+                                        <div class="fa {{b.postIcon}} fa-2x"></div>
                                     </td>
-                                    <td><span class="floatLeft"><strong>{{URL_TAG("/viewboard/"~ b.id, b.Board)|raw}}</strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br />{{b.id|SubBoards|raw}}</td>
-                                    <td class="centerText">{{b.id|counter("TopicCount")}}</td>
-                                    <td class="centerText">{{b.id|counter("PostCount")}}</td>
+                                    <td><span class="floatLeft"><strong><a href="/viewboard/{{b.id}}">{{b.Board }}</a></strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br /></td>
+                                    <td class="centerText">{{b.topicCount}}</td>
+                                    <td class="centerText">{{b.postCount}}</td>
                                     <td>
                                         {% if b.last_update == "" %}
                                             {{LANG_NOPOSTS}}
                                         {% else %}
-                                            {{b.last_update|PostedDate(TimeFormat, TimeZone)}}<br />{{URL_TAG("/viewtopic/"~ b.tid~"/"~b.last_page, LANG_POSTEDBY)|raw}} {{b.Username}}
+                                            {{formatDate(TimeFormat, b.last_update, TimeZone)}}<br /><a href="/viewtopic/{{b.tid}}">{{LANG_POSTEDBY }}</a>  {{b.Username}}
                                         {%endif%}
                                     </td>
                                 </tr>
@@ -73,10 +65,12 @@
 
     <div class="well">
         <h4>{{LANG_BOARDSTAT}}</h4>
+        {#
         {{LANG_NEWESTMEMBER}}: {{boardInfo("newuser")}}<br />
         <b>{{ boardInfo("topic") }}</b> {{LANG_TOTALTOPIC}} /
         <b>{{ boardInfo("post") }}</b> {{LANG_TOTALPOST}} /
         <b>{{ boardInfo("member") }}</b> {{LANG_TOTALUSER}}
+        #}
 
         <h4>{{LANG_ICONGUIDE}}</h4>
         <div class="fa fa-comment-o fa-2x floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
@@ -87,9 +81,9 @@
         {{LANG_ONLINEKEY|raw}}
     </div>
     <div class="well col-xs-12 col-sm-8 col-md-11">
-        <b>{{boardInfo("memberonline")}}</b> {{LANG_LOGGED_ONLINE}} &amp; <b>{{boardInfo("guestonline")}}</b> {{LANG_GUEST_ONLINE}}
+        {#<b>{{boardInfo("memberonline")}}</b> {{LANG_LOGGED_ONLINE}} &amp; <b>{{boardInfo("guestonline")}}</b> {{LANG_GUEST_ONLINE}}#}
         <hr />
-        {{WHOSONLINE|raw}}
+        {#{{WHOSONLINE|raw}}#}
         <br />
     </div>
 {% endblock %}

@@ -1,6 +1,9 @@
 <?php
 namespace ebb;
 use Exception;
+use Twig_Loader_Filesystem;
+use Twig_Environment;
+use Twig_SimpleFunction;
 
 if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
@@ -32,8 +35,8 @@ class template {
         $this->twigTpl = new Twig_Environment($loader);
 
         //global Filters/Functions goes here.
-        $this->twigTpl->addFunction('nl_2_br', new Twig_Function_Function('nl2br'));
-        $this->twigTpl->addFunction('formatDate', new Twig_Function_Function('dateTimeFormatter'));
+        $this->twigTpl->addFunction(new Twig_SimpleFunction('nl_2_br', 'nl2br'));
+        $this->twigTpl->addFunction(new Twig_SimpleFunction('formatDate', 'dateTimeFormatter'));
     }
 
     /**

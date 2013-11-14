@@ -32,7 +32,7 @@ function theme($id) {
  */
 function loadBoardIndex() {
 
-    global $db, $lang, $groupData, $template_path, $time_format, $gmt;
+    global $db,  $groupData, $template_path, $time_format, $gmt;
 
     $parent = $child = array();
 
@@ -75,8 +75,8 @@ function loadBoardIndex() {
 
                         $board->topicCount = $topicCount;
                         $board->postCount = $postCount;
-                        $board->postLink = is_null($board->last_update) ? "" : '<a href="viewtopic.php?'.$board->Post_Link.'">'.$lang['Postedby'].'</a>:'. $board->Username;
-                        $board->lastUpdate = is_null($board->last_update) ? dateTimeFormatter($time_format, $board->last_update, $gmt) : $lang['noposts'];
+                        $board->postLink = is_null($board->last_update) ? "" : '<a href="viewtopic.php?'.$board->Post_Link.'">'.outputLanguageTag('index:Postedby').'</a>:'. $board->Username;
+                        $board->lastUpdate = is_null($board->last_update) ? dateTimeFormatter($time_format, $board->last_update, $gmt) : outputLanguageTag('index:noposts');
                         //$board->subBoards = index_subboard($board->id);
                         //$board->moderators = moderator_boardlist($board->id);
                         $board->postIcon = isNewTopics($board->last_update, $board->Username, substr($postLnkQs[1], 4)) ? "template/".$template_path."/images/new.gif" : "template/".$template_path."/images/old.gif";
