@@ -75,8 +75,8 @@ function loadBoardIndex() {
 
                         $board->topicCount = $topicCount;
                         $board->postCount = $postCount;
-                        $board->postLink = is_null($board->last_update) ? "" : '<a href="viewtopic.php?'.$board->Post_Link.'">'.outputLanguageTag('index:Postedby').'</a>:'. $board->Username;
-                        $board->lastUpdate = is_null($board->last_update) ? dateTimeFormatter($time_format, $board->last_update, $gmt) : outputLanguageTag('index:noposts');
+                        $board->postLink = empty($board->last_update) ? "" : '<a href="viewtopic.php?'.$board->Post_Link.'">'.outputLanguageTag('index:Postedby').'</a>:'. $board->Username;
+                        $board->lastUpdate = empty($board->last_update) ? dateTimeFormatter($time_format, $board->last_update, $gmt) : "";
                         //$board->subBoards = index_subboard($board->id);
                         //$board->moderators = moderator_boardlist($board->id);
                         $board->postIcon = isNewTopics($board->last_update, $board->Username, substr($postLnkQs[1], 4)) ? "template/".$template_path."/images/new.gif" : "template/".$template_path."/images/old.gif";

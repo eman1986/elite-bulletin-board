@@ -7,35 +7,32 @@ if (!defined('IN_EBB')){
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/04/2013
+ * @version 11/20/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
 #Common language tags.
-$lang['login'] = 'Login';
-$lang['register'] = 'Register';
-$lang['logout'] = 'Logout';
-$lang['welcome'] = 'Logged In As';
-$lang['welcomeguest'] = 'Welcome Guest';
-$lang['yes'] = 'Yes';
-$lang['no'] = 'No';
-$lang['installadmin'] = 'the installation files are still active!!!! Your board will not be run until you remove the installation files!';
-$lang['install'] = 'This Board is currently under work, please come back later once all work here is completed.';
-$lang['banned'] = 'The administrator of this board has banned you from accessing this board.';
-$lang['suspended'] = 'The administrator of this board has suspended your access.';
-$lang['emailban'] = 'This email address or email domain has been blocked. Please use another email address.';
-$lang['usernameblacklisted'] = 'The username you wish to use has been blacklisted by the administrator. Please chose another username.';
-$lang['username'] = 'Username';
-$lang['pages'] = 'Pages';
-$lang['next'] = 'Next';
-$lang['prev'] = 'Previous';
-$lang['closewindow'] = 'Close this Window';
-$lang['error'] = 'Error';
-$lang['info'] = 'Information';
-$lang['queryused'] = 'Query Used';
-$lang['goback'] = 'Go Back';
-$lang['errormsg'] = 'An error has occurred:';
-$lang['accessdenied'] = 'You do not have permission to access this area.';
+$lang['common:login'] = 'Login';
+$lang['common:register'] = 'Register';
+$lang['common:logout'] = 'Logout';
+$lang['common:welcome'] = 'Logged In As';
+$lang['common:welcomeguest'] = 'Welcome Guest';
+$lang['common:yes'] = 'Yes';
+$lang['common:no'] = 'No';
+$lang['common:installadmin'] = 'the installation files are still active!!!! Your board will not be run until you remove the installation files!';
+$lang['common:install'] = 'This Board is currently under work, please come back later once all work here is completed.';
+$lang['common:banned'] = 'The administrator of this board has banned you from accessing this board.';
+$lang['common:suspended'] = 'The administrator of this board has suspended your access.';
+$lang['common:emailban'] = 'This email address or email domain has been blocked. Please use another email address.';
+$lang['common:usernameblacklisted'] = 'The username you wish to use has been blacklisted by the administrator. Please chose another username.';
+$lang['common:username'] = 'Username';
+$lang['common:pages'] = 'Pages';
+$lang['common:next'] = 'Next';
+$lang['common:prev'] = 'Previous';
+$lang['common:error'] = 'Error';
+$lang['common:info'] = 'Information';
+$lang['common:errormsg'] = 'An error has occurred:';
+$lang['common:accessdenied'] = 'You do not have permission to access this area.';
 $lang['common:poweredby'] = 'Powered by';
 #ID-checking language tags.
 $lang['nobid'] = 'No Board ID was Located.';

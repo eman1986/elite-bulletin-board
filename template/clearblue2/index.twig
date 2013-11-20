@@ -1,6 +1,6 @@
 {% extends "master.twig" %}
 
-{% block title %}{{boardName}} - {{pageTitle}}{% endblock %}
+{% block title %}{{TITLE}} - {{PAGETITLE}}{% endblock %}
 
 {% block bodyRender %}
 
@@ -21,47 +21,39 @@
         </div>
     {% endif %}
 
-
-    <div class="block" id="block-tables">
-        <div class="content">
-
-            <div class="inner"><br />
-                {% for c in CATEGORY %}
-                    <table class="table">
-                        <tr>
-                            <th colspan="5">::{{c.Board}}::</th>
-                        </tr><tr>
-                            <th width="4%">&nbsp;</th>
-                            <th width="56%">{{LANG_BOARD}}</th>
-                            <th width="10%">{{LANG_TOPIC}}</th>
-                            <th width="10%">{{LANG_POST}}</th>
-                            <th width="20%" class="last">{{LANG_LASTPOSTDATE}}</th>
-                        </tr>
-                        {% for b in BOARDS %}
-                            {# make sure we get the correct data in the right spots. #}
-                            {% if c.id == b.Category %}
-                                <tr>
-                                    <td class="centerText">
-                                        <div class="fa {{b.postIcon}} fa-2x"></div>
-                                    </td>
-                                    <td><span class="floatLeft"><strong><a href="/viewboard/{{b.id}}">{{b.Board }}</a></strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br /></td>
-                                    <td class="centerText">{{b.topicCount}}</td>
-                                    <td class="centerText">{{b.postCount}}</td>
-                                    <td>
-                                        {% if b.last_update == "" %}
-                                            {{LANG_NOPOSTS}}
-                                        {% else %}
-                                            {{formatDate(TimeFormat, b.last_update, TimeZone)}}<br /><a href="/viewtopic/{{b.tid}}">{{LANG_POSTEDBY }}</a>  {{b.Username}}
-                                        {%endif%}
-                                    </td>
-                                </tr>
-                            {%- endif -%}
-                        {% endfor %}
-                    </table>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    {% for c in CATEGORY %}
+        <table class="table">
+            <tr>
+                <th colspan="5">::{{c.Board}}::</th>
+            </tr><tr>
+                <th width="4%">&nbsp;</th>
+                <th width="56%">{{LANG_BOARD}}</th>
+                <th width="10%">{{LANG_TOPIC}}</th>
+                <th width="10%">{{LANG_POST}}</th>
+                <th width="20%" class="last">{{LANG_LASTPOSTDATE}}</th>
+            </tr>
+            {% for b in BOARDS %}
+                {# make sure we get the correct data in the right spots. #}
+                {% if c.id == b.Category %}
+                    <tr>
+                        <td class="centerText">
+                            <div class="fa {{b.postIcon}} fa-2x"></div>
+                        </td>
+                        <td><span class="floatLeft"><strong><a href="viewboard.php?bid={{b.id}}">{{b.Board }}</a></strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br /></td>
+                        <td class="centerText">{{b.topicCount}}</td>
+                        <td class="centerText">{{b.postCount}}</td>
+                        <td>
+                            {% if b.lastUpdate == "" %}
+                                {{LANG_NOPOSTS}}
+                            {% else %}
+                                {{b.lastUpdate}}<br /><a href="viewtopic.php?tid={{b.tid}}">{{LANG_POSTEDBY }}</a>  {{b.Username}}
+                            {%endif%}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {% endfor %}
 
     <div class="well">
         <h4>{{LANG_BOARDSTAT}}</h4>
