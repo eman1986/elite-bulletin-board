@@ -4,7 +4,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: user_function.php
-Last Modified: 10/21/2013
+Last Modified: 11/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -94,21 +94,22 @@ function subscriptionManager($user, $tid, $mode) {
 
     try {
         //check against the database to see if the username  match.
-        $query = $db->prepare('SELECT tid FROM ebb_topic_watch WHERE username=:username');
+        $query = $db->prepare('SELECT count(tid) FROM ebb_topic_watch WHERE username=:username');
         $query->execute(array(":username" => $user));
+        $count = $query->fetchColumn();
 
         //see if they want to subscribe or unsubscribe to a topic.
-        if ($mode == "subscribe" && $query->rowCount() == 0) {
+        if ($mode == "subscribe" && $count == 0) {
             $data = array(
                 "username" => $user,
                 "tid" => $tid,
                 "read_status" => 0
             );
-            $query = $db->prepare('INSERT INTO ebb_topic_watch (username, tid, read_status) VALUES(:username, :tid, :read_status)');
-            $query->execute($data);
-        } elseif ($mode == "unsubscribe" && $query->rowCount() > 0) {
-            $query = $db->prepare('DELETE FROM ebb_topic_watch WHERE tid=:tid AND username=:username');
-            $query->execute(array(":tid" => $tid, ":username" => $user));
+            $subscribe = $db->prepare('INSERT INTO ebb_topic_watch (username, tid, read_status) VALUES(:username, :tid, :read_status)');
+            $subscribe->execute($data);
+        } elseif ($mode == "unsubscribe" && $count > 0) {
+            $unsubscribe = $db->prepare('DELETE FROM ebb_topic_watch WHERE tid=:tid AND username=:username');
+            $unsubscribe->execute(array(":tid" => $tid, ":username" => $user));
         }
     }
     catch (PDOException $e) {
@@ -290,10 +291,10 @@ function DetectNewPM($user) {
     global $db, $menu;
 
     try {
-        $query = $db->prepare("SELECT Read_Status FROM ebb_pm  WHERE Reciever=:reciever AND Folder='Inbox' AND Read_Status=''");
+        $query = $db->prepare("SELECT count(Read_Status) FROM ebb_pm  WHERE Reciever=:reciever AND Folder='Inbox' AND Read_Status=''");
         $query->execute(array(":reciever" => $user));
 
-        if($query->rowCount() == 0){
+        if($query->fetchColumn() == 0){
             return $menu['nonewpm'];
         }else{
             return $query->rowCount().$menu['newpm'];

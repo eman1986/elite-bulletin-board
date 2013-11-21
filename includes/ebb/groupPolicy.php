@@ -8,7 +8,7 @@ if (!defined('IN_EBB') ) {
 }
 /**
 Filename: groupPolicy.php
-Last Modified: 10/20/2013
+Last Modified: 11/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -203,18 +203,17 @@ class groupPolicy {
             //Get data
             $query = $this->db->prepare('SELECT id, Name, Description, Enrollment, Level, permission_type FROM ebb_groups WHERE id=:id LIMIT 1');
             $query->execute(array(":id" => $gid));
+            $GroupData = $query->fetchAll();
 
             //see if we have any records to show.
-            if($query->rowCount() > 0) {
-                $GroupData = $query->fetch(PDO::FETCH_OBJ);
-
+            if(count($GroupData) > 0) {
                 //populate properties with values.
-                $this->setId($GroupData->id);
-                $this->setName($GroupData->Name);
-                $this->setDescription($GroupData->Description);
-                $this->setEnrollment($GroupData->Enrollment);
-                $this->setLevel($GroupData->Level);
-                $this->setPermissionType($GroupData->permission_type);
+                $this->setId($GroupData[0]['id']);
+                $this->setName($GroupData[0]['Name']);
+                $this->setDescription($GroupData[0]['Description']);
+                $this->setEnrollment($GroupData[0]['Enrollment']);
+                $this->setLevel($GroupData[0]['Level']);
+                $this->setPermissionType($GroupData[0]['permission_type']);
                 return TRUE;
             } else {
                 return FALSE;
@@ -266,20 +265,20 @@ class groupPolicy {
             if ($this->validateGroup()) {
 
                 try {
-                    $groupActionQ = $this->db->prepare('SELECT id FROM  ebb_permission_actions WHERE id=:id');
+                    $groupActionQ = $this->db->prepare('SELECT count(id) FROM  ebb_permission_actions WHERE id=:id');
                     $groupActionQ->execute(array(":id" => $permissionAction));
+                    $validateGroupAction = $groupActionQ->fetchColumn();
 
-                    if ($groupActionQ->rowCount() == 0) {
+                    if ($validateGroupAction == 0) {
                         return FALSE;
                     } else {
                         //see if user has correct permission to access requested permission.
                         $groupPermissionQ = $this->db->prepare('SELECT set_value FROM  ebb_permission_data WHERE profile=:profile AND permission=:permission');
                         $groupPermissionQ->execute(array(":id" => $this->getPermissionType(), ":permission" => $permissionAction));
+                        $permissionData = $groupPermissionQ->fetchAll();
 
-                        if ($groupPermissionQ->rowCount() > 0) {
-                            $permissionData = $groupPermissionQ->fetch(PDO::FETCH_OBJ);
-
-                            if ($permissionData->set_value == 1) {
+                        if (count($permissionData) > 0) {
+                            if ($permissionData[0]['set_value'] == 1) {
                                 return TRUE;
                             } else {
                                 return FALSE;
@@ -364,11 +363,12 @@ class groupPolicy {
     private function validateGroup() {
         try {
             //Get data
-            $query = $this->db->prepare('SELECT id FROM ebb_groups WHERE id=:id LIMIT 1');
+            $query = $this->db->prepare('SELECT count(id) FROM ebb_groups WHERE id=:id LIMIT 1');
             $query->execute(array(":id" => $this->getId()));
+            $validateGroup = $query->fetchColumn();
 
             //see if we have any records to show.
-            if($query->rowCount() > 0) {
+            if($validateGroup > 0) {
                 return TRUE;
             } else {
                 return FALSE;
