@@ -9,7 +9,7 @@ if (!defined('IN_EBB') ) {
 }
 /**
 Filename: preference.php
-Last Modified: 10/20/2013
+Last Modified: 11/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -62,11 +62,10 @@ class preference {
         try {
             $query = $this->db->prepare('SELECT pref_value FROM ebb_preference WHERE pref_name=:pref_name LIMIT 1');
             $query->execute(array(":pref_name" => $prefName));
+            $prefVal = $query->fetchAll();
 
-            if ($query->rowCount() > 0) {
-                $prefVal = $query->fetch(PDO::FETCH_OBJ);
-
-                return $prefVal->pref_value;
+            if (count($prefVal) > 0) {
+                return $prefVal[0]['pref_value'];
             } else {
                 throw new Exception($prefName. ' is an invalid preference option.');
             }
@@ -90,11 +89,10 @@ class preference {
         try {
             $query = $this->db->prepare('SELECT pref_type FROM ebb_preference WHERE pref_name=:pref_name LIMIT 1');
             $query->execute(array(":pref_name" => $prefName));
+            $prefVal = $query->fetchAll();
 
-            if ($query->rowCount() > 0) {
-                $prefVal = $query->fetch(PDO::FETCH_OBJ);
-
-                return $prefVal->pref_type;
+            if (count($prefVal) > 0) {
+                return $prefVal[0]['pref_type'];
             } else {
                 throw new Exception($prefName. ' is an invalid preference option.');
             }

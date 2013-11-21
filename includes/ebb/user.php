@@ -8,7 +8,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: user.php
-Last Modified: 10/23/2013
+Last Modified: 11/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -380,7 +380,7 @@ class user {
      *
      * type:VARCHAR,size:5,default:
      *
-     * @param mixed $timeFormat
+     * @param mixed $dateFormat
      * @return user
      */
     public function &setDateFormat($dateFormat) {
@@ -668,6 +668,7 @@ class user {
      *
      * type:VARCHAR,size:14,default:
      *
+     * @param mixed $passwordRecoveryDate
      * @return user
      */
     public function &setPasswordRecoveryDate($passwordRecoveryDate) {
@@ -772,41 +773,41 @@ class user {
             //Get data
             $query = $this->db->prepare('SELECT id, Username, Password, salt, Email, gid, Custom_Title, last_visit, PM_Notify, Hide_Email,WWW, Location, Sig, Time_format, date_format, Time_Zone, Date_Joined, IP, Style, Language, Post_Count, last_post, last_search, failed_attempts, active, act_key, password_recovery_date, warning_level, suspend_length, suspend_time FROM ebb_users WHERE Username=:username LIMIT 1');
             $query->execute(array(":username" => $userID));
+            $userData = $query->fetchAll();
 
             //see if we have any records to show.
-            if($query->rowCount() > 0) {
-                $userData = $query->fetch(PDO::FETCH_OBJ);
+            if(count($userData) > 0) {
 
                 //populate properties with values.
-                $this->setId($userData->id);
-                $this->setUserName($userData->Username);
-                $this->setPassword($userData->Password);
-                $this->setEmail($userData->Email);
-                $this->setGid($userData->gid);
-                $this->setCustomTitle($userData->Custom_Title);
-                $this->setLastVisit($userData->last_visit);
-                $this->setPmNotify($userData->PM_Notify);
-                $this->setHideEmail($userData->Hide_Email);
-                $this->setWww($userData->WWW);
-                $this->setLocation($userData->Location);
-                $this->setSig($userData->Sig);
-                $this->setTimeFormat($userData->Time_format);
-                $this->setDateFormat($userData->date_format);
-                $this->setTimeZone($userData->Time_Zone);
-                $this->setDateJoined($userData->Date_Joined);
-                $this->setIp($userData->IP);
-                $this->setStyle($userData->Style);
-                $this->setLanguage($userData->Language);
-                $this->setPostCount($userData->Post_Count);
-                $this->setLastPost($userData->last_post);
-                $this->setLastSearch($userData->last_search);
-                $this->setFailedAttempts($userData->failed_attempts);
-                $this->setActive($userData->active);
-                $this->setActKey($userData->act_key);
-                $this->setPasswordRecoveryDate($userData->password_recovery_date);
-                $this->setWarningLevel($userData->warning_level);
-                $this->setSuspendLength($userData->suspend_length);
-                $this->setSuspendTime($userData->suspend_time);
+                $this->setId($userData[0]['id']);
+                $this->setUserName($userData[0]['Username']);
+                $this->setPassword($userData[0]['Password']);
+                $this->setEmail($userData[0]['Email']);
+                $this->setGid($userData[0]['gid']);
+                $this->setCustomTitle($userData[0]['Custom_Title']);
+                $this->setLastVisit($userData[0]['last_visit']);
+                $this->setPmNotify($userData[0]['PM_Notify']);
+                $this->setHideEmail($userData[0]['Hide_Email']);
+                $this->setWww($userData[0]['WWW']);
+                $this->setLocation($userData[0]['Location']);
+                $this->setSig($userData[0]['Sig']);
+                $this->setTimeFormat($userData[0]['Time_format']);
+                $this->setDateFormat($userData[0]['date_format']);
+                $this->setTimeZone($userData[0]['Time_Zone]']);
+                $this->setDateJoined($userData[0]['Date_Joined']);
+                $this->setIp($userData[0]['IP']);
+                $this->setStyle($userData[0]['Style']);
+                $this->setLanguage($userData[0]['Language']);
+                $this->setPostCount($userData[0]['Post_Count']);
+                $this->setLastPost($userData[0]['last_post']);
+                $this->setLastSearch($userData[0]['last_search']);
+                $this->setFailedAttempts($userData[0]['failed_attempts']);
+                $this->setActive($userData[0]['active']);
+                $this->setActKey($userData[0]['act_key']);
+                $this->setPasswordRecoveryDate($userData[0]['password_recovery_date']);
+                $this->setWarningLevel($userData[0]['warning_level']);
+                $this->setSuspendLength($userData[0]['suspend_length']);
+                $this->setSuspendTime($userData[0]['suspend_time']);
                 return TRUE;
             } else {
                 return FALSE;
@@ -828,11 +829,11 @@ class user {
             //Get post count
             $query = $this->db->prepare('SELECT Post_Count FROM ebb_users WHERE Username=:username LIMIT 1');
             $query->execute(array(":username" => $user));
+            $userData = $query->fetchAll();
 
             //see if we have any records to show.
-            if($query->rowCount() > 0) {
-                $userData = $query->fetch(PDO::FETCH_OBJ);
-                $increasePostCount = $userData->Post_Count + 1;
+            if(count($userData) > 0) {
+                $increasePostCount = $userData[0]['Post_Count'] + 1;
 
                 $updateQ = $this->db->prepare('UPDATE ebb_users SET Post_Count=:postcount WHERE Username=:username');
                 $updateQ->execute(array(":postcount" => $increasePostCount, ":username" => $user));

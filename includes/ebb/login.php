@@ -9,7 +9,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: login.php
-Last Modified: 10/20/2013
+Last Modified: 11/21/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -22,22 +22,32 @@ class login {
 
     protected $db; // our PDO instance.
 
-    public function __construct(\PDO $db) {
+    private $usr;
+
+    private $pwd;
+
+    public function __construct(\PDO $db, $usr, $pwd) {
         $this->db = $db;
+        $this->usr = $usr;
+        $this->pwd = $pwd;
+    }
+
+    public function __destruct() {
+        $this->usr = NULL;
+        $this->pwd = NULL;
     }
 
     /**
      *Performs a check through the database to ensure the requested username is valid.
-     * @param string $usr The username we wish to check.
      *@return bool
    */
-    private function validateUser($usr) {
+    private function validateUser() {
 
         try {
             //check against the database to see if the username  match.
-            $query = $this->db->prepare('SELECT id from ebb_users WHERE Username=:username LIMIT 1');
-            $query->execute(array(":username" => $usr));
-            $validateUser = $query->rowCount();
+            $query = $this->db->prepare('SELECT count(id) from ebb_users WHERE Username=:username LIMIT 1');
+            $query->execute(array(":username" => $this->usr));
+            $validateUser = $query->fetchColumn();
 
             //see if username is value.
             return $validateUser == 0 ? false : true;
@@ -50,51 +60,29 @@ class login {
 
     /**
      * Performs a check through the database to ensure the requested password is valid.
-     * @param string $pwd
      * @return bool
     */
-    private function validatePwd($pwd) {
-
-        //encrypt password.
-        $encryptPwd = sha1($pwd.$this->getPwdSalt());
-
+    private function validatePwd() {
 
         //check against the database to see if the password match.
-        $query = $this->db->prepare('SELECT id from ebb_users WHERE Password=:password LIMIT 1');
-        $query->execute(array(":password" => $encryptPwd));
-        $validatePwd = $query->rowCount();
+        $query = $this->db->prepare('SELECT Password from ebb_users WHERE Username=:username LIMIT 1');
+        $query->execute(array(":username" => $this->usr));
+        $hashedPwd = $query->fetchColumn();
 
         //see if password is value.
-        return $validatePwd == 0 ? false : true;
+        return password_verify($this->pwd, $hashedPwd) ? false : true;
     }
-
-    /**
-     * Get password salt for requested user.
-     * @return string $pwdSlt
-    */
-    private function getPwdSalt() {
-
-        $query = $this->db->prepare('SELECT salt from ebb_users WHERE Username=:username LIMIT 1');
-        $query->execute(array(":username" => $this->user));
-        $results = $query->fetch(PDO::FETCH_OBJ);
-
-
-        return($results->salt);
-    }
-
-
-    //-------------------------
 
     /**
      * Validate Login Key is valid.
      * @param string $key encrypted key hash being validated.
      * @return boolean
-     */
+    */
     private function ValidateLoginKey($key) {
 
-        $query = $this->db->prepare('SELECT name, login_key from ebb_login_session WHERE username=:username');
+        $query = $this->db->prepare('SELECT count(login_key) from ebb_login_session WHERE username=:username');
         $query->execute(array(":username" => $key));
-        $validateKey = $query->rowCount();
+        $validateKey = $query->fetchColumn();
 
         #setup bool. value to see if user is active or not.
         return $validateKey == 0 ? false : true;
@@ -122,10 +110,12 @@ class login {
                 #add new values to database.
                 $data = array(
                     'last_active' => $new_lastActive,
-                    'login_key' => $new_loginKey
+                    'login_key' => $new_loginKey,
+                    'username' => $this->usr
                 );
-                $this->ci->db->where('username',$this->user);
-                $this->ci->db->update('ebb_login_session', $data);
+
+                $query = $this->db->prepare('UPDATE ebb_login_session SET last_active=:last_active, login_key=:login_key  WHERE username=:username');
+                $query->execute($data);
 
                 return (true); //session is valid
             } else {
@@ -136,15 +126,13 @@ class login {
         }
     }
 
-    //-------------------------
-
     /**
      * Performs a check through the database to ensure the requested information is valid.
      * @return bool
     */
     public function validateLogin() {
         //See if this is a guest account.
-        if ($this->user == "guest" || $this->pass == "guest") {
+        if ($this->usr == "guest" || $this->pwd == "guest") {
             return false;
         } else {
             //see if user entered the correct information.
@@ -155,24 +143,6 @@ class login {
             }
         }
     }
-
-    /**
-     * Validates current login session.
-     * @return bool
-     */
-//    public function validateLoginSession(){
-//        //See if this is a guest account.
-//        if ($this->user == "guest" || $this->pass == "guest") {
-//            return false;
-//        } else {
-//            //see if user entered the correct information.
-//            if ($this->validateUser() && $this->validatePwdEncrypted()){
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-//    }
 
     /**
      * validateAdministrator
