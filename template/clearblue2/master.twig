@@ -19,23 +19,15 @@
     </script>
 
     <!-- Language JS File. -->
-    <script type="text/javascript" src="includes/js/lang/{{LANG}}/{{LANG}}.lang.js"></script>
+    {#<script type="text/javascript" src="includes/js/lang/{{LANG}}/{{LANG}}.lang.js"></script>#}
 
     <!-- REQUIRED, CORE -->
-    <!--[if lt IE 9]>
-    <script src="includes/js/jquery-1.10.2.min.js"></script>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-    <!--[if gte IE 9]>
     <script src="includes/js/jquery-2.0.3.min.js"></script>
-    <!--[endif]-->
     <script type="text/javascript" src="includes/js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript" src="includes/js/bootstrap.min.js"></script>
 
     <!-- PLUGINS USED ALL AROUND EBB -->
     <script type="text/javascript" src="includes/js/bootbox.min.js"></script>
-    <script type="text/javascript" src="includes/js/dialog.js"></script>
     <script type="text/javascript" src="includes/js/common.js"></script>
     <script type="text/javascript" src="includes/js/jquery.functions.js"></script>
 
@@ -304,7 +296,7 @@
       <!-- Begin page content -->
         <div class="content">
             <div style="background-color: #4B6C9E;">
-                <img src="logo.gif" />
+                {#<img src="logo.gif" />#}
                 <span style="float:right;font-weight:bold;color: #fff;">
                     {% if groupAccess == 1 or groupAccess == 2 or groupAccess == 3 %}
                         {{LANG_WELCOME}} <strong>{{LOGGEDUSER}}</strong>

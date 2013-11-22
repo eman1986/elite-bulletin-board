@@ -4,7 +4,8 @@
 
 {% block bodyRender %}
 
-    {% if showInfoBox == 1 %}
+    {% if SETTINGS_ANNOUNCEMENTS == 1 %}
+        {# @TODO, may switch a different ticker plugin, this one seems to speed up too much. #}
         <!-- JS for Information Ticker -->
         <script type="text/javascript" src="includes/js/jquery.ticker.min.js"></script>
         <script type="text/javascript">
@@ -15,16 +16,17 @@
         <div class="well">
             <ul id="announcements">
                 {% for a in ANNOUNCEMENTS %}
-                    <li>a.information</li>
-                {% endfor  %}
+                    <li>{{a}}</li>
+                {% endfor %}
             </ul>
         </div>
     {% endif %}
 
     {% for c in CATEGORY %}
         <table class="table">
+            <thead>
             <tr>
-                <th colspan="5">::{{c.Board}}::</th>
+                <th colspan="5" class="centerText">::{{c.Board}}::</th>
             </tr><tr>
                 <th width="4%">&nbsp;</th>
                 <th width="56%">{{LANG_BOARD}}</th>
@@ -32,37 +34,35 @@
                 <th width="10%">{{LANG_POST}}</th>
                 <th width="20%" class="last">{{LANG_LASTPOSTDATE}}</th>
             </tr>
-            {% for b in BOARDS %}
-                {# make sure we get the correct data in the right spots. #}
-                {% if c.id == b.Category %}
-                    <tr>
-                        <td class="centerText">
-                            <div class="fa {{b.postIcon}} fa-2x"></div>
-                        </td>
-                        <td><span class="floatLeft"><strong><a href="viewboard.php?bid={{b.id}}">{{b.Board }}</a></strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br /></td>
-                        <td class="centerText">{{b.topicCount}}</td>
-                        <td class="centerText">{{b.postCount}}</td>
-                        <td>
-                            {% if b.lastUpdate == "" %}
-                                {{LANG_NOPOSTS}}
-                            {% else %}
-                                {{b.lastUpdate}}<br /><a href="viewtopic.php?tid={{b.tid}}">{{LANG_POSTEDBY }}</a>  {{b.Username}}
-                            {%endif%}
-                        </td>
-                    </tr>
-                {% endif %}
+            </thead>
+            <tbody>
+            {% for b in BOARDS if c.id == b.Category %}
+                <tr>
+                    <td class="centerText">
+                        <div class="fa {{b.postIcon}} fa-2x"></div>
+                    </td>
+                    <td><span class="floatLeft"><strong><a href="viewboard.php?bid={{b.id}}">{{b.Board }}</a></strong>&nbsp;</span><div class="icon-rss floatLeft" style="cursor: pointer;" onclick="gotoUrl('{{BOARD_URL}}{{INDEX_PAGE}}/feed/{{b.id}}');"></div><br />{{b.Description|raw}}<br />{{b.subBoards|raw}}</td>
+                    <td>{{b.topicCount}}</td>
+                    <td>{{b.postCount}}</td>
+                    <td>
+                        {% if b.lastUpdate == "" %}
+                            {{LANG_NOPOSTS}}
+                        {% else %}
+                            {{b.lastUpdate}}<br /><a href="viewtopic.php?tid={{b.Post_Link}}">{{LANG_POSTEDBY }}</a>  {{b.Username}}
+                        {%endif%}
+                    </td>
+                </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% endfor %}
 
     <div class="well">
         <h4>{{LANG_BOARDSTAT}}</h4>
-        {#
-        {{LANG_NEWESTMEMBER}}: {{boardInfo("newuser")}}<br />
-        <b>{{ boardInfo("topic") }}</b> {{LANG_TOTALTOPIC}} /
-        <b>{{ boardInfo("post") }}</b> {{LANG_TOTALPOST}} /
-        <b>{{ boardInfo("member") }}</b> {{LANG_TOTALUSER}}
-        #}
+        {{LANG_NEWESTMEMBER}}: <b>{{NEWESTUSER}}</b><br />
+        <b>{{ TOPICCOUNT }}</b> {{LANG_TOTALTOPIC}} /
+        <b>{{ POSTCOUNT }}</b> {{LANG_TOTALPOST}} /
+        <b>{{ USERCOUNT }}</b> {{LANG_TOTALUSER}}
 
         <h4>{{LANG_ICONGUIDE}}</h4>
         <div class="fa fa-comment-o fa-2x floatLeft"></div><div class="floatLeft">{{LANG_NEWPOST}}</div><br /><br />
@@ -73,9 +73,9 @@
         {{LANG_ONLINEKEY|raw}}
     </div>
     <div class="well col-xs-12 col-sm-8 col-md-11">
-        {#<b>{{boardInfo("memberonline")}}</b> {{LANG_LOGGED_ONLINE}} &amp; <b>{{boardInfo("guestonline")}}</b> {{LANG_GUEST_ONLINE}}#}
+        {{LANG_WHOSONLINE|raw}}
         <hr />
-        {#{{WHOSONLINE|raw}}#}
+        {{WHOSONLINE|raw}}
         <br />
     </div>
 {% endblock %}

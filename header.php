@@ -4,13 +4,13 @@
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/14/2013
+ * @version 11/20/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 session_start();
 
-if (phpversion() < "5.3") {
-    exit('Elite Bulletin Board Requires at least PHP 5.3.0');
+if (phpversion() < "5.3.7") {
+    exit('Elite Bulletin Board Requires at least PHP 5.3.7');
 }
 
 //delete old session.
@@ -20,11 +20,11 @@ if (!defined('IN_EBB')) {
     die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 
-if (phpversion() >= "5.4") {
+/*if (phpversion() >= "5.4") {
     error_reporting(E_ALL ^ E_DEPRECATED ^ E_STRICT); //to remove all DEPRECATED & STRICT STANDARDS errors in production for PHP 5.4 users.
 } elseif (phpversion() >= "5.3") {
     error_reporting(E_ALL ^ E_DEPRECATED); //to remove all DEPRECATED errors in production for PHP 5.3 users.
-}
+}*/
 
 //see if config file is already written.
 if (filesize('config.php') == 0) {
@@ -35,15 +35,6 @@ require_once "config.php";
 
 //composer autoloader
 require_once FULLPATH.'/includes/autoload.php';
-
-//see if xdebug is installed
-if (!function_exists("xdebug_get_code_coverage")) {
-    $run = new \Whoops\Run;
-    $errorPage = new \Whoops\Handler\PrettyPageHandler;
-    $errorPage->setPageTitle("System Failure!");
-    $run->pushHandler($errorPage);
-    $run->register();
-}
 
 // setup our database object.
 $options = array(
@@ -56,7 +47,12 @@ try {
     $db = new \PDO(DB_DSN, DB_USER, DB_PASS, $options);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    exit( $e->getMessage());
+    $page = new \ebb\template();
+    exit($page->output("error", array(
+        "EXCEPTION_MESSAGE" => $e->getMessage(),
+        "EXCEPTION_FILE" => $e->getFile(),
+        "EXCEPTION_LINE" => $e->getLine()
+    )));
 }
 
 //update online data.
@@ -113,7 +109,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
             $logged_user = $userInfo->getUserName();
             //$stat = $userpref['Status']; //TODO: should replace with $access_level
             $template = $userInfo->getStyle();
-            $time_format = $userInfo->getTimeFormat();
+            $time_format = getDateTimeFormat($userInfo->getDateFormat(),$userInfo->getTimeFormat());
             $lng = $userInfo->getLanguage();
             $gmt = $userInfo->getTimeZone();
             $last_visit = $userInfo->getLastVisit();
@@ -124,7 +120,8 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
         }
 
     } else {
-        //@todo invalid login session, log user out.
+        //invalid login session, log user out.
+        redirect("login.php?action=logout");
     }
 } else {
     $logged_user = 'guest';
@@ -136,7 +133,7 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     //get default values.
     $access_level = 0;
     $template = $boardPref->getPreferenceValue("default_style");
-    $time_format = 0;//$boardPref->getPreferenceValue("time_format");
+    $time_format = getDateTimeFormat($boardPref->getPreferenceValue("dateformat"), $boardPref->getPreferenceValue("timeformat"));
     $lng = $boardPref->getPreferenceValue("default_language");
     $gmt = $boardPref->getPreferenceValue("timezone");
     $last_visit = NULL;

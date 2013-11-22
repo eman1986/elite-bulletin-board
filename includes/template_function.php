@@ -7,7 +7,7 @@ if (!defined('IN_EBB') ) {
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/04/2013
+ * @version 11/21/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
@@ -32,7 +32,7 @@ function theme($id) {
  */
 function loadBoardIndex() {
 
-    global $db,  $groupData, $template_path, $time_format, $gmt;
+    global $db,  $groupData, $time_format, $gmt;
 
     $parent = $child = array();
 
@@ -62,24 +62,23 @@ function loadBoardIndex() {
                     $boardAclQ->execute(array(":boardId" => $board->id));
                     $boardAclR = $boardAclQ->fetch(PDO::FETCH_OBJ);
                     if ($groupData->validateAccess(0, $boardAclR->B_Read)) {
-                        $postLnkQs = explode("&amp;", $board->Post_Link);
-
                         #get topic & post count from board.
                         $topicCountQ = $db->prepare('SELECT tid FROM ebb_topics WHERE bid=:boardId');
                         $topicCountQ->execute(array(":boardId" => $board->id));
-                        $topicCount = $topicCountQ->rowCount();
+                        $topicCountR = $topicCountQ->fetchAll(PDO::FETCH_OBJ);
+                        $topicCount = number_format(count($topicCountR));
 
                         $postCountQ = $db->prepare('SELECT pid FROM ebb_posts WHERE bid=:boardId');
                         $postCountQ->execute(array(":boardId" => $board->id));
-                        $postCount = $topicCountQ->rowCount();
+                        $postCountR = $postCountQ->fetchAll(PDO::FETCH_OBJ);
+                        $postCount = number_format(count($postCountR));
 
                         $board->topicCount = $topicCount;
                         $board->postCount = $postCount;
-                        $board->postLink = empty($board->last_update) ? "" : '<a href="viewtopic.php?'.$board->Post_Link.'">'.outputLanguageTag('index:Postedby').'</a>:'. $board->Username;
-                        $board->lastUpdate = empty($board->last_update) ? dateTimeFormatter($time_format, $board->last_update, $gmt) : "";
-                        //$board->subBoards = index_subboard($board->id);
+                        $board->lastUpdate = empty($board->last_update) ? "": dateTimeFormatter($time_format, $board->last_update, $gmt);
+                        $board->subBoards = getSubBoard($board->id);
                         //$board->moderators = moderator_boardlist($board->id);
-                        $board->postIcon = isNewTopics($board->last_update, $board->Username, substr($postLnkQs[1], 4)) ? "template/".$template_path."/images/new.gif" : "template/".$template_path."/images/old.gif";
+                        $board->postIcon = isNewTopics($board->last_update, $board->Username, $board->Post_Link) ? "fa-comment" : "fa-comment-o";
                         $child[] = $board;
                     }
                 }
@@ -115,249 +114,94 @@ function isNewTopics($lastUpdate, $username, $tid) {
 }
 
 /**
- * Builds the board index list.
- * @return mixed
- */
-function index_board() {
+ * Will list all sub-boards linked to a parent board.
+ * @param int $boardID - Board ID to search for any sub-boards.
+ * @return string
+*/
+function getSubBoard($boardID) {
 
-    global $db, $lang, $time_format, $gmt, $template_path, $logged_user;
+    global $db, $groupData;
 
     try {
-        $bInx = loadBoardIndex();
+        $childQ = $db->prepare("SELECT id, Board FROM ebb_boards b WHERE b.type='3' AND b.Category=:category ORDER BY b.B_Order");
+        $childQ->execute(array(":category" => $boardID));
+        $childR = $childQ->fetchAll();
 
-        foreach($bInx['Parent_Boards'] as $parent) {
-
-            $page = new \ebb\template("board_header", $template_path);
-            $page->replace_tags(array(
-                "CAT-NAME" => $parent->Board,
-                "LANG-BOARD" => "$lang[boards]",
-                "LANG-TOPIC" => "$lang[topics]",
-                "LANG-POST" => "$lang[posts]",
-                "LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
-            $board_row = $page->output();
-
-            foreach($bInx['Child_Boards'] as $children) {
-                if ($children->Category == $parent->id) {
-                    $page = new \ebb\template("board_data", $template_path);
-                    $page->replace_tags(array(
-                        "LANG-TOPIC" => "$lang[topics]",
-                        "LANG-POST" => "$lang[posts]",
-                        "LANG-OLDPOST" => $lang['oldpost'],
-                        "LANG-NEWPOST" => $lang['newpost'],
-                        "POSTICON" => $children->postIcon,
-                        "BOARDID" => $children->id,
-                        "BOARDNAME" => $children->Board,
-                        "LANG-RSS" => "$lang[viewfeed]",
-                        "BOARDDESCRIPTION" => $children->Description,
-                        //"MODERATORS" => "$board_moderator",
-                        //"SUBBOARDS" => "$subboard",
-                        "TOPICCOUNT" => $children->topicCount,
-                        "POSTCOUNT" => $children->postCount,
-                        //"POSTDATE" => "$board_date",
-                        //"POSTLINK" => "$last_post_link"
-                    ));
-                    $board_row = $page->output();
+        if (count($childR) == 0) {
+            $subBoard = '';
+        } else {
+            $subBoard = outputLanguageTag('index:subboards').":&nbsp;";
+            $counter = 0;
+            foreach ($childR as $subBoardRow) {
+                //see if we've reached the end of our query results.
+                if (count($childR) == 1) {
+                    $marker = '';
+                } elseif($counter < count($childR) - 1) {
+                    $marker = ',&nbsp;';
+                } else {
+                    $marker = '';
                 }
+
+                //board rules
+                $subBoardAclQ = $db->prepare('SELECT B_Read FROM ebb_board_access WHERE B_id=:boardId');
+                $subBoardAclQ->execute(array(":boardId" => $subBoardRow['id']));
+                $subBoardAclR = $subBoardAclQ->fetch(PDO::FETCH_OBJ);
+
+                //see if user can view the board.
+                if ($groupData->validateAccess(0, $subBoardAclR->B_Read)) {
+                    $subBoard .= sprintf('<em><a href="viewboard.php?bid=%d">%s</a></em>%s', $subBoardRow['id'], $subBoardRow['Board'], $marker);
+                }
+
+                //increment counter.
+                $counter++;
             }
-            $page = new \ebb\template("board_footer", $template_path);
-            $board_row = $page->output();
         }
-
-        return $board_row;
+    } catch (PDOException $e) {
+        return $e->getMessage();
     }
-    catch (PDOException $e) {
-        echo $e->getMessage();
+    return $subBoard;
+}
+
+/**
+ * Displays a list of users & guest currently online.
+ * @return string
+*/
+function whosonline() {
+
+    global $db, $ebbUserId;
+
+    $online = '';
+
+    try {
+        $getUsersOnlineQ = $db->query("SELECT u.Username FROM ebb_online o
+                                       LEFT JOIN ebb_users u ON o.Username=u.id
+                                       WHERE o.ip IS NULL");
+
+        //get a new instance of the group & user object.
+        $groupsonline = new \ebb\groupPolicy($db);
+        $usersonline = new \ebb\user($db);
+
+        while($onlineRow = $getUsersOnlineQ->fetch(PDO::FETCH_OBJ)) {
+            #gain status of users
+            $usersonline->getUser($ebbUserId);
+            $groupsonline->getGroupData($usersonline->getGid());
+
+            if ($groupsonline->getLevel() == 1) {
+                $online .= sprintf('<strong><a href="Profile.php?action=viewprofile&amp;u=%s">%s</a></strong>&nbsp;', $onlineRow->Username);
+            } elseif ($groupsonline->getLevel() == 2) {
+                $online .= sprintf('<em><a href="Profile.php?action=viewprofile&amp;u=%s">%s</a></em>&nbsp;', $onlineRow->Username);
+            } elseif($groupsonline->getLevel() == 3) {
+                $online .= sprintf('<a href="Profile.php?action=viewprofile&amp;u=%s">%s</a>&nbsp;', $onlineRow->Username);
+            } else {
+                $online .= '&nbsp;';
+            }
+        }
+        return $online;
+    }  catch (PDOException $e) {
+        return $e->getMessage();
     }
 }
-#sub-board grabber
-function index_subboard($bid){
- 
-	global $lang, $db, $access_level, $stat, $level_result;
- 
-	$db->run = "select id, Board from ebb_boards where type='3' and Category='$bid' ORDER BY B_Order";
-	$subboard_query = $db->query();
-	$count_sub = $db->num_results();
-	$db->close();
 
-	if($count_sub == 0){
-		$subboard = '';
-	}else{
-		$subboard = $lang['subboards']. ":&nbsp;";
-		while ($row = mysql_fetch_assoc ($subboard_query)) {
-			#guest & non-group members dont need a group check.
-			if(($stat == "guest") or ($stat == "Member")){
-				#get group access information.
-				$checkgroup = 0;
-				$checkmod = 0;
-			}else{
-				#get group access information.
-				$checkgroup = group_validate($row['id'], $level_result['id'], 2);
-				$checkmod = group_validate($row['id'], $level_result['id'], 1);
-			}
-			#board rules sql.
-			$db->run = "select B_Read from ebb_board_access WHERE B_id='$row[id]'";
-			$board_rule = $db->result();
-			$db->close();
-			$view_board = permission_check($board_rule['B_Read']);
-			#see if user can view the board.
-			if($view_board == 1){
-				$subboard .= "<i><a href=\"viewboard.php?bid=$row[id]\">$row[Board]</a></i>&nbsp;";
-			}
-		}
-	}
-	return($subboard);
-}
-#sub display for viewboard.
-function viewboard_subboard($bid){
- 
-	global $db, $lang, $time_format, $gmt, $template_path, $stat, $logged_user, $access_level, $level_result;
-	#start variable.
-	$subboard_row = ''; 
-	$db->run = "SELECT id, Board, Description, last_update, Posted_User, Post_Link FROM ebb_boards WHERE type='3' and Category='$bid' ORDER BY B_Order";
-	$board_query = $db->query();
-	$db->close();
-	#subboard header.
-	$page = new template($template_path ."/viewboard_hsubboards.htm");
-	$page->replace_tags(array(
-	"LANG-BOARD" => "$lang[boards]",
-	"LANG-TOPIC" => "$lang[topics]",
-	"LANG-POST" => "$lang[posts]",
-	"LANG-LASTPOSTDATE" => "$lang[lastposteddate]"));
-	$subboard_row = $page->output();
-	while ($row = mysql_fetch_assoc ($board_query)) {
-		#guest & non-group members dont need group check.
-		if(($stat == "guest") or ($stat == "Member")){
-			#get group access information.
-			$checkgroup = 0;
-			$checkmod = 0;
-		}else{
-			#get group access information.
-			$checkgroup = group_validate($row['id'], $level_result['id'], 2);
-			$checkmod = group_validate($row['id'], $level_result['id'], 1);
-		}
-		#get topic & post count from board.
-		$db->run = "select tid from ebb_topics WHERE bid='$row[id]'";
-		$topic_num = $db->num_results();
-		$db->close();
-		$db->run = "select pid from ebb_posts WHERE bid='$row[id]'";
-		$post_num = $db->num_results();
-		$db->close();
-		#get group moderators for this board.
-		$board_moderator = moderator_boardlist($row['id']);
-		#get sub-boards.
-		$subboard = index_subboard($row['id']);
-		#get last post details.
-		if ($row['last_update'] == ""){
-			$board_date = $lang['noposts'];
-			$last_post_link = "";
-		}else{
-			$gmttime = gmdate ($time_format, $row['last_update']);
-			$board_date = date($time_format,strtotime("$gmt hours",strtotime($gmttime)));
-			$last_post_link = "<a href=\"viewtopic.php?$row[Post_Link]\">$lang[Postedby]</a>: $row[Posted_User]";
-		}
-		#get read status on board.
-		$db->run = "select * from ebb_read_board where User='$logged_user'";
-		$read_stat = $db->result();
-		$db->close();
-		$read_ct = read_board_stat($row['id'], $logged_user);
-		if (($read_ct == 1) OR ($row['last_update'] == "") OR ($stat == "guest")){
-			$icon = "<img src=\"$template_path/images/old.gif\" alt=\"$lang[oldpost]\" title=\"$lang[oldpost]\" />";
-		}else{
-			$icon = "<img src=\"$template_path/images/new.gif\" alt=\"$lang[newpost]\" title=\"$lang[newpost]\" />";
-		}
-		#get permission rules.
-		$db->run = "select B_Read from ebb_board_access WHERE B_id='$row[id]'";
-		$board_rule = $db->result();
-		$db->close();
-		$view_board = permission_check($board_rule['B_Read']);
-		#see if user can view the board.
-		if($view_board == 1){
-			$page = new template($template_path ."/viewboard_subboards.htm");
-			$page->replace_tags(array(
-			"LANG-TOPIC" => "$lang[topics]",
-			"LANG-POST" => "$lang[posts]",
-			"POSTICON" => "$icon",
-			"BOARDID" => "$row[id]",
-			"BOARDNAME" => "$row[Board]",
-			"LANG-RSS" => "$lang[viewfeed]",
-			"BOARDDESCRIPTION" => "$row[Description]",
-			"MODERATORS" => "$board_moderator",
-			"SUBBOARDS" => "$subboard",
-			"TOPICCOUNT" => "$topic_num",
-			"POSTCOUNT" => "$post_num",
-			"POSTDATE" => "$board_date",
-			"POSTLINK" => "$last_post_link"));
-			$subboard_row = $page->output();
-		}
-	}
-	#subboard footer.
-	$page = new template($template_path ."/viewboard_fsubboards.htm");
-	$subboard_row = $page->output();
-	return($subboard_row);
-}
-#moderator listing
-function moderator_boardlist($b_id){
-
-	global $db, $lang;
-
-	$db->run = "select group_id from ebb_grouplist where board_id='$b_id' order by group_id";
-	$moderator_r = $db->query();
-	$db->close();
-
-	#see if a group exist for this board.
-	$db->run = "select * from ebb_grouplist where board_id='$b_id'";
-	$chk_group = $db->num_results();
-	$db->close();
-	if($chk_group == 0){
-		$board_moderator = ''; 
-	}else{
-		$board_moderator = $lang['moderators']. ":&nbsp;";
-	while ($row = mysql_fetch_assoc ($moderator_r)) {
-		//get group details.
-		$db->run = "select id, Name from ebb_groups where id='$row[group_id]' and Enrollment!='2'";
-		$group_r = $db->result();
-		$db->close();
-		//output the info.
-		$board_moderator .= "<a href=\"groups.php?mode=view&amp;id=$group_r[id]\">$group_r[Name]</a>&nbsp;";
-	}
-	}
-	return ($board_moderator);
-}
-#whosonline display function
-function whosonline(){
-
-	global $db;
-
-	$db->run = "select DISTINCT Username from ebb_online where ip=''";
-	$online_logged = $db->query();
-	$db->close();
-	
-	$online = '';
-	while ($row = mysql_fetch_assoc ($online_logged)) {
-		//see what the users status is.
-		$db->run = "select Status from ebb_users where Username='$row[Username]'";
-		$stat = $db->result();
-		$db->close();
-		if ($stat['Status'] == "groupmember"){
-			$db->run = "SELECT gid FROM ebb_group_users where Username='$row[Username]'";
-			$groupchk = $db->result();
-			$db->close();
-			$db->run = "SELECT Level FROM ebb_groups where id='$groupchk[gid]'";
-			$level_type = $db->result();
-			$db->close();
-			if ($level_type['Level'] == 1){
-				$online .= "<b><a href=\"Profile.php?user=$row[Username]\">$row[Username]</a></b>&nbsp;";
-			}else{
-				$online .= "<i><a href=\"Profile.php?user=$row[Username]\">$row[Username]</a></i>&nbsp;";
-			}
-		}elseif (($stat['Status'] == "Member") or ($level_type['Level'] == 3)){
-			$online .= "<a href=\"Profile.php?user=$row[Username]\">$row[Username]</a>&nbsp;";
-		}else{
-			$online .= "&nbsp;";
-		}
-	}
-	return $online;
-}
 #group detail display
 function display_group(){
 

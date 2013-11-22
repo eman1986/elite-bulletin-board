@@ -92,6 +92,48 @@ function dateTimeFormatter($format, $time, $tmZn){
 }
 
 /**
+ * Get the date & time format and parse it in the way PHP date() will use it.
+ * @param integer $date The date format type.
+ * @param integer $time The time format type.
+ * @return string outputs a format that PHP date() will understand.
+ */
+function getDateTimeFormat($date, $time) {
+    $dateFormatArr = array(
+        0 => "M dS Y",
+        1 => "m-d-Y",
+        2 => "m-d-y",
+        3 => "m.d.Y",
+        4 => "m.d.y",
+        5 => "d-m-Y",
+        6 => "d-m-y",
+        7 => "d.m.Y",
+        8 => "d.m.y",
+        9 => "F dS, Y",
+        10 => "F jS, Y",
+        11 => "dS F, Y",
+        12 => "jS F, Y",
+        13 => "l F dS, Y",
+        14 => "l F jS, Y",
+        15 => "l dS F, Y",
+        16 => "l jS F, Y"
+    );
+
+    $timeFormatArr = array(
+        0 => "h:i:s a",
+        1 => "h:i a",
+        2 => "G:i",
+        3 => "H:i"
+    );
+
+    //see if the selected value is in the array.
+    if (array_key_exists($date, $dateFormatArr) && array_key_exists($time, $timeFormatArr)) {
+        return $dateFormatArr[$date].' '.$timeFormatArr[$time];
+    } else {
+        return $dateFormatArr[0].' '.$timeFormatArr[0];
+    }
+}
+
+/**
  * Set flash data.
  * @param string $title name of flash data
  * @param string $msg content of flash data
@@ -244,27 +286,56 @@ function filetype_lookup($filetype){
         return false; //the extension is NOT allowed.
     }
 }
-#board status.
-function board_stats(){
 
-	global $db;
+/**
+ * Get an array of board stats.
+ * @return array
+*/
+function getBoardStats() {
 
-	//get member count.
-	$db->run = "select id from ebb_users";
-	$user_num = $db->num_results();
-	$db->close();
-	//get topic count.
-	$db->run = "select tid from ebb_topics";
-	$topic_num = $db->num_results();
-	$db->close();
-	//get post count.
-	$db->run = "select pid from ebb_posts";
-	$post_num = $db->num_results();
-	$db->close();
+    global $db;
 
-	$b_stats = array($user_num, $topic_num, $post_num);
+    try {
+        //get user count.
+        $usrCountQ = $db->query('SELECT count(id) FROM ebb_users WHERE active=1');
+        $usrCountR = $usrCountQ->fetchColumn();
+        $userCount = number_format($usrCountR);
 
-	return ($b_stats);
+        //get topic count.
+        $topicCountQ = $db->query('SELECT count(tid) FROM ebb_topics');
+        $topicCountR = $topicCountQ->fetchColumn();
+        $topicCount = number_format($topicCountR);
+
+        //get topic count.
+        $postCountQ = $db->query('SELECT count(pid) FROM ebb_posts');
+        $postCountR = $postCountQ->fetchColumn();
+        $postCount = number_format($postCountR);
+
+        //get latest user.
+        $newUserQ = $db->query('SELECT Username FROM ebb_users WHERE active=1 ORDER BY Date_Joined DESC LIMIT 1');
+        $newUserR = $newUserQ->fetchColumn();
+        $newUser = $newUserR;
+
+        //guests online
+        $guestOnlineQ = $db->query('SELECT count(ip) FROM ebb_online WHERE Username IS NULL');
+        $guestOnlineR = $guestOnlineQ->fetchColumn();
+        $guestOnline = $guestOnlineR;
+
+        //users online
+        $userOnlineQ = $db->query('SELECT count(Username) FROM ebb_online WHERE ip IS NULL');
+        $userOnlineR = $userOnlineQ->fetchColumn();
+        $userOnline = $userOnlineR;
+
+        return array(
+            "newUser" => $newUser,
+            "userCount" => $userCount,
+            "topicCount" => $topicCount,
+            "postCount" => $postCount,
+            "guestOnline" => $guestOnline,
+            "userOnline" => $userOnline);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 }
 
 /**
@@ -279,7 +350,7 @@ function checkInstall() {
  * loads data for announcements.
  * @return array announcement data.
 */
-function informationPanel() {
+function GetAnnouncements() {
 
     global $db;
 
@@ -287,13 +358,14 @@ function informationPanel() {
 
     try {
         $infoQ = $db->query("SELECT information FROM ebb_information_ticker");
+        $infoR = $infoQ->fetchAll(PDO::FETCH_OBJ);
 
         //
-        if ($infoQ->rowCount() == 0) {
+        if (count($infoR) == 0) {
             $infoData[] = outputLanguageTag("index:nonews");
         } else {
-            while($infoR = $infoQ->fetch(PDO::FETCH_OBJ)) {
-                $infoData[] = smiles(BBCode($infoR->information));
+            foreach($infoR as $news) {
+                $infoData[] = smiles(BBCode($news->information));
             }
         }
 

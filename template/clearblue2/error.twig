@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>System Error</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!--  Base CSS -->
+    <link rel="stylesheet" href="template/clearblue2/style.css" media="screen">
+
+    <!--RSS & ICO -->
+    <link rel="shortcut icon" href="template/clearblue2/favicon.ico">
+</head>
+<body>
+    <!-- Begin page content -->
+    <div id="errorContent">
+        <h1>An Error Occurred:</h1>
+        <br><br>
+        {{EXCEPTION_MESSAGE}}
+        <hr>
+        File: {{EXCEPTION_FILE}}<br>
+        Line: {{EXCEPTION_LINE}}
+    </div>
+</body>
+</html>

@@ -1,6 +1,5 @@
 {
     "require": {
-        "filp/whoops": "1.*",
         "phpmailer/phpmailer": "v5.2.7",
         "ircmaxell/password-compat": "1.*",
         "twig/twig": "1.*"

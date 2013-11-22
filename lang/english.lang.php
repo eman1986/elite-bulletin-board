@@ -68,7 +68,6 @@ $lang['index:boards'] = 'Boardlist';
 $lang['index:description'] = 'Description';
 $lang['index:topics'] = 'Topics';
 $lang['index:posts'] = 'Posts';
-$lang['index:moderators'] = 'Moderators';
 $lang['index:subboards'] = 'Sub-Boards';
 $lang['index:lastposteddate'] = 'Last Posted Date';
 $lang['index:Postedby'] = 'Posted by';
@@ -80,8 +79,8 @@ $lang['index:iconguide'] = 'Icon Guide';
 $lang['index:newpost'] = 'New Post';
 $lang['index:oldpost'] = 'Old Post';
 $lang['index:whosonline'] = 'Currently Online';
+$lang['index:currentlyonline'] = '<b>%d</b> Members & <b>%d</b> guests are online currently';
 $lang['index:onlinekey'] = '[Key]<br /><b>Administrator</b><br /><i>Moderator</i><br />Member';
-$lang['index:guestonline'] = 'guests are online currently.';
 #RSS language tags.
 $lang['viewfeed'] = 'View RSS Feed for this board.';
 $lang['latestposts'] = 'Latest Topics created.';
