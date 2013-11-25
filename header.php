@@ -9,7 +9,7 @@
 */
 session_start();
 
-if (phpversion() < "5.3.7") {
+if (PHP_VERSION_ID  < 50307) {
     exit('Elite Bulletin Board Requires at least PHP 5.3.7');
 }
 
