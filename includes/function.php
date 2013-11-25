@@ -7,7 +7,7 @@ if (!defined('IN_EBB')) {
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/06/2013
+ * @version 11/25/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
@@ -360,7 +360,7 @@ function GetAnnouncements() {
         $infoQ = $db->query("SELECT information FROM ebb_information_ticker");
         $infoR = $infoQ->fetchAll(PDO::FETCH_OBJ);
 
-        //
+        //see if have anything to post about.
         if (count($infoR) == 0) {
             $infoData[] = outputLanguageTag("index:nonews");
         } else {
@@ -394,35 +394,7 @@ function makeRandomPassword() {
     }
     return $pass;
 }
-#newpost counter.
-function newpost_counter(){
 
-	global $search_result, $search_result2, $logged_user, $db;
-	//output any topics
-	$count = 0;	 
-	#get topic count.
-	while ($r = mysql_fetch_assoc($search_result)) {
-		$db->run = "select * from ebb_read_topic WHERE Topic='$r[tid]' and User='$logged_user'";
-		$read_stat = $db->num_results();
-		$db->close();
-		if ($read_stat == 0){
-			//increment count
-			$count++;
-		}
-	}
-	#post count
-	while ($r2 = mysql_fetch_assoc($search_result2)){
-		//see if post is new.
-		$db->run = "select * from ebb_read_topic WHERE Topic='$r2[tid]' and User='$logged_user'";
-		$read_stat2 = $db->num_results();
-		$db->close();
-		if ($read_stat2 == 0){
-			//increment count
-			$count++;
-		}
-	}
-	return ($count);
-}
 #ip-viewer code
 function ip_checker(){
 
@@ -486,16 +458,15 @@ function other_ip_check(){
  * @param bool $halt determines if we should prevent any further execution.
 */
 function error($error, $type, $halt=FALSE) {
-    global $title, $txt, $template_path;
+    global $title, $template_path;
 
     switch($type){
         case 'error':
-            $page = new \ebb\template("error", $template_path);
-            $page->replace_tags(array(
-            "TITLE" => "$title",
-            "LANG-TITLE" => "$txt[error]",
-            "ERRORMSG" => "$error"));
-            $page->output();
+            $page = new \ebb\template($template_path);
+            $page->output("error", array(
+                "TITLE" => $title,
+                "LANG-TITLE" => outputLanguageTag("common:error"),
+                "ERRORMSG" => $error) );
 
             //kill script?
             if ($halt) {
@@ -503,27 +474,16 @@ function error($error, $type, $halt=FALSE) {
             }
         break;
         case 'general':
-            $page = new \ebb\template("error", $template_path);
-            $page->replace_tags(array(
-            "TITLE" => "$title",
-            "LANG-TITLE" => "$txt[info]",
-            "ERRORMSG" => "$error"));
-            $page->output();
+            $page = new \ebb\template($template_path);
+            $page->output("error", array(
+                "TITLE" => $title,
+                "LANG-TITLE" => outputLanguageTag("common:error"),
+                "ERRORMSG" => $error));
 
             //kill script?
             if ($halt) {
                 exit();
             }
-        break;
-        case 'validate': //@TODO we may not need this anymore.
-            $page = new \ebb\template("error-validate", $template_path);
-            $page->replace_tags(array(
-            "TITLE" => "$title",
-            "LANG-TITLE" => "$txt[error]",
-            "LANG-GOBACK" => "$txt[goback]",
-            "LANG-ERRORMSG" => "$txt[errormsg]",
-            "ERRORMSG" => "$error"));
-            $page->output();
         break;
     }
 }

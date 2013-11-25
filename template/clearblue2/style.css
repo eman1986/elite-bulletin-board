@@ -1,7 +1,7 @@
 /*
 ========================================
 Filename: style.css
-Last Modified: 10/30/2013
+Last Modified: 11/25/2013
 ClearBlue2 CSS template file for Elite Bulletin Board v2.2.0
 All formatting belongs here.
 ========================================
@@ -235,10 +235,6 @@ LOADER CSS
     z-index:100000;
     background-color:#A1B3C7;
     border:solid 1px #000;
-}
-
-.ui-autocomplete-loading {
-    background: transparent url('images/smloader.gif') right center no-repeat;
 }
 
 /*

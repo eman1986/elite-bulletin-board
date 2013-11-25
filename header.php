@@ -4,7 +4,7 @@
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/20/2013
+ * @version 11/25/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 session_start();
@@ -119,6 +119,8 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
             throw new Exception('Invalid User');
         }
 
+        //update user's online presence.
+        update_whosonline_reg($logged_user);
     } else {
         //invalid login session, log user out.
         redirect("login.php?action=logout");
@@ -139,6 +141,9 @@ if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
     $last_visit = NULL;
     $suspend_length = NULL;
     $suspend_date = NULL;
+
+    //update user's online presence.
+    update_whosonline_guest();
 }
 
 //settings

@@ -7,14 +7,15 @@
     {% if SETTINGS_ANNOUNCEMENTS == 1 %}
         {# @TODO, may switch a different ticker plugin, this one seems to speed up too much. #}
         <!-- JS for Information Ticker -->
-        <script type="text/javascript" src="includes/js/jquery.ticker.min.js"></script>
+        <script type="text/javascript" src="includes/js/jquery.newsticker.min.js"></script>
         <script type="text/javascript">
             $(function () {
-                $('#announcements').ticker({ titleText:"{{TITLE}} :: {{LANG_ANNOUNCEMENTS}}" });
+                $('#news').newsticker(5000);
             });
         </script>
         <div class="well">
-            <ul id="announcements">
+            <ul id="news">
+                <li style="font-weight: bold;">{{TITLE}} :: {{LANG_ANNOUNCEMENTS}}</li>
                 {% for a in ANNOUNCEMENTS %}
                     <li>{{a}}</li>
                 {% endfor %}

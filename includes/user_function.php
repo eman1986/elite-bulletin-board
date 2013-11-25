@@ -4,7 +4,7 @@ if (!defined('IN_EBB') ) {
 }
 /*
 Filename: user_function.php
-Last Modified: 11/21/2013
+Last Modified: 11/25/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,6 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 */
 
-
 /**
  * Get Avatar from Gravatar Service.
  * @param string $eml The email to look up on gravatar.
@@ -21,7 +20,7 @@ the Free Software Foundation; either version 2 of the License, or
  * @param string $dImage Setup a default image.
  * @param string $rating Restrict the type of avatar to allow.
  * @return string URL to return an image.
- */
+*/
 function getGravatar($eml, $size = "medium", $dImage = "gravatar", $rating = "ignore") {
     //base URL.
     $gravatarUrl = (!isSecure()) ? 'http://www.gravatar.com/avatar/' : 'https://www.gravatar.com/avatar/';
@@ -87,7 +86,7 @@ function getGravatar($eml, $size = "medium", $dImage = "gravatar", $rating = "ig
  * @param string $user the user we want to this to affect.
  * @param integer $tid the Topic ID we want this to affect.
  * @param string $mode are we subscribing or unsubscribing?
- */
+*/
 function subscriptionManager($user, $tid, $mode) {
 
     global $db;
@@ -122,7 +121,8 @@ function subscriptionManager($user, $tid, $mode) {
  * @return string
 */
 function newuser() {
-	global $db;
+
+    global $db;
 
     try {
         //Get data
@@ -137,56 +137,12 @@ function newuser() {
     }
 }
 
-#user's warning level bar.
-function user_warn($user){
-
-    global $db, $checkmod, $access_level, $level_r, $template_path, $cp, $viewtopic, $tid, $bid, $logged_user, $permission_chk_warn;
-
-    #see if user variable is blank.
-    if(!isset($user) || empty($user)){
-        echo $cp['nousernameentered'];
-        exit();
-    }else{
-        #get user's warning level.
-        $db->run = "SELECT warning_level FROM ebb_users WHERE Username='$user'";
-        $warn_r = $db->result();
-        $user_chk = $db->num_results();
-        $db->close();
-        #see if username placed in the function is invalid.
-        if($user_chk == 0){
-            echo $cp['nousernameentered'];
-            exit();
-        }
-        #see if user has moderator status, if so let them alter warning level.
-        if($checkmod == 1){
-            #see if user they wish to warn is higher in rank than them, if so don't let them set anything.
-            if(($access_level == 2) and ($level_r['Level'] == 1)){
-                $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
-            }else{
-                #see if user has permission to alter warning value.
-                if($permission_chk_warn == 1){
-                    $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"12\" width=\"$warn_r[warning_level]\" />&nbsp;(<a href=\"manage.php?mode=warn&amp;user=$user&amp;bid=$bid&amp;tid=$tid\">$warn_r[warning_level]%</a>)</div>";
-                }else{
-                    $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
-                }
-            }
-        }else{
-            #see if user is the actual user.
-            if($user == $logged_user){
-                $warn_bar = "<div class=\"warningheader\">$viewtopic[warnlevel]</div><div class=\"warnlevel\"><img src=\"$template_path/images/bar.gif\" alt=\"$viewtopic[warnlevel]\" height=\"10\" width=\"$warn_r[warning_level]\" />&nbsp;($warn_r[warning_level]%)</div>";
-            }else{
-                $warn_bar = '';
-            }
-        }
-    }
-    return($warn_bar);
-}
-
 /**
  * Update the online status of logged in users.
  * @param string $user The user we wish to update their online status.
+ * @TODO refactor this to not be a separate process.
 */
-function update_whosonline_reg($user){
+function update_whosonline_reg($user) {
 
     global $db;
 
@@ -212,8 +168,9 @@ function update_whosonline_reg($user){
 
 /**
  * Update the online status of guest accounts.
+ * @TODO refactor this to not be a separate process.
 */
-function update_whosonline_guest(){
+function update_whosonline_guest() {
 
     global $db;
 
@@ -238,7 +195,7 @@ function update_whosonline_guest(){
  * Update the last post when creating a post.
  * @param string $user
 */
-function update_user($user){
+function update_user($user) {
 
     global $db;
 
@@ -255,7 +212,7 @@ function update_user($user){
  * sniffs out real IP Address.
  * @return mixed
 */
-function detectProxy(){
+function detectProxy() {
 
     $ip_sources = array(
         "HTTP_CLIENT_IP",

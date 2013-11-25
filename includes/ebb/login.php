@@ -9,7 +9,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: login.php
-Last Modified: 11/21/2013
+Last Modified: 11/25/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -22,14 +22,12 @@ class login {
 
     protected $db; // our PDO instance.
 
-    private $usr;
+    public $usr;
 
-    private $pwd;
+    public $pwd;
 
-    public function __construct(\PDO $db, $usr, $pwd) {
+    public function __construct(\PDO $db) {
         $this->db = $db;
-        $this->usr = $usr;
-        $this->pwd = $pwd;
     }
 
     public function __destruct() {
@@ -148,122 +146,52 @@ class login {
      * validateAdministrator
      * @return bool
     */
-    public function validateAdministrator(){
-	
-		#See if this is a guest account.
-		if(($this->user == "guest") OR ($this->pass == "guest")){
-		    return(false);
-		}else{
-			#see if user entered the correct information.
-			if(($this->validateUser()) AND ($this->validatePwd())){
-				#see if user is an administrator.
+    public function validateAdministrator() {
+
+        #See if this is a guest account.
+        if ($this->user == "guest" || $this->pass == "guest") {
+            return FALSE;
+        } else {
+            //see if user entered the correct information.
+            if ($this->validateUser() || $this->validatePwd()) {
+                //see if user is an administrator.
                 $validateGroupPolicy = new groupPolicy($this->user);
-				if($validateGroupPolicy->groupAccessLevel() == 1){
-			    	return(true);
-				}else{
-			    	return(false);
-			    }//END group validation.
-			}else{
-				return(false);
-			}//END user validation.
-		}//END guest filtering.
-	}
-
-	/**
-			 * Validates current adminCP session.
-			 * @access Public
-			 * @version 7/25/2011
-			*/
-	public function validateAdministratorSession() {
-
-		#See if this is a guest account.
-		if(($this->user == "guest") OR ($this->pass == "guest")){
-		    return(false);
-		}else{
-			#see if user entered the correct information.
-			if(($this->validateUser()) AND ($this->validatePwdEncrypted())){
-				#see if user is an administrator.
-                $validateGroupPolicy = new groupPolicy($this->user);
-				if($validateGroupPolicy->groupAccessLevel() == 1){
-			    	return(true);
-				}else{
-			    	return(false);
-			    }//END group validation.
-			}else{
-				return(false);
-			}//END user validation.
-		}//END guest filtering.
-
-	}
-	
-    /**
-	*acpLogOn
-	*
-	*Performs login process, creating any sessions or cookies needed for the ACP.
-	*
-	*@modified 12/28/10
-	*
-	*@access public
-	*/
-	public function acpLogOn(){
-
-    	global $boardPref, $sessionLength;
-
-		#set session to a secure status.
-		//ini_get('session.cookie_secure',true);
-
-		#encrypt password.
-	    $encryptPwd = sha1($this->pass.$this->getPwdSalt());
-	    
-	    #create session marker for time limit.
-	    //@TO-DO: Add this value into a session table in the database, plan for RC 2.
-	    $_SESSION['ebbacptimer'] = $sessionLength;
-	
-		#user is an admin, let them log in. set to last as long as user selected.
-		//@todo: make this session value, NOT a cookie.
-		$expire = time()+3600*$sessionLength;
-		setcookie("ebbacpu", $this->user, $expire, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-		setcookie("ebbacpp", $encryptPwd, $expire, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-
-		#generate session-based validation.
-		$this->regenerateSession(true);
-	}
+                if ($validateGroupPolicy->groupAccessLevel() == 1) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }//END group validation.
+            } else {
+                return FALSE;
+            }//END user validation.
+        }//END guest filtering.
+    }
 
     /**
-	*acpLogOut
-	*
-	*Performs logout process, removing any sessions or cookies needed for the ACP.
-	*
-	*@modified 5/19/10
-	*
-	*@access public
-	*/
-	public function acpLogOut(){
+     * Validates current adminCP session.
+     * @return bool
+    */
+    public function validateAdministratorSession() {
 
-		global $boardPref;
+        //See if this is a guest account.
+        if ($this->user == "guest" || $this->pass == "guest") {
+            return FALSE;
+        } else {
+            //see if user entered the correct information.
+            if ($this->validateUser() || $this->validatePwdEncrypted()) {
+                //see if user is an administrator.
+                $validateGroupPolicy = new groupPolicy($this->user);
+                if ($validateGroupPolicy->groupAccessLevel() == 1) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }//END group validation.
+            }else{
+                return FALSE;
+            }//END user validation.
+        }//END guest filtering.
 
-   		#set session to a secure status.
-		//ini_get('session.cookie_secure',true);
-
-		#close out ACP cookies.
-		if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))){
-	        #encrypt password.
-		    $encryptPwd = sha1($this->pass.$this->getPwdSalt());
-
-		    #get session time.
-	        $sessionLength = $_SESSION['ebbacptimer'];
-
-			#get cookie time.
-   			$expire = time()+3600*$sessionLength;
-
-			#destroy cookies.
-			setcookie("ebbacpu", $this->user, $expire, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-			setcookie("ebbacpp", $encryptPwd, $expire, $boardPref->getPreferenceValue("cookie_path"), $boardPref->getPreferenceValue("cookie_domain"), $boardPref->getPreferenceValue("cookie_secure"), true);
-			
-			#clear session data.
-			session_destroy();
-		}
-	}
+    }
 
     /**
      * Performs login process, creating any sessions or cookies needed for the system.
@@ -342,41 +270,41 @@ class login {
 
         global $db;
 
-		#setup session length.
+        #setup session length.
         $expireAcp = time()-3600;
-		$expireTime = time() - (2592000);
+        $expireTime = time() - (2592000);
 
-		#see if user wants to remain logged on.
-		if (isset($_COOKIE['ebbuser'])) {
+        #see if user wants to remain logged on.
+        if (isset($_COOKIE['ebbuser'])) {
 
-			#destroy cookies.
-			setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+            #destroy cookies.
+            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
 
-			#remove user from who's online list.
-			$db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
-			$db->query();
-			
-			#close out ACP cookie if needed
-			if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
-				setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
-			}
-			
-			#clear session data.
-			session_destroy();
-		} else {
-			#remove user from who's online list.
-			$db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
-			$db->query();
+            #remove user from who's online list.
+            $db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
+            $db->query();
 
-			#close out ACP cookie if needed
-			if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
-				setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
-			}
+            #close out ACP cookie if needed
+            if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
+                setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+            }
 
-			#clear session data.
-			session_destroy();
-		}
-	}
+            #clear session data.
+            session_destroy();
+        } else {
+            #remove user from who's online list.
+            $db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
+            $db->query();
+
+            #close out ACP cookie if needed
+            if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
+                setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+            }
+
+            #clear session data.
+            session_destroy();
+        }
+    }
 
     /**
      * Performs a check to ensure the session value is valid and not hijacked.
@@ -426,17 +354,18 @@ class login {
     public function isActive(){
         global $db;
 
+        //@TODO MAY NOT NEED THIS ANYMORE!
         //check against the database to see if the username and password match.
         $db->SQL = "SELECT active FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
-		$validateStatus = $db->fetchResults();
+        $validateStatus = $db->fetchResults();
 
-		#setup bool. value to see if user is active or not.
-		if ($validateStatus['active'] == 0) {
-		    return(false);
-		} else {
-		    return(true);
-		}
-	}
+        #setup bool. value to see if user is active or not.
+        if ($validateStatus['active'] == 0) {
+            return(false);
+        } else {
+            return(true);
+        }
+    }
 
     /**
 	*deactivateUser
@@ -448,6 +377,8 @@ class login {
 	*@access public
 	*/
 	public function deactivateUser(){
+
+        //@TODO MAY NOT NEED THIS ANYMORE!
 
 		global $db;
 		
@@ -466,6 +397,8 @@ class login {
 	*/
 	public function activateUser(){
 
+        //@TODO MAY NOT NEED THIS ANYMORE!
+
 		global $db;
 
 		$db->SQL = "UPDATE ebb_users SET active='1' WHERE Username='".$this->user."' LIMIT 1";
@@ -483,6 +416,8 @@ class login {
 	*@access public
 	*/
 	public function getFailedLoginCt(){
+
+        //@TODO MAY NOT NEED THIS ANYMORE!
 
 	    global $db;
 
@@ -507,6 +442,8 @@ class login {
 
 	    global $db;
 
+        //@TODO MAY NOT NEED THIS ANYMORE!
+
 	    #get new count.
 		$newCount = $this->getFailedLoginCt();
 		$incrementFailedCt = $newCount['failed_attempts'] + 1;
@@ -530,6 +467,8 @@ class login {
 
 	    global $db;
 
+        //@TODO MAY NOT NEED THIS ANYMORE!
+
 	    #clear count.
         $db->SQL = "UPDATE ebb_users SET failed_attempts='0' WHERE Username='".$this->user."' LIMIT 1";
 		$db->query();
@@ -543,10 +482,11 @@ class login {
 	public function checkBan() {
         global $db, $lang, $suspend_length, $suspend_date, $groupProfile;
 
+        //@TODO MAY NOT NEED THIS ANYMORE OR SHOULD BE REFACTORED!
+
         //see if user is marked as banned.
         if ($groupProfile == 6) {
             $error = new notifySys($lang['banned'], true);
-            $error->displayError();
         }
 
         //see if user is suspended.
