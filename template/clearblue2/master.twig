@@ -33,9 +33,6 @@
 
     <!-- notification plug-in. -->
     <script type="text/javascript" src="includes/js/jquery.jnotify.min.js"></script>
-
-    <!-- validation js -->
-    <script type="text/javascript" src="includes/js/validate.min.js"></script>
     <!-- /JAVASCRIPT FILES -->
 </head>
 <body>
@@ -214,15 +211,16 @@
           </div>
         </div>
 
+        <script type="text/javascript" src="includes/js/nod.min.js"></script>
         <div id="qlogin" style="display:none;">
-            <form role="form">
+            <form id="frmLogin" action="auth.php?do=login">
               <div class="form-group">
-                <label for="exampleInputEmail1">{{LANG_USERNAME}}</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" style="width:250px;">
+                <label for="quser">{{LANG_USERNAME}}</label>
+                <input type="email" class="form-control" id="quser" style="width:250px;">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">{{LANG_PASSWORD}}</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" style="width:250px;">
+                <label for="qpassword">{{LANG_PASSWORD}}</label>
+                <input type="password" class="form-control" id="qpassword" style="width:250px;">
               </div>
               <div class="checkbox">
                 <label>
@@ -231,11 +229,23 @@
               </div>
               <button type="submit" class="btn btn-primary btn-xs btn-block">{{LANG_LOGIN}}</button>
               <button type="button" class="btn btn-default btn-xs btn-block">{{LANG_FORGOT}}</button>
+                <script type="text/javascript">
+                    var qLoginRules = [
+                        [ '#quser', 'presence', '{{LANG_VAILDATE_USERNAME}}' ],
+                        [ '#qpassword', 'presence', '{{LANG_VAILDATE_PASSWORD}}' ]
+                    ];
+                    var options = {
+                        'groupClass' : 'inputError',
+                        'errorPosClasses': 'control-label',
+                        'errorClass' : 'inputError'
+                    };
+                    $("#frmLogin").nod(qLoginRules, options);
+                </script>
             </form>
         </div>        
 
-        <div id="frmRegister" name="frmRegister" style="display:none;">
-            <form role="form">
+        <div id="qregister" style="display:none;">
+            <form  id="qRegister" action="register.php?action=process">
               <div class="form-group">
                 <label for="exampleInputEmail1">{{LANG_USERNAME}}</label>
                 <input type="email" class="form-control" id="exampleInputEmail1" style="width:250px;">
@@ -248,34 +258,15 @@
                 <label for="exampleInputPassword1">{{LANG_EMAIL}}</label>
                 <input type="password" class="form-control" id="exampleInputPassword1" style="width:250px;">
               </div>
-              <div class="checkbox">
+              {#<div class="checkbox">
                 <label>
                   <input type="checkbox"> {{LANG_AGREETERMS}}
                 </label>
-              </div>
+              </div>#}
               <button type="submit" class="btn btn-primary btn-xs btn-block">{{LANG_REGISTER}}</button>
             </form>
         </div>
         <script type="text/javascript">
-            new FormValidator('frmQLogin', [{
-                name: 'username',
-                display: '{{LANG_USERNAME}}',
-                rules: 'required'
-            }, {
-                name: 'password',
-                display: '{{LANG_PASSWORD}}',
-                rules: 'required'
-            }], function(errors, event) {
-
-                if (errors.length > 0) {
-                    $('#validateQLogin').empty();
-                    $('#validateQLogin').append(errors.join('<br />'));
-                    $('#div_ErrMsg_QLogin').show();
-                } else {
-                    event.returnValue = true; //allow form to process.
-                }
-
-            });
             $(function() {
                 $('#login').popover({ 
                     html : true, 
@@ -283,6 +274,7 @@
                       return $('#qlogin').html();
                     }
                 });
+
                 $('#register').popover({ 
                     html : true, 
                     content: function() {
@@ -290,7 +282,7 @@
                     }
                 });
             });
-        </script>        
+        </script>
         {% endif %}
 
       <!-- Begin page content -->

@@ -32,7 +32,12 @@ echo $page->output("index", array(
     'LANG_REGISTER' => outputLanguageTag('common:register'),
     'LANG_PASSWORD' => outputLanguageTag('pass'),
     'LANG_FORGOT' => outputLanguageTag('forgot'),
+    'LANG_EMAIL' => outputLanguageTag('email'),
     'LANG_REMEMBERTXT' => outputLanguageTag('remembertxt'),
+
+    'LANG_VAILDATE_USERNAME' => outputLanguageTag('nouser'),
+    'LANG_VAILDATE_PASSWORD' => outputLanguageTag('nopass'),
+
     'LANG_QUICKSEARCH' => outputLanguageTag('quicksearch'),
     'LANG_SEARCH' => outputLanguageTag('search'),
     'LANG_ADVSEARCH' => outputLanguageTag('advsearch'),
