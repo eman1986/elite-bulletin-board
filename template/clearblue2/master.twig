@@ -211,16 +211,16 @@
           </div>
         </div>
 
-        <script type="text/javascript" src="includes/js/nod.min.js"></script>
+        <script type="text/javascript" src="includes/js/jquery.validate.min.js"></script>
         <div id="qlogin" style="display:none;">
             <form id="frmLogin" action="auth.php?do=login">
               <div class="form-group">
-                <label for="quser">{{LANG_USERNAME}}</label>
-                <input type="email" class="form-control" id="quser" style="width:250px;">
+                <label class="control-label" for="quser">{{LANG_USERNAME}}</label>
+                <input type="email" class="form-control" name="username" id="quser" style="width:250px;">
               </div>
               <div class="form-group">
-                <label for="qpassword">{{LANG_PASSWORD}}</label>
-                <input type="password" class="form-control" id="qpassword" style="width:250px;">
+                <label class="control-label" for="qpassword">{{LANG_PASSWORD}}</label>
+                <input type="password" class="form-control" name="password" id="qpassword" style="width:250px;">
               </div>
               <div class="checkbox">
                 <label>
@@ -230,16 +230,25 @@
               <button type="submit" class="btn btn-primary btn-xs btn-block">{{LANG_LOGIN}}</button>
               <button type="button" class="btn btn-default btn-xs btn-block">{{LANG_FORGOT}}</button>
                 <script type="text/javascript">
-                    var qLoginRules = [
-                        [ '#quser', 'presence', '{{LANG_VAILDATE_USERNAME}}' ],
-                        [ '#qpassword', 'presence', '{{LANG_VAILDATE_PASSWORD}}' ]
-                    ];
-                    var options = {
-                        'groupClass' : 'inputError',
-                        'errorPosClasses': 'control-label',
-                        'errorClass' : 'inputError'
-                    };
-                    $("#frmLogin").nod(qLoginRules, options);
+                    $(document).ready(function() {
+                        $('#frmLogin').validate({
+                            rules: {
+                                username: {
+                                    required: true
+                                },
+                                password: {
+                                    required: true
+                                }
+                            },
+                            errorClass: "help-block",
+                            highlight: function(element) {
+                                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                            },
+                            success: function(element) {
+                                element.closest('.form-group').removeClass('has-error').addClass('has-success');
+                            }
+                        });
+                    });
                 </script>
             </form>
         </div>        
