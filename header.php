@@ -59,7 +59,7 @@ try {
 $timeout = time() - 120;
 
 //delete any old entries
-$updateOnlineStatusQ = $db->prepare('DELETE FROM ebb_online WHERE time =:time');
+$updateOnlineStatusQ = $db->prepare('DELETE FROM ebb_online WHERE time < :time');
 $updateOnlineStatusQ->execute(array(":time" => $timeout));
 
 //load our preference object.
