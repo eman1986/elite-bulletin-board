@@ -45,7 +45,6 @@ $options = array(
 
 try {
     $db = new \PDO(DB_DSN, DB_USER, DB_PASS, $options);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     $page = new \ebb\template();
     exit($page->output("error", array(
