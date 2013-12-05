@@ -5,7 +5,7 @@ define('IN_EBB', true);
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/20/2013
+ * @version 12/05/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 require "header.php";
@@ -30,30 +30,26 @@ echo $page->output("index", array(
     'LANG_LOGOUT' => outputLanguageTag('common:logout'),
     'LANG_USERNAME' => outputLanguageTag('common:username'),
     'LANG_REGISTER' => outputLanguageTag('common:register'),
-    'LANG_PASSWORD' => outputLanguageTag('pass'),
-    'LANG_FORGOT' => outputLanguageTag('forgot'),
-    'LANG_EMAIL' => outputLanguageTag('email'),
-    'LANG_REMEMBERTXT' => outputLanguageTag('remembertxt'),
+    'LANG_PASSWORD' => outputLanguageTag('login:pass'),
+    'LANG_FORGOT' => outputLanguageTag('login:forgot'),
+    'LANG_EMAIL' => outputLanguageTag('user:email'),
+    'LANG_REMEMBERTXT' => outputLanguageTag('login:remembertxt'),
 
-    'LANG_VAILDATE_USERNAME' => outputLanguageTag('nouser'),
-    'LANG_VAILDATE_PASSWORD' => outputLanguageTag('nopass'),
-
-    'LANG_QUICKSEARCH' => outputLanguageTag('quicksearch'),
-    'LANG_SEARCH' => outputLanguageTag('search'),
-    'LANG_ADVSEARCH' => outputLanguageTag('advsearch'),
-    'LANG_PMS' => outputLanguageTag('pm'),
-    'LANG_PMINBOX' => outputLanguageTag('inbox'),
-    'LANG_PMARCHIVE' => outputLanguageTag('archive'),
+    'LANG_QUICKSEARCH' => outputLanguageTag('search:quicksearch'),
+    'LANG_SEARCH' => outputLanguageTag('menu:search'),
+    'LANG_ADVSEARCH' => outputLanguageTag('search:advsearch'),
+    'LANG_PMS' => outputLanguageTag('menu:pm'),
+    'LANG_PMINBOX' => outputLanguageTag('pm:inbox'),
+    'LANG_PMARCHIVE' => outputLanguageTag('pm:archive'),
     'UNREADPMCOUNT' => 0, //@TODO IMPLEMENT
-    'LANG_UNREADPM' => outputLanguageTag('newpm'),
-    'LANG_POSTPM' => outputLanguageTag('PostPM'),
-    'LANG_CP' => outputLanguageTag('admincp'),
-    'LANG_NEWPOSTS' => outputLanguageTag('newposts'),
-    'LANG_HOME' => outputLanguageTag('home'),
-    'LANG_HELP' => outputLanguageTag('help'),
-    'LANG_MEMBERLIST' => outputLanguageTag('members'),
-    'LANG_UOPTIONS' => outputLanguageTag('uoptions'),
-    'LANG_CHANGETHEME' => outputLanguageTag('changetheme'),
+    //'LANG_UNREADPM' => outputLanguageTag('newpm'),
+    'LANG_POSTPM' => outputLanguageTag('pm:PostPM'),
+    'LANG_CP' => outputLanguageTag('acp:admincp'),
+    'LANG_NEWPOSTS' => outputLanguageTag('index:newposts'),
+    'LANG_HOME' => outputLanguageTag('menu:home'),
+    'LANG_MEMBERLIST' => outputLanguageTag('menu:members'),
+    'LANG_UOPTIONS' => outputLanguageTag('menu:uoptions'),
+    'LANG_CHANGETHEME' => outputLanguageTag('menu:changetheme'),
     'SETTINGS_ANNOUNCEMENTS' => $boardPref->getPreferenceValue("infobox_status"),
     'LANG_ANNOUNCEMENTS' => outputLanguageTag("index:announcements"),
     'ANNOUNCEMENTS' => GetAnnouncements(),
