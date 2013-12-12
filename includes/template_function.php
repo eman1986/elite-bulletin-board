@@ -7,7 +7,7 @@ if (!defined('IN_EBB') ) {
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/25/2013
+ * @version 12/12/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
@@ -264,52 +264,63 @@ function timezone_select($tzone="") {
 
     return $timezone;
 }
-#style select function
+
+/**
+ * Style Select Form Builder
+ * @param string $stylesel The value already set by the user.
+ * @return string
+*/
 function style_select($stylesel){
 
     global $db;
 
-    $db->run = "SELECT id, Name FROM ebb_style";
-    $style_query = $db->query();
-    $db->close();
+    try {
+        $styleSelect = '<select name="style">';
+        $getStylesQ = $db->query("SELECT id, Name FROM ebb_style");
+        $styles = $getStylesQ->fetchAll(PDO::FETCH_OBJ);
 
-    $style_select = "<select name=\"style\" class=\"text\">";
-    while ($row = mysql_fetch_assoc ($style_query)){
-        #see what is currently selected already.
-        if ($stylesel == ""){
-            $style_select .= "<option value=\"$row[id]\">$row[Name]</option>";
-        }else{
-            if ($stylesel == $row['id']){
-                $style_select .= "<option value=\"$row[id]\" selected=selected>$row[Name]</option>";
-            }else{
-                $style_select .= "<option value=\"$row[id]\">$row[Name]</option>";
+        foreach($styles as $style) {
+            if (empty($stylesel)) {
+                $styleSelect .= '<option value="'.$style->id.'">'.$style->Name.'</option>'."\n";
+            } else {
+                if ($stylesel == $style->id) {
+                    $styleSelect .= '<option value="'.$style->id.'" selected=selected>'.$style->Name.'</option>'."\n";
+                } else {
+                    $styleSelect .= '<option value="'.$style->id.'">'.$style->Name.'</option>'."\n";
+                }
+            }
+        }
+        $styleSelect .= '</select>';
+
+        return $styleSelect;
+    }  catch (PDOException $e) {
+        return $e->getMessage();
+    }
+}
+
+/**
+ * Language Select Form Builder
+ * @param string $langsel The value already set by the user.
+ * @return string
+*/
+function lang_select($langsel) {
+    $langSelectField = '<select name="default_lang">'."\n";
+    $handle = opendir("lang");
+    while (($file = readdir($handle))) {
+        if (is_file("lang/$file") && false !== strpos($file, '.lang.php')) {
+
+            $file = str_replace(".lang.php", "", $file);
+            if (empty($langsel)) {
+                $langSelectField .= '<option value="'.$file.'">'.$file.'</option>'."\n";
+            } else {
+                if ($langsel == $file) {
+                    $langSelectField .= '<option value="'.$file.'" selected=selected>'.$file.'</option>'."\n";
+                } else {
+                    $langSelectField .= '<option value="'.$file.'">'.$file.'</option>'."\n";
+                }
             }
         }
     }
-    $style_select .= "</select>";
-
-    return ($style_select);
-}
-#language select function
-function lang_select($langsel) {
-
-	$lang = "<select name=\"default_lang\" class=\"text\">";
-	$handle = opendir("lang");
-	while (($file = readdir($handle))) {
-		if (is_file("lang/$file") && false !== strpos($file, '.lang.php')) {
-
-			$file = str_replace(".lang.php", "", $file);
-			if($langsel == ""){
-				$lang .= "<option value=\"$file\">$file</option>"; 
-			}else{
-				if ($langsel == $file){
-					$lang .= "<option value=\"$file\" selected=selected>$file</option>";
-				}else{
-					$lang .= "<option value=\"$file\">$file</option>";
-				}
-			}
-		}
-	}
-	$lang .= "</select>";
-	return ($lang);
+    $langSelectField .= '</select>';
+    return $langSelectField;
 }
