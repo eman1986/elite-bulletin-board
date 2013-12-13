@@ -17,277 +17,442 @@ the Free Software Foundation; either version 2 of the License, or
 class PM {
 
     //
-    // Data Members
+    // DATA MEMBERS
     //
 
     /**
-             * Defines a user.
-             * @var string
-         */
-    public $user;
+     * PDO instance.
+     * @var PDO
+     */
+    protected $db;
 
-    /**
-             * Defines a PM ID.
-             * @var int
-         */
-    public $pmID;
+    private $id;
+    private $subject;
+    private $sender;
+    private $receiver;
+    private $folder;
+    private $message;
+    private $date;
+    private $readStatus;
+    private static $sdb;
+    public static $validFolders = array('Inbox', 'Archive');
 
-    //
-    // Constructors & Destructors
-    //
 
-    /**
-             * Creates our PM Object.
-             * @param int $pmID PM ID
-             * @param string $pmUsr PM User.
-             * @access Public
-             * @version 6/11/2011
-            */
-    public function __construct($pmID, $pmUsr){
-        $this->pmID = $pmID;
-        $this->user = $pmUsr;
-    }
-
-    /**
-             * Resets our PM Object.
-             * @access Public
-             * @version 6/8/2011
-            */
-    public function __destruct(){
-        unset($this->pmID);
-        unset($this->user);
+    public function __construct(\PDO $db) {
+        $this->db = $db;
+        self::$sdb = $db; //get instance for our static methods
     }
 
     //
-    // Methods
+    // PROPERTIES
     //
 
     /**
-             * Obtains a list of Private Mages.
-             * @param string $folder - Folder to view.
-             * @access Public
-             * @version 4/13/2011
-             * @return  SQL query
-         */
-    public function ListMessages($folder="Inbox") {
-
-        global $db;
-
-        if($folder == "Outbox"){
-            $db->SQL = "SELECT id, Subject, Sender, Date, Read_Status FROM ebb_pm WHERE Sender='".$this->user."' AND Read_Status='' ORDER BY Date DESC";
-            $pmQry = $db->query();
-        }else{
-            $db->SQL = "SELECT id, Subject, Sender, Date, Read_Status FROM ebb_pm WHERE Reciever='".$this->user."' AND Folder='$folder' ORDER BY Date DESC";
-            $pmQry = $db->query();
-        }
-
-        return $pmQry;
+     * set value for id
+     *
+     * type:MEDIUMINT UNSIGNED,size:8,default:null,primary,unique,autoincrement
+     *
+     * @param mixed $id
+     * @return PM
+     */
+    public function &setId($id) {
+        $this->id=$id;
+        return $this;
     }
 
     /**
-             * Gets the amount of messages inside of a PM Folder.
-             * @param string $folder
-             * @return int
-             * @access Public
-             * @version 4/13/2011
-        */
-    public function GetUsageAmount($folder="Inbox") {
-
-        global $db;
-
-        if($folder == "Outbox"){
-            $db->SQL = "SELECT id FROM ebb_pm WHERE Sender='".$this->user."' AND Read_Status=''";
-            $usageAmt = $db->affectedRows();
-        }else{
-            $db->SQL = "SELECT id FROM ebb_pm WHERE Reciever='".$this->user."' AND Folder='$folder'";
-            $usageAmt = $db->affectedRows();
-        }
-
-        return $usageAmt;
+     * get value for id
+     *
+     * type:MEDIUMINT UNSIGNED,size:8,default:null,primary,unique,autoincrement
+     *
+     * @return mixed
+     */
+    public function getId() {
+        return $this->id;
     }
 
     /**
-             * Composes a message to a defined user.
-             * @param string $sendTo - Person getting the message.
-             * @param string $sentFrom - Person sending the message.
-             * @param string $subject - Subject of PM Message.
-             * @param string $body - Message body.
-             * @param string $date - Date message was sent.
-             * @access Public
-             * @version 4/9/2011
-         */
-    public function ComposeMessage($sendTo, $sentFrom, $subject, $body, $date) {
-
-        global $db;
-
-        $db->SQL = "INSERT INTO ebb_pm (Sender, Reciever, Subject, Folder, Message, Date) VALUES('".$sentFrom."', '".$sendTo."', '".$subject."', 'Inbox', '".$body."', '".$date."')";
-        $db->query();
+     * set value for Subject
+     *
+     * type:VARCHAR,size:25,default:
+     *
+     * @param mixed $subject
+     * @return PM
+     */
+    public function &setSubject($subject) {
+        $this->subject=$subject;
+        return $this;
     }
 
     /**
-             * Gets a selected PM Message.
-             * @access Public
-             * @return Data Row
-             * @version 4/9/2011
-         */
-    public function ReadMessage() {
-
-        global $db;
-
-        #get PM data.
-        $db->SQL = "SELECT id, Read_Status, Sender, Reciever, Folder, Subject, Message, Date FROM ebb_pm WHERE id='".$this->pmID."'";
-        $pmMessage = $db->fetchResults();
-
-        return $pmMessage;
+     * get value for Subject
+     *
+     * type:VARCHAR,size:25,default:
+     *
+     * @return mixed
+     */
+    public function getSubject() {
+        return $this->subject;
     }
 
     /**
-             * See if a PM Exists.
-             * @access Public
-             * @version 4/13/2011
-             * @return boolean
-        */
-    public function PMExists() {
-        global $db;
-
-        $db->SQL = "SELECT id  FROM ebb_pm WHERE id='".$this->pmID."'";
-        $pmCheck = $db->affectedRows();
-
-        #see if PM exists.
-        if ($pmCheck == 0) {
-            return false;
-        } else {
-            return true;
-        }
+     * set value for Sender
+     *
+     * type:VARCHAR,size:25,default:
+     *
+     * @param mixed $sender
+     * @return PM
+     */
+    public function &setSender($sender) {
+        $this->sender=$sender;
+        return $this;
     }
 
     /**
-             * Deletes a selected PM Message.
-             * @access Public
-             * @version 4/9/2011
-         */
-    public function DeleteMessage() {
-
-        global $db, $lang;
-
-        #only delete message if user is owner.
-        if ($this->IsPMOwner()) {
-            //process query
-            $db->SQL = "DELETE FROM ebb_pm WHERE id='".$this->pmID."'";
-            $db->query();
-        } else {
-            $displayMsg = new notifySys($lang['accessdenied'], true);
-            $displayMsg->displayError();
-        }
+     * get value for Sender
+     *
+     * type:VARCHAR,size:25,default:
+     *
+     * @return mixed
+     */
+    public function getSender() {
+        return $this->sender;
     }
 
     /**
-             * Archives a selected PM Message.
-             * @access Public
-             * @version 6/22/2011
-         */
-    public function ArchiveMessage() {
-
-        global $db, $boardPref, $lang;
-
-        #see if user has enough space to save message.
-        $db->SQL = "SELECT id FROM ebb_pm WHERE Reciever='".$this->user."' AND Folder='Archive'";
-        $check_archive = $db->affectedRows();
-
-        if ($check_archive == $boardPref->getPreferenceValue("archive_quota")){
-            $displayMsg = new notifySys($lang['overquota'], true);
-            $displayMsg->displayError();
-        }else{
-            //process query
-            $db->SQL = "UPDATE ebb_pm SET Folder='Archive' WHERE id='".$this->pmID."'";
-            $db->query();
-        }
+     * set value for Receiver
+     *
+     * type:VARCHAR,size:25,default:
+     *
+     * @param mixed $receiver
+     * @return PM
+     */
+    public function &setReceiver($receiver) {
+        $this->receiver=$receiver;
+        return $this;
     }
 
     /**
-             * Performs a check to see if the user viewing the message has access to this message.
-             * @access Public
-             * @version 6/8/2011
-             * @return boolean
-         */
-    public function IsPMOwner() {
-
-        global $db;
-
-            #get PM data.
-        $db->SQL = "SELECT id FROM ebb_pm WHERE id='".$this->pmID."' AND Reciever='".$this->user."'";
-        $validateOwner = $db->affectedRows();
-
-        //see if pm message belong to the right user.
-        if ($validateOwner == 1){
-            return true;
-        } else {
-            return false;
-        }
+     * get value for Receiver
+     *
+     * type:VARCHAR,size:25,default:
+     *
+     * @return mixed
+     */
+    public function getReceiver() {
+        return $this->receiver;
     }
 
     /**
-             * Performs a check to see if the user posting a message isn't blocked by the desired sender.
-             * @param string $bUser User to check against.
-             * @access Public
-             * @version 6/22/2011
-             * @return boolean
-         */
-    public function IsBannedByUser($bUser) {
-
-        global $db;
-
-        //check to see if this user is on the ban list.
-        $db->SQL = "SELECT rid FROM ebb_relationship WHERE status='2' AND friend='$bUser' AND uid='".$this->user."'";
-        $validateBan = $db->affectedRows();
-
-        if ($validateBan == 1) {
-            return true;
-        } else {
-            return false;
-        }
+     * set value for Folder
+     *
+     * type:VARCHAR,size:7,default:null
+     *
+     * @param mixed $folder
+     * @return PM
+     */
+    public function &setFolder($folder) {
+        $this->folder=$folder;
+        return $this;
     }
 
     /**
-             * Checks to see user has space for message.
-             * @access Public
-             * @version 6/22/2011
-             * @param $folder the folder we're checking for quota.
-             * @return boolean
-         */
-    public function QuotaCheck($folder, $usr="") {
+     * get value for Folder
+     *
+     * type:VARCHAR,size:7,default:null
+     *
+     * @return mixed
+     */
+    public function getFolder() {
+        return $this->folder;
+    }
 
-        global $db, $boardPref;
+    /**
+     * set value for Message
+     *
+     * type:TEXT,size:65535,default:null
+     *
+     * @param mixed $message
+     * @return PM
+     */
+    public function &setMessage($message) {
+        $this->message=$message;
+        return $this;
+    }
 
-        #see how we're checking this.
-        if ($usr == "") {
-            $sUsr = $this->user;
-        } else {
-            $sUsr = $usr;
-        }
+    /**
+     * get value for Message
+     *
+     * type:TEXT,size:65535,default:null
+     *
+     * @return mixed
+     */
+    public function getMessage() {
+        return $this->message;
+    }
 
-        if ($folder == "Inbox") {
+    /**
+     * set value for Date
+     *
+     * type:VARCHAR,size:14,default:
+     *
+     * @param mixed $date
+     * @return PM
+     */
+    public function &setDate($date) {
+        $this->date=$date;
+        return $this;
+    }
 
-            $db->SQL = "SELECT id FROM ebb_pm WHERE Reciever='".$sUsr."' AND Folder='Inbox'";
-            $check_inbox = $db->affectedRows();
+    /**
+     * get value for Date
+     *
+     * type:VARCHAR,size:14,default:
+     *
+     * @return mixed
+     */
+    public function getDate() {
+        return $this->date;
+    }
 
-            //check to see if the from user's inbox is full.
-            if ($check_inbox == $boardPref->getPreferenceValue("pm_quota")){
-                return false;
+    /**
+     * set value for Read_Status
+     *
+     * type:CHAR,size:3,default:
+     *
+     * @param mixed $readStatus
+     * @return PM
+     */
+    public function &setReadStatus($readStatus) {
+        $this->readStatus=$readStatus;
+        return $this;
+    }
+
+    /**
+     * get value for Read_Status
+     *
+     * type:CHAR,size:3,default:
+     *
+     * @return mixed
+     */
+    public function getReadStatus() {
+        return $this->readStatus;
+    }
+
+    //
+    // METHODS
+    //
+
+    /**
+     * Get a list of message assigned to a defined user.
+     * @param integer $uid The UserID we want to filter by.
+     * @param string $tZone The user's time zone.
+     * @param string $dtFormat The user's date/time format.
+     * @param string $folder The folder we wish to look in.
+     * @param string $order The column and direction to sort data by.
+     * @param integer $page how many records to show per page.
+     * @param integer $indx where to begin the data range.
+     * @return array an array of data to present to grid.
+     */
+    public function getPMMessagesByUserID($uid, $tZone,$dtFormat, $folder, $order, $page, $indx) {
+        $messages = array();
+
+        //fetch pm data.
+        $this->db->select('p.id, p.Subject, p.Date, p.Read_Status, u.Username')
+            ->from('ebb_pm p')
+            ->join('ebb_users u', 'p.Sender=u.id', 'LEFT')
+            ->where('p.Receiver', $uid)
+            ->where('p.Folder', $folder);
+
+        if (!is_null($order)) {
+            if ($order == "formattedDateTime DESC") {
+                $this->db->order_by('p.Date DESC');
+            } elseif ($order == "formattedDateTime ASC") {
+                $this->db->order_by('p.Date ASC');
             } else {
-                return true;
-            }
-        } else if ($folder == "Archive") {
-
-            $db->SQL = "SELECT id FROM ebb_pm WHERE Reciever='".$sUsr." AND Folder='Archive'";
-            $check_archive = $db->affectedRows();
-
-            #see if user has enough space to save message.
-            if ($check_archive == $boardPref->getPreferenceValue("archive_quota")){
-                return false;
-            } else {
-                return true;
+                $this->db->order_by($order);
             }
         }
+
+        if (!is_null($page) && !is_null($indx)) {
+            $this->db->limit($page, $indx);
+        }
+
+        $query = $this->db->get();
+
+        //loop through data and bind to an array.
+        foreach ($query->result() as $row) {
+            $row->formattedDateTime = datetimeFormatter($row->Date,$dtFormat,$tZone);
+            $messages[] = $row;
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Get a defined PM Message by PM ID.
+     * @param integer $id The PM ID we want to filter by.
+     * @return boolean TRUE, the record exists; FALSE, no such record exists.
+     */
+    public function getPMMessage($id) {
+        try {
+            $query = $this->db->prepare('SELECT id, Subject, Folder, Message, Date, Read_Status, Receiver, Sender FROM ebb_pm WHERE id=:id LIMIT 1');
+            $query->execute(array(":id" => $id));
+            $pmData = $query->fetchAll();
+
+            //see if we have any records to show.
+            if(count($pmData) > 0) {
+                $this->setId($pmData->id);
+                $this->setFolder($pmData->Folder);
+                $this->setSubject($pmData->Subject);
+                $this->setDate($pmData->Date);
+                $this->setMessage($pmData->Message);
+                $this->setReadStatus($pmData->Read_Status);
+                $this->setReceiver($pmData->Receiver);
+                $this->setSender($pmData->Sender);
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return FALSE;
+        }
+    }
+
+    /**
+     * Get a total count of records for the ebb_pm table.
+     * @param integer $uid User ID to filter by.
+     * @param string $folder The folder we wish to look in.
+     * @return integer
+     */
+    public function countAllMessagesByUser($uid, $folder) {
+        $this->db->select('id')
+            ->from('ebb_pm')
+            ->where('Receiver', $uid)
+            ->where('Folder', $folder);
+
+        $query = $this->db->get();
+
+        return $query->num_rows();
+    }
+
+    /**
+     * Validate the user owns this message.
+     * @param integer $uid
+     * @return boolean TRUE means the message belongs to this user, FALSE, mean it does not.
+     */
+    public function IsPMOwner($uid) {
+        $this->db->select('id')
+            ->from('ebb_pm')
+            ->where('id', $this->getId())
+            ->where('Receiver', $uid)
+            ->limit(1);
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() == 1) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Marks a message as read.
+     */
+    public function markAsRead() {
+        $data = array('Read_Status' => 0);
+        #update user.
+        $this->db->where('id', $this->getId());
+        $this->db->update('ebb_pm', $data);
+    }
+
+    /**
+     * Creates a new PM Message.
+     * @return integer New PM ID.
+     */
+    public function CreateMessage() {
+        #setup values.
+        $data = array(
+            'Subject' => $this->getSubject(),
+            'Sender' => $this->getSender(),
+            'Receiver' => $this->getReceiver(),
+            'Folder' => 'Inbox',
+            'Message' => $this->getMessage(),
+            'Date' => time(),
+            'Read_Status' => 1
+        );
+
+        #add new message.
+        $this->db->insert('ebb_pm', $data);
+
+        //get pm id
+        return $this->db->insert_id();
+    }
+
+    /**
+     * Deletes the defined PM Message.
+     */
+    public function deleteMessage() {
+        $this->db->where('id', $this->getId())
+            ->delete('ebb_pm');
+    }
+
+    /**
+     * Move a message to the Archive folder.
+     */
+    public function archiveMessage() {
+        $data = array('Folder' => 'Archive');
+        #update user.
+        $this->db->where('id', $this->getId());
+        $this->db->update('ebb_pm', $data);
+    }
+
+    /**
+     * Get the amount of new messages by user.
+     * @param integer $uid The user we want to check
+     * @return integer Number of new messages.
+     */
+    public static function getNewMessageCount($uid) {
+        self::$db->select('id')
+            ->from('ebb_pm')
+            ->where('Read_Status', 1)
+            ->where('Receiver', $uid)
+            ->limit(1);
+
+        $query = self::$db->get();
+        return $query->num_rows();
+    }
+
+    /**
+     * See if we have hit the quota set by administrator.
+     * @param string $folder The folder to check.
+     * @param integer $uid User ID to check by.
+     * @return boolean TRUE, quota not reached; FALSE, quota has been reached.
+     */
+    public static function QuotaCheck($folder, $uid) {
+        //see if we entered a correct folder.
+        if (!in_array($folder, self::$validFolders)) {
+            log_message('error', 'invalid folder was provided.'.$folder); //log error in error log.
+            return FALSE;
+        } else {
+            self::$db->select('id')
+                ->from('ebb_pm')
+                ->where('Folder', $folder)
+                ->where('Receiver', $uid);
+            $query = self::$db->get();
+            $folderQuota = $query->num_rows();
+
+            //see if we went over our quota.
+            if ($folder == "Inbox" && self::$ci->preference->getPreferenceValue("pm_quota") == $folderQuota) {
+                return FALSE;
+            } elseif ($folder == "Archive" && self::$ci->preference->getPreferenceValue("archive_quota") == $folderQuota) {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
+        }
+
     }
 }
