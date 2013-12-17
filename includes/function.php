@@ -7,7 +7,7 @@ if (!defined('IN_EBB')) {
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/25/2013
+ * @version 12/10/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
@@ -159,7 +159,7 @@ function set_flashdata($title, $msg) {
 */
 function get_flashdata($title, $extendLife=false) {
     if (isset($_SESSION['flashData_'.$title])) {
-        $flashData = var_cleanup($_SESSION['errors']);
+        $flashData = var_cleanup($_SESSION['flashData_'.$title]);
 
         //destroy flash session data, if no longer needed.
         if (!$extendLife)

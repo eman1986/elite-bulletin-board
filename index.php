@@ -1,4 +1,4 @@
-<?php
+ <?php
 define('IN_EBB', true);
 /**
  * index.php
@@ -21,6 +21,8 @@ echo $page->output("index", array(
     "TITLE" => $title,
     "PAGETITLE" => outputLanguageTag("index:title"),
     "TimeZone" => $gmt,
+    'NOTIFY_TYPE' => get_flashdata('NotifyType'),
+    'NOTIFY_MSG' => get_flashdata('NotifyMsg'),
     'LANG_WELCOME'=> outputLanguageTag('common:loggedinas'),
     'LANG_WELCOMEGUEST' => outputLanguageTag('common:welcomeguest'),
     'LOGGEDUSER' => $logged_user,

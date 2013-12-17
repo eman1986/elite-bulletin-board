@@ -9,7 +9,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: login.php
-Last Modified: 11/25/2013
+Last Modified: 12/16/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -21,9 +21,7 @@ the Free Software Foundation; either version 2 of the License, or
 class login {
 
     protected $db; // our PDO instance.
-
     public $usr;
-
     public $pwd;
 
     public function __construct(\PDO $db) {
@@ -115,12 +113,12 @@ class login {
                 $query = $this->db->prepare('UPDATE ebb_login_session SET last_active=:last_active, login_key=:login_key  WHERE username=:username');
                 $query->execute($data);
 
-                return (true); //session is valid
+                return TRUE; //session is valid
             } else {
-                return (false); //session is invalid
+                return FALSE; //session is invalid
             }
         } else {
-            return (false); //session is invalid
+            return FALSE; //session is invalid
         }
     }
 
@@ -135,9 +133,9 @@ class login {
         } else {
             //see if user entered the correct information.
             if ($this->validateUser() && $this->validatePwd()) {
-                return true;
+                return TRUE;
             } else {
-                return false;
+                return FALSE;
             }
         }
     }
@@ -236,7 +234,7 @@ class login {
      * Performs login process, creating any sessions or cookies needed for the system.
      * @param bool $remember
     */
-    public function logOn($remember=false){
+    public function logOn($remember=FALSE){
 
         global $ipAddr, $db;
 
@@ -246,20 +244,20 @@ class login {
             $_SESSION['ebb_user'] = $this->user;
 
             //generate session-based validation.
-            $this->regenerateSession(true);
+            $this->regenerateSession(TRUE);
         } else {
             //setup session length.
             $expireTime = time() + (2592000);
 
             //create cookie.
-            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, TRUE);
 
             #remove user's IP from who's online list.
             $db->SQL = "delete from ebb_online where ip='$ipAddr'";
             $db->query();
 
             //generate session-based validation.
-            $this->regenerateSession(true);
+            $this->regenerateSession(TRUE);
         }
     }
 
@@ -310,7 +308,7 @@ class login {
      * Performs a check to ensure the session value is valid and not hijacked.
      * @param bool $destroy true will destroy old session data; false will not.
     */
-    public function validateSession($destroy = false){
+    public function validateSession($destroy = FALSE){
         try {
             //validate User Agent and make sure it didn't just 'magically' change.
             if($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']){
@@ -325,7 +323,7 @@ class login {
                 $this->regenerateSession($destroy);
             }
         } catch(Exception $e) {
-            $error = new notifySys($e, true, true, __FILE__, __LINE__);
+            $error = new notifySys($e, TRUE, TRUE, __FILE__, __LINE__);
             $error->genericError();
         }
     }
@@ -334,14 +332,14 @@ class login {
      * creates a new session id and destroys the old session id(if any exists).
      * @param bool $destroy true will destroy old session data; false will not.
     */
-    public function regenerateSession($destroy = false){
+    public function regenerateSession($destroy = FALSE){
         if(!isset($_SESSION['userAgent'])){
             $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
         }
 
         //Create new session & destroy the old one.
         if ($destroy) {
-            session_regenerate_id(true);
+            session_regenerate_id(TRUE);
         } else {
             session_regenerate_id();
         }
@@ -361,9 +359,9 @@ class login {
 
         #setup bool. value to see if user is active or not.
         if ($validateStatus['active'] == 0) {
-            return(false);
+            return FALSE;
         } else {
-            return(true);
+            return TRUE;
         }
     }
 
@@ -486,7 +484,7 @@ class login {
 
         //see if user is marked as banned.
         if ($groupProfile == 6) {
-            $error = new notifySys($lang['banned'], true);
+            $error = new notifySys($lang['banned'], TRUE);
         }
 
         //see if user is suspended.
@@ -496,7 +494,7 @@ class login {
             $suspend_time = $suspend_date + $math;
             $today = time() - $math;
             if($suspend_time > $today){
-                $error = new notifySys($lang['suspended'], true);
+                $error = new notifySys($lang['suspended'], TRUE);
                 $error->displayError();
             }
         }
@@ -508,7 +506,7 @@ class login {
 
         #output an error msg.
         if ($banChk == 1) {
-            $error = new notifySys($lang['banned'], true);
+            $error = new notifySys($lang['banned'], TRUE);
             $error->displayError();
         }
     }
