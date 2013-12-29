@@ -7,7 +7,7 @@ if (!defined('IN_EBB')){
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 12/05/2013
+ * @version 12/29/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 
@@ -32,6 +32,7 @@ $lang['common:prev'] = 'Previous';
 $lang['common:error'] = 'Error';
 $lang['common:info'] = 'Information';
 $lang['common:errormsg'] = 'An error has occurred:';
+$lang['common:formrequestfail'] = 'Form method is not permitted.';
 $lang['common:accessdenied'] = 'You do not have permission to access this area.';
 $lang['common:poweredby'] = 'Powered by';
 #ID-checking language tags.

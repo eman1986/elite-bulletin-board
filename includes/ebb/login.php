@@ -9,7 +9,7 @@ if (!defined('IN_EBB')) {
 }
 /**
 Filename: login.php
-Last Modified: 12/16/2013
+Last Modified: 12/29/2013
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -38,6 +38,7 @@ class login {
      *@return bool
    */
     private function validateUser() {
+
         try {
             //check against the database to see if the username  match.
             $query = $this->db->prepare('SELECT COUNT(id) FROM ebb_users WHERE Username=:username LIMIT 1');
@@ -45,11 +46,11 @@ class login {
             $validateUser = $query->fetchColumn();
 
             //see if username is value.
-            return $validateUser == 0 ? false : true;
+            return $validateUser == 0 ? FALSE : TRUE;
         }
         catch (PDOException $e) {
             echo $e->getMessage();
-            return null;
+            return NULL;
         }
     }
 
@@ -65,11 +66,11 @@ class login {
             $hashedPwd = $query->fetchColumn();
 
             //see if password is value.
-            return password_verify($this->pwd, $hashedPwd) ? false : true;
+            return password_verify($this->pwd, $hashedPwd) ? FALSE : TRUE;
         }
         catch (PDOException $e) {
             echo $e->getMessage();
-            return false;
+            return FALSE;
         }
     }
 
@@ -84,12 +85,12 @@ class login {
             $query->execute(array(":username" => $key));
             $validateKey = $query->fetchColumn();
 
-            #setup bool. value to see if user is active or not.
-            return $validateKey == 0 ? false : true;
+            //determine if user is active or not.
+            return $validateKey == 0 ? FALSE : TRUE;
         }
         catch (PDOException $e) {
             echo $e->getMessage();
-            return false;
+            return FALSE;
         }
     }
 
@@ -100,29 +101,34 @@ class login {
      * @return bool
     */
     public function validateLoginSession($lastActive, $loginKey) {
-        #Level 1, validate username.
-        if ($this->validateUser()) {
-            #Level 2, validate activity & key.
-            if ((time() - $lastActive < 300) AND ($this->ValidateLoginKey($loginKey))) { //5 minutes
-                #Level 3, update activity value and regenerate key.
-                $new_loginKey = sha1(makeRandomPassword());
-                $new_lastActive = time() + 300;
+        //Level 1 - Validate session.
+        if ($this->validateSession()) {
+            //Level 2, validate username.
+            if ($this->validateUser()) {
+                //Level 3, validate activity & key.
+                if ((time() - $lastActive < 300 && $this->ValidateLoginKey($loginKey))) { //5 minutes
+                    //Level 4, update activity value and regenerate key.
+                    $new_loginKey = sha1(makeRandomPassword());
+                    $new_lastActive = time() + 300;
 
-                #set new values in session.
-                $_SESSION['ebbLastActive'] = $new_lastActive;
-                $_SESSION['ebbLoginKey'] = $new_loginKey;
+                    //set new values in session.
+                    $_SESSION['ebbLastActive'] = $new_lastActive;
+                    $_SESSION['ebbLoginKey'] = $new_loginKey;
 
-                #add new values to database.
-                $data = array(
-                    'last_active' => $new_lastActive,
-                    'login_key' => $new_loginKey,
-                    'username' => $this->usr
-                );
+                    //add new values to database.
+                    $data = array(
+                        'last_active' => $new_lastActive,
+                        'login_key' => $new_loginKey,
+                        'username' => $this->usr
+                    );
 
-                $query = $this->db->prepare('UPDATE ebb_login_session SET last_active=:last_active, login_key=:login_key  WHERE username=:username');
-                $query->execute($data);
+                    $query = $this->db->prepare('UPDATE ebb_login_session SET last_active=:last_active, login_key=:login_key  WHERE username=:username');
+                    $query->execute($data);
 
-                return TRUE; //session is valid
+                    return TRUE; //session is valid
+                } else {
+                    return FALSE; //session is invalid
+                }
             } else {
                 return FALSE; //session is invalid
             }
@@ -138,7 +144,7 @@ class login {
     public function validateLogin() {
         //See if this is a guest account.
         if ($this->usr == "guest" || $this->pwd == "guest") {
-            return false;
+            return FALSE;
         } else {
             //see if user entered the correct information.
             if ($this->validateUser() && $this->validatePwd()) {
@@ -150,83 +156,33 @@ class login {
     }
 
     /**
-     * validateAdministrator
-     * @return bool
-    */
-    public function validateAdministrator() {
-
-        #See if this is a guest account.
-        if ($this->user == "guest" || $this->pass == "guest") {
-            return FALSE;
-        } else {
-            //see if user entered the correct information.
-            if ($this->validateUser() || $this->validatePwd()) {
-                //see if user is an administrator.
-                $validateGroupPolicy = new groupPolicy($this->user);
-                if ($validateGroupPolicy->groupAccessLevel() == 1) {
-                    return TRUE;
-                } else {
-                    return FALSE;
-                }//END group validation.
-            } else {
-                return FALSE;
-            }//END user validation.
-        }//END guest filtering.
-    }
-
-    /**
-     * Validates current adminCP session.
-     * @return bool
-    */
-    public function validateAdministratorSession() {
-
-        //See if this is a guest account.
-        if ($this->user == "guest" || $this->pass == "guest") {
-            return FALSE;
-        } else {
-            //see if user entered the correct information.
-            if ($this->validateUser() || $this->validatePwdEncrypted()) {
-                //see if user is an administrator.
-                $validateGroupPolicy = new groupPolicy($this->user);
-                if ($validateGroupPolicy->groupAccessLevel() == 1) {
-                    return TRUE;
-                } else {
-                    return FALSE;
-                }//END group validation.
-            }else{
-                return FALSE;
-            }//END user validation.
-        }//END guest filtering.
-
-    }
-
-    /**
      * Performs login process, creating any sessions or cookies needed for the system.
-     * @param bool $remember
+     * @param boolean $remember keep user login info in tact?
     */
-    public function logOn($remember=FALSE) {
-
+    public function logOn($remember=FALSE){
         //see if user wants to remain logged on.
-        if ($remember) {
-            //create a session.
-            $_SESSION['ebb_user'] = $this->user;
-
-            //generate session-based validation.
-            $this->regenerateSession(TRUE);
-        } else {
+        if($remember) {
             //setup session length.
             $expireTime = time() + (2592000);
 
             //create cookie.
-            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, TRUE);
-
-            //remove user's IP from who's online list.
-            $query = $this->db->prepare('DELETE FROM ebb_online WHERE ip=:ip');
-            $query->execute(array(":ip" => detectProxy()));
-
-            //generate session-based validation.
-            $this->regenerateSession(TRUE);
+            setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
+        } else {
+            //create a session.
+            $_SESSION['ebb_user'] = $this->user;
         }
+
+        //remove user's IP from who's online list.
+        $query = $this->db->prepare('DELETE FROM ebb_online WHERE ip=:ip');
+        $query->execute(array(
+            ":ip" => detectProxy()
+        ));
+
+        $_SESSION['ebb_last_active'] = time() + 300;
+        $_SESSION['ebb_login_key'] = sha1(makeRandomPassword());
+
+        //generate session-based validation.
+        $this->regenerateSession(true);
     }
 
     /**
@@ -235,61 +191,38 @@ class login {
     public function logOut() {
 
         #setup session length.
-        $expireAcp = time()-3600;
         $expireTime = time() - (2592000);
 
-        #see if user wants to remain logged on.
+        //see if user was being remembered.
         if (isset($_COOKIE['ebbuser'])) {
-
-            #destroy cookies.
+            //destroy cookies.
             setcookie("ebbuser", $this->user, $expireTime, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
-
-            #remove user from who's online list.
-            $db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
-            $db->query();
-
-            #close out ACP cookie if needed
-            if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
-                setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
-            }
-
-            #clear session data.
-            session_destroy();
-        } else {
-            #remove user from who's online list.
-            $db->SQL = "DELETE FROM ebb_online WHERE Username='".$this->user."'";
-            $db->query();
-
-            #close out ACP cookie if needed
-            if (isset($_COOKIE['ebbacpu']) and (isset($_COOKIE['ebbacpp']))) {
-                setcookie("ebbacpu", $this->user, $expireAcp, '/', $_SERVER['SERVER_NAME'], isSecure() ? 1 : 0, true);
-            }
-
-            #clear session data.
-            session_destroy();
         }
+
+        //clear session data.
+        session_destroy();
+
+        $query = $this->db->prepare('DELETE FROM ebb_online WHERE Username=:username');
+        $query->execute(array(
+            ":username" => $this->user
+        ));
     }
 
     /**
      * Performs a check to ensure the session value is valid and not hijacked.
      * @param bool $destroy true will destroy old session data; false will not.
+     * @return bool TRUE, session is valid; FALSE, its not.
     */
-    public function validateSession($destroy = FALSE){
-        try {
-            //validate User Agent and make sure it didn't just 'magically' change.
-            if($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']){
-                //session mismatch, lets silently log out user.
-                $this->logOut();
-            } else {
-                /*
-                regenerate Session ID.
-                NOTE: We should only be clearing the old session IDs when performing important tasks
-                such as logging in or anything within the ACP.
-                */
-                $this->regenerateSession($destroy);
-            }
-        } catch(Exception $e) {
-            echo $e->getMessage();
+    public function validateSession($destroy = FALSE) {
+        //validate User Agent and make sure it didn't just 'magically' change.
+        if ($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']) {
+            //session mismatch, lets silently log out user.
+            $this->logOut();
+            return FALSE;
+        } else {
+            //regenerate Session ID.
+            $this->regenerateSession($destroy);
+            return TRUE;
         }
     }
 
@@ -298,126 +231,11 @@ class login {
      * @param bool $destroy true will destroy old session data; false will not.
     */
     public function regenerateSession($destroy = FALSE){
-        if(!isset($_SESSION['userAgent'])){
+        if (!isset($_SESSION['userAgent'])) {
             $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
         }
 
         //Create new session & destroy the old one.
-        if ($destroy) {
-            session_regenerate_id(TRUE);
-        } else {
-            session_regenerate_id();
-        }
-    }
-
-    /**
-     * Checks to see if the user is verified as active or still waiting for activation.
-     * @return bool
-    */
-    public function isActive(){
-        //@TODO MAY NOT NEED THIS ANYMORE!
-        //check against the database to see if the username and password match.
-//        $db->SQL = "SELECT active FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
-//        $validateStatus = $db->fetchResults();
-
-        #setup bool. value to see if user is active or not.
-//        if ($validateStatus['active'] == 0) {
-//            return FALSE;
-//        } else {
-//            return TRUE;
-//        }
-    }
-
-    /**
-	 * disable user's active status.
-	*/
-	public function deactivateUser(){
-        //@TODO MAY NOT NEED THIS ANYMORE!
-		//$db->SQL = "UPDATE ebb_users SET active='0' WHERE Username='".$this->user."' LIMIT 1";
-		//$db->query();
-	}
-
-	/**
-	 * activates the user to allow them access the system.
-	*/
-	public function activateUser(){
-
-        //@TODO MAY NOT NEED THIS ANYMORE!
-		//$db->SQL = "UPDATE ebb_users SET active='1' WHERE Username='".$this->user."' LIMIT 1";
-		//$db->query();
-	}
-
-    /**
-	 * See how many times the user failed to login correctly.
-	*/
-	public function getFailedLoginCt(){
-        //@TODO MAY NOT NEED THIS ANYMORE!
-        #get the count from the user table..
-        //$db->SQL = "SELECT failed_attempts FROM ebb_users WHERE Username='".$this->user."' LIMIT 1";
-		//$getFailedLoginCt = $db->fetchResults();
-		//return($getFailedLoginCt);
-	}
-
-    /**
-	 * increment fail count for defined user.
-	*/
-	public function setFailedLogin(){
-        //@TODO MAY NOT NEED THIS ANYMORE!
-
-	    //#get new count.
-		//$newCount = $this->getFailedLoginCt();
-		//$incrementFailedCt = $newCount['failed_attempts'] + 1;
-
-	    #get the count from the user table.
-        //$db->SQL = "UPDATE ebb_users SET failed_attempts='$incrementFailedCt' WHERE Username='".$this->user."' LIMIT 1";
-		//$db->query();
-	}
-
-    /**
-	 * Clears the failed count to 0.
-	*/
-	public function clearFailedLogin(){
-        //@TODO MAY NOT NEED THIS ANYMORE!
-
-        #clear count.
-        //$db->SQL = "UPDATE ebb_users SET failed_attempts='0' WHERE Username='".$this->user."' LIMIT 1";
-		//$db->query();
-	}
-
-    /**
-	 * Checks to see if the user is banned or suspended.
-	*/
-	public function checkBan() {
-        global $suspend_length, $suspend_date, $groupProfile;
-
-        //@TODO MAY NOT NEED THIS ANYMORE OR SHOULD BE REFACTORED!
-
-        //see if user is marked as banned.
-//        if ($groupProfile == 6) {
-//            $error = new notifySys($lang['banned'], TRUE);
-//        }
-
-        //see if user is suspended.
-//        if ($suspend_length > 0) {
-//            #see if user is still suspended.
-//            $math = 3600 * $suspend_length;
-//            $suspend_time = $suspend_date + $math;
-//            $today = time() - $math;
-//            if($suspend_time > $today){
-//                $error = new notifySys($lang['suspended'], TRUE);
-//                $error->displayError();
-//            }
-//        }
-
-        #see if the IP of the user is banned.
-//        $uip = detectProxy();
-//        $db->SQL = "SELECT ban_item FROM ebb_banlist WHERE ban_type='IP' AND ban_item LIKE '%$uip%'";
-//        $banChk = $db->affectedRows();
-//
-//        #output an error msg.
-//        if ($banChk == 1) {
-//            $error = new notifySys($lang['banned'], TRUE);
-//            $error->displayError();
-//        }
+        session_regenerate_id($destroy);
     }
 }

@@ -848,4 +848,28 @@ class user {
         }
     }
 
+    /**
+     * See if the user is either banned or suspended from the forum.
+     * @return string
+     */
+    public function checkBan() {
+
+        //see if user is marked as banned.
+        if ($this->getGid() == 6) {
+            return error(outputLanguageTag('common:banned'), 'error', TRUE);
+        }
+
+        //see if user is suspended.
+        if ($this->getSuspendLength() > 0) {
+            #see if user is still suspended.
+            $math = 3600 * $this->getSuspendLength();
+            $suspend_time = $this->getSuspendTime() + $math;
+            $today = time() - $math;
+
+            if ($suspend_time > $today) {
+                return error(outputLanguageTag('common:suspended'), 'error', TRUE);
+            }
+        }
+    }
+
 }

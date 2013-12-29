@@ -218,6 +218,14 @@ function outputLanguageTag($tag) {
 }
 
 /**
+ * Builds a hashed
+ * @return bool|false|string
+ */
+function generateFormToken() {
+    return password_hash(uniqid("CSRF_", true), PASSWORD_BCRYPT, array("cost" => 12));
+}
+
+/**
  * generate pagination
  * @param string $actions
  * @return string

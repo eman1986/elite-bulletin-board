@@ -4,7 +4,7 @@
  * @package Elite Bulletin Board
  * @author Elite Bulletin Board Team <http://elite-board.us>
  * @copyright (c) 2006-2015
- * @version 11/25/2013
+ * @version 12/29/2013
  * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
 */
 session_start();
@@ -63,6 +63,16 @@ $updateOnlineStatusQ->execute(array(":time" => $timeout));
 
 //load our preference object.
 $boardPref = new \ebb\preference($db);
+
+//see if the IP of the user is banned.
+$query = $this->db->prepare('SELECT COUNT(ban_ip) FROM ebb_banlist_ip WHERE ban_ip LIKE %:ban_ip%');
+$query->execute(array(":ban_ip" => detectProxy()));
+$banIpCount = $query->fetchColumn();
+
+//output an error msg.
+if ($banIpCount == 1) {
+    error(outputLanguageTag('common:banned'), 'error', TRUE);
+}
 
 //user check
 if (isset($_COOKIE['ebbuser']) || isset($_SESSION['ebb_user'])) {
