@@ -1,0 +1,38 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_msettings";
+var nosmtphost = "{LANG-NOSMTPHOST}";
+var longsmtphost = "{LANG-LONGSMTPHOST}";
+var nosmtpport = "{LANG-NOSMTPPORT}";
+var nosmtpuser = "{LANG-NOSMTPUSER}";
+var longsmtpuser = "{LANG-LONGSMTPUSER}";
+var nosmtppwd = "{LANG-NOSMTPPWD}";
+var longsmtppwd = "{LANG-LONGSMTPPWD}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-MAILSETTINGS}</div><br />
+
+<form method="post" action="acpsettings.php?section=save_mail" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-MAILSETTINGS}</td>
+</tr><tr>
+<td class="td2">{LANG-MAILTYPE}</td>
+<td class="td2">{MAILTYPE}</td>
+</tr><tr>
+<td class="td2">{LANG-HOST}</td>
+<td class="td2"><input type="text" name="smtp_host" size="30" value="{HOST}" class="text" id="smtphost" /><div id="smtphosterr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-PORT}</td>
+<td class="td2"><input type="text" name="smtp_port" size="5" value="{PORT}" class="text" maxlength="4" id="smtpport" /><div id="smtpporterr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-USERNAME}</td>
+<td class="td2"><input type="text" name="smtp_user" size="30" value="{USERNAME}" class="text" id="smtpuser" /><div id="smtpusererr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-PASSWORD}</td>
+<td class="td2"><input type="text" name="smtp_pass" size="30" value="{PASSWORD}" class="text" id="smtppwd" /><div id="smtppwderr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-SAVESETTINGS}" class="submit"></td>
+</tr>
+</table>
+</form><br />

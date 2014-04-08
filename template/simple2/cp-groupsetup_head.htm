@@ -1,0 +1,23 @@
+<script language="JavaScript" type="text/javascript"> 
+
+function del_confirm(id){ 
+if (confirm("{LANG-DELPROMPT}")){ 
+window.location="groupcp.php?action=group_delete&id="+id
+}
+} 
+</script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-GROUPSETUP}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+
+<p class="td2">[<a href="groupcp.php?action=new_group">{LANG-NEWGROUP}</a>] - [<a href="groupcp.php?action=manageprofile">{LANG-MANAGEPROFILE}</a>]</p>
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="6" class="td1" align="center"><b>::{LANG-GROUPSETUP}::</b></td>
+</tr><tr>
+<td class="td2" width="10%">&nbsp;</td>
+<td class="td2" align="center" width="20%">{LANG-GROUPNAME}</td>
+<td class="td2" align="center" width="20%">{LANG-GROUPSTATUS}</td>
+<td class="td2" align="center" width="10%">{LANG-GROUPACCESS}</td>
+<td class="td2" align="center" width="20%">{LANG-GROUPMEMBERLIST}</td>
+</tr>

@@ -1,0 +1,41 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_blacklist";
+var nouser = "{LANG-NOUSER}";
+var longuser = "{LANG-LONGUSER}";
+var nomtype = "{LANG-NOMTYPE}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-BLACKLISTEDUSERS}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+
+<!--USER BLACKLIST FORM -->
+<form method="post" action="usercp.php?action=blacklist_add" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-BLACKEDUSERNAME}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-USERNAMETOBAN}</td>
+<td class="td2" width="50%"><input type="text" name="blacklistuser" size="30" class="text" id="userban" /><div id="userbanerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BLACKLISTTYPE}</td>
+<td class="td2" width="50%"><input type="radio" name="match_type" value="Exact" class="text" id="exact" />{LANG-EXACTMATCH}&nbsp;<input type="radio" name="match_type" value="Wildcard" class="text" id="wildcard" />{LANG-WILDCARDMATCH}<div id="matchtypeerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />
+<!--REMOVE USER FROM BLACKLIST FORM -->
+<form method="post" action="usercp.php?action=blacklist_remove">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-UNBLACKLISTUSER}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-UNBLACKLISTUSERTXT}</td>
+<td class="td2" width="50%">{BLACKLIST}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

@@ -909,6 +909,9 @@ switch ($mode){
 		}
 	break;
 	default:
+		#load RSS reader library.
+		include "includes/simplepie.php";
+				
 		$user = (empty($_GET['user'])) ? $logged_user : var_cleanup($_GET['user']);
 		#see if user is viewing a profile.
 		if((empty($user)) and ($stat !== "guest")){
@@ -965,6 +968,44 @@ switch ($mode){
 		$join_date = date($time_format,strtotime("$gmt hours",strtotime($gmttime)));
 		
 		#BEGIN Portal Data Gathering.
+		
+		//see if anything is entered.
+		if ($userpref['rssfeed1'] == "") {
+			$feedTitle1 = '';
+			$feedDesc1 = '';
+			$feedItem1 = '';
+		} else {
+			#begin feed 1
+			$feed1 = new SimplePie();
+			$feed1->set_feed_url($userpref['rssfeed1']);
+			$feed1->enable_cache(false);
+			$feed1->init();
+			$feed1->handle_content_type();
+		
+			#define some variables.
+			$feedTitle1 = $feed1->get_title();
+			$feedDesc1 = $feed1->get_description();
+			$feedItem1 = getFeed($feed1);
+		}
+		
+		//see if anything is entered.
+		if ($userpref['rssfeed2'] == "") {
+			$feedTitle2 = '';
+			$feedDesc2 = '';
+			$feedItem2 = '';
+		} else {
+			#begin feed 2
+			$feed2 = new SimplePie();
+			$feed2->set_feed_url($userpref['rssfeed2']);
+			$feed2->enable_cache(false);
+			$feed2->init();
+			$feed2->handle_content_type();
+		
+			#define some variables.
+			$feedTitle2 = $feed2->get_title();
+			$feedDesc2 = $feed2->get_description();
+			$feedItem2 = getFeed($feed2);
+		}
 		
 		#latest Topics.
 		$LastTopics = latestTopics($userpref['Username']);

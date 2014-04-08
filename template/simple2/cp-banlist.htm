@@ -1,0 +1,74 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_emailban";
+var noemail = "{LANG-NOEMAIL}";
+var longemail = "{LANG-LONGEMAIL}";
+var nomtype = "{LANG-NOMTYPE}";
+//FORM VALUES FOR 2nd FORM.
+var ftype2 = "acp_ipban";
+var noip = "{LANG-NOIP}";
+var longip = "{LANG-LONGIP}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-BANLIST}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+<!-- EMAIL BANLIST -->
+<form method="post" action="usercp.php?action=ban_add" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-EMAILBAN}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BANEMAILTXT}</td>
+<td class="td2" width="50%"><input type="text" name="emailbanning" size="30" class="text" id="emailban" /><div id="emailbanerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-MATCHTYPETXT}</td>
+<td class="td2" width="50%"><input type="radio" name="match_type" value="Exact" class="text" id="exact" />{LANG-EXACTMATCH}&nbsp;<input type="radio" name="match_type" value="Wildcard" class="text" id="wildcard" />{LANG-WILDCARDMATCH}<div id="matchtypeerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+<input type="hidden" name="type" value="Email" />
+</form><br />
+<!-- UNBAN EMAIL FORM -->
+<form method="post" action="usercp.php?action=ban_remove">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-UNBANEMAIL}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-UNBANEMAILTXT}</td>
+<td class="td2" width="50%">{BANLIST-EMAIL}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+<input type="hidden" name="type" value="Email" />
+</form><br />
+<!-- BAN IP FORM -->
+<form method="post" action="usercp.php?action=ban_add" onsubmit="return acp_validate(ftype2);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-BANIP}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BANIPTXT}</td>
+<td class="td2" width="50%"><input type="text" name="ipbanning" size="30" class="text" id="ipban" /><div id="ipbanerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+<input type="hidden" name="type" value="IP" />
+</form><br />
+<!-- UNBAN IP FORM -->
+<form method="post" action="usercp.php?action=ban_remove">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-UNBANIP}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-UNBANIPTXT}</td>
+<td class="td2" width="50%">{BANLIST-IP}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+<input type="hidden" name="type" value="IP" />
+</form><br />

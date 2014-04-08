@@ -1,0 +1,27 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_smiles";
+var nocode = "{LANG-NOCODE}";
+var longcode = "{LANG-LONGCODE}";
+var noimage = "{LANG-NOIMAGE}";
+var longimage = "{LANG-LONGIMAGE}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; 
+{LANG-ADDSMILES}</div><br />
+
+<form method="post" action="generalcp.php?action=add_smiles_process" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ADDSMILES}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SMILECODE}</td>
+<td class="td2" width="50%"><input type="text" name="smile_code" size="30" class="text" id="code" /><div id="codeerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-SMILEFILE}</td>
+<td class="td2"><input type="text" name="smile_file" size="30" class="text" id="image" /><div id="imageerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-ADDSMILES}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

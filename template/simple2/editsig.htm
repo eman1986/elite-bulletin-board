@@ -1,0 +1,30 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "edit_sig";
+var longsig = "{LANG-LONGSIG}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<script type="text/javascript" src="includes/bbcode.js"></script>
+<br /><div class="td2"><a href="index.php">{TITLE}</a> &#187; <a href="Profile.php">{LANG-TITLE}</a> &#187; {LANG-EDITSIG}</div><br />
+<p class="td2">{LANG-TEXT}</p>
+
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1">{LANG-CURRENTSIG}</td>
+</tr><tr>
+<td class="td2">{CURRENTSIG}</td>
+</tr>
+</table><br />
+<form method="post" action="Profile.php?mode=sig_process" name="forum" onsubmit="return validate(ftype);">
+<table width="100%" border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" align="center" class="td1">{BBCODE}</td>
+</tr><tr>
+<td class="td2" align="center" width="20%">{SMILES}<br />
+<a href="#" OnClick="open_win('smiles.php', 455, 200);">{LANG-SMILES}</a></td>
+<td align="center" class="td1" width="80%"><textarea name="signature" rows="5" cols="50" wrap="soft" class="text" id="sig">{SIGNATURE}</textarea><div id="sigerr"></div></td>
+<tr>
+<td colspan="2" align="center" class="td1"><input type="submit" value="{LANG-SAVESIG}" class="submit" /></td>
+</tr>
+</table>
+</form>

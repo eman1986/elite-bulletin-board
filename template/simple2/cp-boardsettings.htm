@@ -1,0 +1,75 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_bsettings";
+var nobname = "{LANG-NOBNAME}";
+var longbname = "{LANG-LONGBNAME}";
+var invalidbaddr = "{LANG-INVALIDBADDR}";
+var longbaddr = "{LANG-LONGBADDR}";
+var invalidsiteaddr = "{LANG-INVALIDSITEADDR}";
+var longsiteaddr = "{LANG-LONGSITEADDR}";
+var nobmsg = "{LANG-NOBMSG}";
+var invalidemail = "{LANG-INVALIDEMAIL}";
+var longbemail = "{LANG-LONGBEMAIL}";
+var noamsg = "{LANG-NOAMSG}";
+var notimeform = "{LANG-NOTIMEFORM}";
+var longtimeform = "{LANG-LONGTIMEFORM}";
+var noperpage = "{LANG-NOPERPG}";
+var invalidperpg = "{LANG-INVALIDPERPG}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-BOARDSETTINGS}</div><br />
+
+<form method="post" action="acpsettings.php?section=save_board" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-BOARDSETTINGS}</td>
+</tr><tr>
+<td class="td2">{LANG-BOARDNAME}</td>
+<td class="td2"><input type="text" name="board_name" size="30" value="{BOARDNAME}" class="text" id="boardname" /><div id="boardnameerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-BOARDADDRESS}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-BOARDADDRESSTXT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="board_address" size="30" value="{BOARDADDRESS}" class="text" id="boardaddr"><div id="boardaddrerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-SITEADDRESS}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-SITEADDESSTXT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="site_address" size="30" value="{SITEADDRESS}" class="text" id="siteaddr" /><div id="siteaddrerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-PERPAGE}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-PERPAGEHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="perpg" size="3" maxlength="3" value="{PERPAGE}" class="text" id="perpg" /><div id="perpgerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-BOARDSTATUS}</td>
+<td class="td2">{BOARDSTATUS}</td>
+</tr><tr>
+<td class="td2">{LANG-OFFMSG}</td>
+<td class="td2"><textarea name="off_msg" rows="3" cols="50" wrap="soft" class="text" id="boardmsg">{OFFMSG}</textarea><div id="boardstaterr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-BOARDEMAIL}</td>
+<td class="td2"><input type="text" name="board_email" size="30" value="{BOARDEMAIL}" class="text" id="boardemail"><div id="boardemailerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-ANNOUNCEMENTSTATUS}</td>
+<td class="td2">{ANNOUNCEMENTSTATUS}</td>
+</tr><tr>
+<td class="td2">{LANG-ANNOUNCEMENT}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-ANNOUNCERULE}', this, event, '150px')">[?]</a></td>
+<td class="td2"><textarea name="announce_msg" rows="3" cols="50" wrap="soft" class="text" id="announce">{ANNOUNCEMENT}</textarea><div id="announcestaterr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-DEFAULTSTYLE}</td>
+<td class="td2">{DEFAULTSTYLE}</td>
+</tr><tr>
+<td class="td2">{LANG-DEFAULTLANGUAGE}</td>
+<td class="td2">{DEFAULTLANGUAGE}</td>
+</tr><tr>
+<td class="td2">{LANG-GZIP}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-GZIPREQ}', this, event, '150px')">[?]</a></td>
+<td class="td2">{GZIP}</td>
+</tr><tr>
+<td class="td2">{LANG-SPELLCHECKER}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-PSPELL}', this, event, '150px')">[?]</a></td>
+<td class="td2">{SPELLCHECKER}</td>
+</tr><tr>
+<td class="td2">{LANG-TIMEZONE}</td>
+<td class="td2">{TIMEZONE}</td>
+</tr><tr>
+<td class="td2">{LANG-TIMEFORMAT}<a href="http://us2.php.net/manual/en/function.date.php" target="_blank" class="hintanchor" onMouseover="showhint('{LANG-TIMERULE}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="default_time" size="30" value="{TIMEFORMAT}" class="text" id="timeform"><div id="timeformaterr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-SAVESETTINGS}" class="submit"></td>
+</tr>
+</table>
+</form><br />

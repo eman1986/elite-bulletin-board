@@ -1,0 +1,59 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_usettings";
+var noterm = "{LANG-NOTERM}";
+var nopmquota = "{LANG-NOPMQUOTA}";
+var invalidpmquota = "{LANG-INVALIDPMQUOTA}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-USERSETTINGS}</div><br />
+
+<form method="post" action="acpsettings.php?section=save_user" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" align="center" class="td1">{LANG-USERSETTINGS}</td>
+</tr><tr>
+<td class="td2">{LANG-TOSSTAT}</td>
+<td class="td2">{TOSSTAT}</td>
+</tr><tr>
+<td class="td2">{LANG-TOS}</td>
+<td class="td2"><textarea name="term_msg" rows="3" cols="50" wrap="soft" class="text" id="term">{TOS}</textarea><div id="termerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-REG-STAT}</td>
+<td class="td2">{REG-STAT}</td>
+</tr><tr>
+<td class="td2">{LANG-ACTIVE-TYPE}</td>
+<td class="td2">{ACTIVE-TYPE}</td>
+</tr><tr>
+<td class="td2">{LANG-USERSTAT}</td>
+<td class="td2">{USERSTAT}</td>
+</tr><tr>
+<td class="td2">{LANG-COPPAVALIDATION}</td>
+<td class="td2"><select name="coppa" class="text">
+{COPPAVALIDATION}
+</select></td>
+</tr><tr>
+<td class="td2">{LANG-IMGVERT}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-GDREQ}', this, event, '150px')">[?]</a></td>
+<td class="td2">{IMGVERT}</td>
+</tr><tr>
+<td class="td2">{LANG-PROXY-STAT}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-PROXY-HINT}', this, event, '150px')">[?]</a></td>
+<td class="td2">{PROXY-STAT}</td>
+</tr><tr>
+<td class="td2">{LANG-MXCHECK}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-MXCHECKHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2">{MXCHECK}</td>
+</tr><tr>
+<td class="td2">{LANG-WARNINGTHRESHOLD}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-WARNINGTHRESHOLD-HINT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><select name="warnthreshold" class="text">
+{WARNINGTHRESHOLD}
+</select></td>
+</tr><tr>
+<td class="td2">{LANG-PMQUOTA}</td>
+<td class="td2"><input type="text" name="pm_quota" size="5" value="{PMQUOTA}" maxlength="4" class="text" id="pmquota"><div id="pmquoteerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-ARCHIVEQUOTA}</td>
+<td class="td2"><input type="text" name="archive_quota" size="5" value="{ARCHIVEQUOTA}" maxlength="4" class="text" id="archivequota"><div id="archivepmreqerr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" Value="{LANG-SAVESETTINGS}" class="submit"></td>
+</tr>
+</table>
+</form><br />

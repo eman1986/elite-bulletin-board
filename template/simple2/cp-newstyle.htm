@@ -1,0 +1,27 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_style";
+var nostylename = "{LANG-NOSTYLENAME}";
+var notemppath = "{LANG-NOTEMPPATH}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-ADDSTYLE}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+
+<form method="post" action="stylecp.php?action=style_add_process" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ADDSTYLE}</td>
+</tr>
+<tr>
+<td class="td2" width="50%">{LANG-STYLENAME}</td>
+<td class="td2" width="50%"><input type="text" name="style_name" maxlength="50" size="30"  class="text" id="stylename" /><div id="stylenameerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TEMPLATEPATH}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-TEMPLATERULE}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="text" name="template_path" maxlength="80" size="30"  class="text" id="temppath" /><div id="temppatherr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-ADDSTYLE}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

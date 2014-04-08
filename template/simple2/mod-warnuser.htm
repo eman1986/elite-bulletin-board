@@ -1,0 +1,41 @@
+<script language='JavaScript' type="text/javascript">
+//lets add in some variables.
+var ftype = "mod_warn";
+var nowarn = "{LANG-NOWARN}";
+var noreason = "{LANG-NOREASON}";
+var longreason = "{LANG-LONGREASON}";
+var nocontact = "{LANG-NOCONTACTERR}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<br /><div class="td2"><a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+
+<form method="post" action="manage.php?mode=warn_process&amp;bid={BID}&amp;tid={TID}" onsubmit="return validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" colspan="2" align="center">{LANG-SUBMIT}</td>
+</tr><tr>
+<td class="td2">{LANG-WARNOPTION}</td>
+<td class="td2"><input type="radio" name="warnopt" id="addwarn" value="10" /><span  class="raisewarn">{LANG-RAISEWARN}</span><br /><input type="radio" name="warnopt" id="removewarn" value="-10" /><span class="lowerwarn">{LANG-LOWERWARN}</span><div id="warnerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-WARNREASON}</td>
+<td class="td2"><textarea name="reason" id="wreason" rows="5" cols="60" class="text"></textarea><div id="reasonerr"></div></td>
+</tr><tr>
+<td class="td2">{LANG-SUSPENDIONLENGTH}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-SUSPENDHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2"><input type="text" name="suspend" size="5" class="text" value="{SUSPENDIONLENGTH}" /></td>
+</tr><tr>
+<td class="td2">{LANG-CONTACTOPTION}</td>
+<td class="td2"><select name="contactopt" class="text" id="contactopt">
+<option value="None">{LANG-NOCONTACT}</option>
+<option value="PM">{LANG-PMCONTACT}</option>
+<option value="Email">{LANG-EMAILCONTACT}</option>
+</select></td>
+</tr><tr>
+<td class="td2">{LANG-CONTACT-TEXT}</td>
+<td class="td2"><textarea name="body" rows="5" cols="60" class="text" id="contactmsg"></textarea><div id="contacterr"></div></td>
+</tr><tr>
+<td class="td1" colspan="2" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td></tr>
+</table>
+<input type="hidden" name="user" value="{USER}" />
+</form><br />

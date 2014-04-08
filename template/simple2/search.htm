@@ -1,0 +1,34 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "search";
+var nokeyword = "{LANG-NOKEYWORD}";
+var longkeyword = "{LANG-LONGKEYWORD}";
+var longuser = "{LANG-LONGUSER}";
+var notype = "{LANG-NOTYPE}";
+</script>
+<script type="text/javascript" src="includes/validate.js"></script>
+<br /><div class="td2"><a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}</div><br />
+
+<div class="td2">{LANG-TEXT}</div><br />
+<form method="post" action="Search.php?action=result" onsubmit="return validate(ftype);">
+<br><table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td class="td1" width="50%">&nbsp;</td>
+<td class="td1" width="50%">&nbsp;</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-KEYWORD}</td>
+<td class="td2" width="50%"><input type="text" name="keyword" size="30" class="text" id="keyword" /><div id="keyworderr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-USERNAME}</td>
+<td class="td2" width="50%"><input type="text"name="poster" size="30" class="text" id="author" /><div id="authorerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SELBOARD}</td>
+<td class="td2" width="50%">{BOARDLIST}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TEXT2}</td>
+<td class="td2" width="50%"><input type="radio" name="search_type" value="topic" id="topic" />{LANG-TOPIC}<br /><input type="radio" name="search_type" value="post" id="post" />{LANG-POST}<div id ="typeerr"></div></td>
+</tr><tr>
+<td colspan="2" align="center" class="td1"><input type="submit" name="submit" value="{LANG-SEARCH}" class="submit" /></td>
+</tr>
+</table>
+</form>

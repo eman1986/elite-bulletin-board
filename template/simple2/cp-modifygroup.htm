@@ -1,0 +1,34 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_editgroup";
+var nogroupname = "{LANG-NOGROUPNAME}";
+var nogroupdescription = "{LANG-NOGROUPDESCRIPTION}";
+var longgroupdescription = "{LANG-LONGGROUPDESCRIPTION}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-MODIFYGROUP}</div><br />
+
+<form method="post" action="groupcp.php?action=modify_group_process&amp;id={ID}" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-MODIFYGROUP}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPNAME}</td>
+<td class="td2" width="50%"><input type="text" name="group" size="30" class="text" value="{GROUPNAME}" maxlength="30" id="groupname" /><div id="groupnameerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPDESCRIPTION}</td>
+<td class="td2" width="50%"><textarea name="description" rows="3" cols="50" wrap="soft" class="text" id="groupdescription">{GROUPDESCRIPTION}</textarea><div id="groupdescriptionerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPSTATUS}</td>
+<td class="td2" width="50%">{GROUPSTATUS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPACCESS}</td>
+<td class="td2" width="50%">{GROUPACCESS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-GROUPPROFILE}<a href="#" class="hintanchor" onMouseover="showhint('{LANG-GROUPPROFILEHINT}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%">{GROUPPROFILE}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-MODIFYGROUP}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

@@ -1,0 +1,98 @@
+<br /><div class="td2"><a href="index.php">{TITLE}</a> &#187; {LANG-TITLE}</div><br />
+
+<script type="JavaScript">
+<!-- Begin
+function doAIM() {
+var action;
+var msg = document.frmAIM.txtMessage.value;
+var newMsg = "";
+var charSpec = "N";
+var specials = "&? @%";
+for(var i = 0; i < msg.length; i++) {
+for(var q = 0; q < specials.length; q++) {
+if(msg.charAt(i) == specials.charAt(q)) {
+charSpec = "Y";
+break;
+} else {
+charSpec = "N";
+   }
+}
+if(charSpec == "Y") {
+newMsg += "+";
+} else {
+newMsg += msg.charAt(i);
+   }
+}
+action = "aim:goim?screenname=";
+action += document.frmAIM.txtName.value;
+action += "&message=";
+action += newMsg;
+document.frmAIM.action = action;
+document.frmAIM.submit();
+}
+//  End -->
+</script>
+
+<div id="contentwrapper">
+<div id="contentcolumn">
+<div class="innertube">&nbsp;
+<div class="td2">
+                <h1 class="rsstitle">{LANG-LATEST-TOPICS}</h1>
+<p>{LATEST-TOPICS}</p>           	                
+            </div>
+            
+<div class="td2">
+                <h1 class="rsstitle">{LANG-LATEST-POSTS}</h1>
+<p>{LATEST-POSTS}</p>                	                
+            </div>
+
+</div>
+
+</div>
+</div>
+
+<div id="leftcolumn">
+<div class="innertube">&nbsp;
+
+			<div class="td2">
+                <h1 class="rsstitle">{USERNAME}'s {LANG-TITLE}</h1>
+				<img src="{AVATAR}" alt="{USERNAME}'s Avatar" title="{USERNAME}'s Avatar" class="avatar" />
+                <p>{LANG-RANK}:&nbsp;{RANK}</p>
+                <p>{LANG-POSTCOUNT}: {POSTCOUNT}</p>
+                <p>{LANG-EMAIL}: {EMAIL}</p>
+                <p>{LANG-MSN}: {MSN}</p> 	
+				<p>{LANG-AOL}: <a href="aim:goim?screenname={AOL}&message=Hi,+Are+you+there?">{AOL}</a></p> 	
+				<p>{LANG-ICQ}: {ICQ}</p> 	
+				<p>{LANG-YAHOO}: {YAHOO}</p> 	
+				<p>{LANG-WWW}: <a href="{WWW}" target="_blank">{WWW}</a></p> 	
+				<p>{LANG-LOCATION}: {LOCATION}</p> 	
+				<p>{LANG-JOINED}: {JOINED}</p>                	                
+            </div>
+            
+			<div class="td2">
+                <h1 class="rsstitle">{LANG-OPTION}</h1>
+                {OPTION}               	                
+            </div>
+            
+</div>
+
+</div>
+
+<div id="rightcolumn">
+<div class="innertube">&nbsp;
+			<div class="rssbox">
+                <h1 class="rsstitle">{FEED-TITLE1}</h1>
+                <p>{FEED-DESC1}</p>
+				
+				{FEED-ITEM1}                	                
+            </div><br />
+            
+			<div class="rssbox">
+                <h1 class="rsstitle">{FEED-TITLE2}</h1>
+                <p>{FEED-DESC2}</p>
+				
+				{FEED-ITEM2}                	                
+            </div>
+</div>
+
+</div

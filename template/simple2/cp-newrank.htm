@@ -1,0 +1,32 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_ranks";
+var norankname = "{LANG-NORANKNAME}";
+var longrankname = "{LANG-LONGRANKNAME}";
+var norankstar = "{LANG-NORANKSTAR}";
+var longrankstar = "{LANG-LONGRANKSTAR}";
+var norankrule = "{LANG-NORANKRULE}";
+var longrankrule = "{LANG-LONGRANKRULE}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; 
+{LANG-ADDRANK}</div><br />
+
+<form method="post" action="usercp.php?action=rank_add_process" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ADDRANK}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-RANKNAME}</td>
+<td class="td2" width="50%"><input type="text" name="rank_name" class="text" size="30" id="rankname" /><div id="ranknameerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-STAR}</td>
+<td class="td2" width="50%"><input type="text" name="rank_star" class="text" size="30" id="rankstar" /><div id="rankstarerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-POSTRULE}</td>
+<td class="td2" width="50%"><input type="text" name="rank_post" class="text" size="30" id="rankrule" /><div id="rankruleerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-ADDRANK}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

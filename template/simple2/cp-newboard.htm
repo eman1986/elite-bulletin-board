@@ -1,0 +1,132 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_board";
+var noboard = "{LANG-NOBOARD}";
+var longboard = "{LANG-LONGBOARD}";
+var nodescription = "{LANG-NODESCRIPTION}";
+var nocatsel = "{LANG-NOCATSEL}";
+var nopostincred = "{LANG-NOPOSTINCRED}";
+var nobbcode = "{LANG-NOBBCODE}";
+var nosmile = "{LANG-NOSMILE}";
+var noimg = "{LANG-NOIMG}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-ADDBOARD}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+
+<form method="post" action="boardcp.php?action=board_add_process&amp;type={BOARDTYPE}" onsubmit="return acp_validate(ftype);">
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-ADDBOARD}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BOARDNAME}</td>
+<td class="td2" width="50%"><input type="text" name="board_name" size="30" class="text" id="boardname" /><div id="boarderr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DESCRIPTION}</td>
+<td class="td2" width="50%"><textarea name="description" rows="3" cols="50" wrap="soft" class="text" id="description"></textarea><div id="descriptionerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-BOARDPERMISSION}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-READACCESS}</td>
+<td class="td2" width="50%"><select name="readaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3">{LANG-ACCESS-REG}</option>
+<option value="0" selected=selected>{LANG-ACCESS-ALL}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-WRITEACCESS}</td>
+<td class="td2" width="50%"><select name="writeaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-REPLYACCESS}</td>
+<td class="td2" width="50%"><select name="replyaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-VOTEACCESS}</td>
+<td class="td2" width="50%"><select name="voteaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-POLLACCESS}</td>
+<td class="td2" width="50%"><select name="pollaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-EDITACCESS}</td>
+<td class="td2" width="50%"><select name="editaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DELETEACCESS}</td>
+<td class="td2" width="50%"><select name="deleteaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ATACHMENTACCESS}</td>
+<td class="td2" width="50%"><select name="attachmentaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2">{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3" selected=selected>{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-IMPORTANTACCESS}</td>
+<td class="td2" width="50%"><select name="importantaccess" class="text">
+<option value="5">{LANG-ACCESS-PRIVATE}</option>
+<option value="1">{LANG-ACCESS-ADMINS}</option>
+<option value="2" selected=selected>{LANG-ACCESS-ADMINSMODS}</option>
+<option value="3">{LANG-ACCESS-REG}</option>
+<option value="4">{LANG-ACCESS-NONE}</option>
+</select></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-BOARDSETTINGS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-CATEGORY}</td>
+<td class="td2" width="50%">{CATEGORY}<div id="catselerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-POSTINCREMENT}</td>
+<td class="td2" width="50%"><input type="radio" name="increment" value="1" id="postincred" />{LANG-YES} <input type="radio" name="increment" value="0" id="nopostincred" />{LANG-NO}<div id="postincrederr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BBCODE}</td>
+<td class="td2" width="50%"><input type="radio" name="bbcode" value="1" id="bbcode" />{LANG-ON} <input type="radio" name="bbcode" value="0" id="nobbcode" />{LANG-OFF}<div id="bbcodeerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SMILE}</td>
+<td class="td2" width="50%"><input type="radio" name="smiles" value="1" id="smile" />{LANG-ON} <input type="radio" name="smiles" value="0" id="nosmile" />{LANG-OFF}<div id="smileerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-IMG}</td>
+<td class="td2" width="50%"><input type="radio" name="img" value="1" id="img" />{LANG-ON} <input type="radio" name="img" value="0" id="noimg" />{LANG-OFF}<div id="imgerr"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center"><input type="submit" value="{LANG-SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

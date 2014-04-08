@@ -1,0 +1,97 @@
+<script language='JavaScript'>
+//lets add in some variables.
+var ftype = "acp_usermanage";
+var invalidemail = "{LANG-INVALIDEMAIL}";
+var longemail = "{LANG-LONGEMAIL}";
+var longmsn = "{LANG-LONGMSN}";
+var longaim = "{LANG-LONGAIM}";
+var longyim = "{LANG-LONGYIM}";
+var longicq = "{LANG-LONGICQ}";
+var longwww = "{LANG-LONGURL}";
+var invalidurl = "{LANG-INVALIDURL}";
+var notimeform = "{LANG-NOTIMEFORM}";
+var longtimeform = "{LANG-LONGTIMEFORM}";
+var longloc = "{LANG-LONGLOC}";
+var longsig = "{LANG-LONGSIG}";
+var longrss = "{LANG-LONGRSS}";
+</script>
+<script type="text/javascript" src="/includes/acp_vaildate.js"></script>
+<br /><div class="td2"><a href="../index.php">{TITLE}</a> &#187; <a href="index.php">{LANG-TITLE}</a> &#187; {LANG-MANAGEUSER}</div><br />
+
+<p class="td2">{LANG-TEXT}</p>
+
+<form method="post" action="usercp.php?action=user_process" onsubmit="return acp_validate(ftype);">
+<table class="table" border="0" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-MANAGEUSER}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-EMAIL}</td>
+<td class="td2" width="50%"><input name="email" type="text" value="{EMAIL}" size="30" class="text" id="email" /><div id="emailerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-USERNAME}</td>
+<td class="td2" width="50%"><input type="text" name="user" value="{USERNAME}" size="30" class="text" readonly=readonly></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TIME}</td>
+<td class="td2" width="50%">{TIME}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TIMEFORMAT}<a href="http://us2.php.net/manual/en/function.date.php" target="_blank" class="hintanchor" onMouseover="showhint('{LANG-TIMEINFO}', this, event, '150px')">[?]</a></td>
+<td class="td2" width="50%"><input type="text" name="time_format" value="{TIMEFORMAT}" size="30" class="text" id="timeform" /><div id="timeformerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-PMNOTIFY}</td>
+<td class="td2" width="50%">{PMNOTIFY}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SHOWEMAIL}</td>
+<td class="td2" width="50%">{SHOWEMAIL}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-STYLE}</td>
+<td class="td2" width="50%">{STYLE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-LANGUAGE}</td>
+<td class="td2" width="50%">{LANGUAGE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-MSN}</td>
+<td class="td2" width="50%"><input type="text" name="msn_messenger" class="text" value="{MSN}" size="30" id="msn" /><div id="msnerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-AOL}</td>
+<td class="td2" width="50%"><input type="text" name="aol_messenger" class="text" value="{AOL}" size="30" id="aim" /><div id="aimerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-YIM}</td>
+<td class="td2" width="50%"><input type="text" name="yim" class="text" size="30" value="{YIM}" id="yim" /><div id="yimerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ICQ}</td>
+<td class="td2" width="50%"><input type="text" name="icq" class="text" size="30" value="{ICQ}" id="icq" /><div id="icqerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-LOCATION}</td>
+<td class="td2" width="50%"><input type="text" name="location" class="text" size="30" value="{LOCATION}" id="loc" /><div id="locerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SIG}</td>
+<td class="td2" width="50%"><textarea name="sig" rows="5" cols="40" class="text" id="sig">{SIG}</textarea><div id="sigerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-WWW}</td>
+<td class="td2" width="50%"><input type="text" name="site" class="text" size="30" value="{WWW}" id="url" /><div id="wwwerr"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-RSSFEED1}</td>
+<td class="td2" width="50%"><input type="text" name="rssfeed1" value="{RSSFEED1}" class="text" size="30" id="rss1" /><div id="rssfeed1err"></div></td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-RSSFEED2}</td>
+<td class="td2" width="50%"><input type="text" name="rssfeed2" value="{RSSFEED2}" class="text" size="30" id="rss2" /><div id="rssfeed2err"></div></td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">{LANG-ADMINTOOLS}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-ACTIVEUSER}</td>
+<td class="td2" width="50%">{ACTIVEUSER}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-RSSBAN}</td>
+<td class="td2" width="50%">{RSSBAN}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-BANUSER}</td>
+<td class="td2" width="50%">{BANUSER}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DELUSER}</td>
+<td class="td2" width="50%"><input type="checkbox" name="deluser" class="text" value="yes">{LANG-TICKDELETE}</td>
+</tr><tr>
+<td colspan="2" class="td1" align="center">
+<input type="submit" value="{SUBMIT}" class="submit" /></td>
+</tr>
+</table>
+</form><br />

@@ -1,0 +1,37 @@
+<script language="JavaScript" type="text/javascript"> 
+
+function del_confirm(id){ 
+if (confirm("{LANG-DELPROMPT}")){ 
+window.location="PM.php?action=delete&id="+id
+}
+} 
+
+function move_confirm(id){ 
+if (confirm("{LANG-movePROMPT}")){ 
+window.location="PM.php?action=movemsg&id="+id
+}
+}
+</script>
+<br /><div class="td2"><a href="index.php">{TITLE}</a> &#187; <a href="PM.php">{LANG-TITLE}</a> &#187; {LANG-READPM}</div><br />
+
+<a href="PM.php?action=reply&amp;id={ID}"><img src="template/simple2/images/reply.gif" border="0" alt="{LANG-REPLY}" /></a><br /><br />
+<table border="0" class="table" cellspacing="1" cellpadding="1">
+<tr>
+<td colspan="2" class="td1" align="center">{LANG-READPM}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-FROM}</td>
+<td class="td2" width="50%">{FROM} [<a href="PM.php?action=ban&amp;ban_user={FROM}">{LANG-BANUSER}</a>]</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-TO}</td>
+<td class="td2" width="50%">{TO}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-DATE}</td>
+<td class="td2" width="50%">{DATE}</td>
+</tr><tr>
+<td class="td2" width="50%">{LANG-SUBJECT}</td>
+<td class="td2" width="50%">{SUBJECT}</td>
+</tr><tr>
+<td colspan="2" class="td2">{PM-MESSAGE}<br><br>{SIGNATURE}</td>
+</tr><tr>
+<td colspan="2" class="td2"><input type="button" value="{LANG-DELETEPM}" onclick="del_confirm({ID});return false;" class="submit" /> - <input type="button" value="{LANG-MOVEPM}" onclick="move_confirm({ID});return false;" class="submit" /></td>
+</table><br />
