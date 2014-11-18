@@ -2,7 +2,7 @@
 define('IN_EBB', true);
 /*
 Filename: index.php
-Last Modified: 10/17/2012
+Last Modified: 11/17/2014
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ echo '<div class="td1"><a href="index.php"><img src="../template/clearblue2/imag
 
 switch($cmd){
 case 'create':
-#see if config file is already writtened.
+#see if config file is already written.
 $config_path = '../config.php';
 $file_size = filesize($config_path);
 if($file_size > 0){
@@ -79,7 +79,7 @@ if($file_size > 0){
 	</div></form><br />';	
 break; 
 case 'write':
-#see if config file is already writtened.
+#see if config file is already written.
 $config_path = '../config.php';
 $file_size = filesize($config_path);
 if($file_size > 0){
@@ -141,7 +141,7 @@ define('PWDSALT', '$pass');
 		       echo "Cannot write to file ($filename)";
 		       exit();
 			}
-			echo '<p class="td2">Successfully created config file. onto <a href=\"install.php?step=install_1\">step 2</a>.</p>';
+			echo '<p class="td2">Successfully created config file. onto <a href="install.php?step=install_1">step 2</a>.</p>';
 			fclose($handle);
 		}else{
 			echo '<p class="td2">The file $filename is not writable</p>';

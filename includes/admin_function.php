@@ -4,7 +4,7 @@ die("<b>!!ACCESS DENIED HACKER!!</b>");
 }
 /*
 Filename: admin_function.php
-Last Modified: 5/22/2012
+Last Modified: 11/17/2014
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -26,9 +26,9 @@ function versionchecker(){
 		$checker = $cp['updateerr'];	
 	}else{
 		if ($phpver < 5.1){
-			$currver = file_get_contents("http://elite-board.us/updates/md5_hash.md5");  
+			$currver = file_get_contents("http://elite-board.sourceforge.net/updates/md5_hash.md5");
 		}else{
-			$currver = file_get_contents("http://elite-board.us/updates/md5_hash.md5", FALSE,NULL,0,32);
+			$currver = file_get_contents("http://elite-board.sourceforge.net/updates/md5_hash.md5", FALSE,NULL,0,32);
 		}
 		#see if the version on file is up to date.
 		if ($currver == $settings['version']){
