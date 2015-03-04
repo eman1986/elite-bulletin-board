@@ -2,7 +2,7 @@
 define('IN_EBB', true);
 /*
 Filename: upload.php
-Last Modified: 10/17/2012
+Last Modified: 03/04/2015
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -93,12 +93,12 @@ if($attach_chk == 0){
 		$colume = 'attachment_quota';
 		$settings = board_settings($colume);
     	#get file values.
-    	$file_name = $_FILES['attachment']['name'];
+    	$file_name = anti_injection($_FILES['attachment']['name']);
         $encryptName = sha1($file_name);
-    	$file_type = $_FILES['attachment']['type'];
-    	$file_size = $_FILES['attachment']['size'];
-    	$file_temp = $_FILES['attachment']['tmp_name'];
-    	$file_ext = strtolower(substr(strrchr($file_name, "."), 1));
+    	$file_type = anti_injection($_FILES['attachment']['type']);
+    	$file_size = anti_injection($_FILES['attachment']['size']);
+    	$file_temp = anti_injection($_FILES['attachment']['tmp_name']);
+    	$file_ext = anti_injection(strtolower(substr(strrchr($file_name, "."), 1)));
         $uploadpath = "uploads/".$encryptName;
     	$error = 0;
     	$errormsg = '';

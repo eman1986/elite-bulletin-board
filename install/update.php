@@ -2,7 +2,7 @@
 define('IN_EBB', true);
 /*
 Filename: update.php
-Last Modified: 11/17/2014
+Last Modified: 03/04/2015
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -15,8 +15,8 @@ require "../header.php";
 require "../includes/admin_function.php";
 
 #version data.
-$versionKey = 'a2e57d59fd590d801e9729578255e857';
-$newVer = '2.1.25';
+$versionKey = 'ef645aba8f54125e65eb5092ecb74931';
+$newVer = '2.1.26';
 
 $page = new template("../". $template_path ."/acp_header.htm");
 $page->replace_tags(array(

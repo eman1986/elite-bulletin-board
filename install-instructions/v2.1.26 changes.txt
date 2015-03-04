@@ -1,0 +1,28 @@
+v2.1.26 README
+----------------------
+
+If you currently have 2.1 installed this is the readme file for you to read.
+
+STEP 1: upload updated files
+
+The following files need to be uploaded, if prompted to allow overwrite say yes.
+/upload.php
+/install/update.php(upload to the install folder, make sure both update.php AND /install/ are either set to 777 or 755(if not CHMOD them))
+
+STEP 2: Log into ACP
+
+Click on Administration Panel and if prompted, enter in your admin account details.
+
+the ACP should auto-detect the update file and redirect you to that file where it will give you further instructions.
+
+STEP 3: Finished
+
+If you set the permissions correctly, the update file was removed and your board is now updated.
+
+IF IT DID NOT DELETE THE UPDATE FILE, BE SURE TO DELETE IT,OTHERWISE IT'LL JUST LOOP BACK TO THE FILE AND WILL NOT ALLOW YOU TO ACCESS THE ADMINISTRATIVE PANEL.
+
+----
+Changes
+----
+FIXED:
+* SQL Injection Exploit when uploading a file.

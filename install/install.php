@@ -3,7 +3,7 @@ ob_start();
 define('IN_EBB', true);
 /*
 Filename: install.php
-Last Modified: 11/17/2014
+Last Modified: 03/04/2015
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@ if(isset($_GET['step'])){
 
 #config data.
 $template_path = "../template/clearblue2";
-$versionKey = 'a2e57d59fd590d801e9729578255e857';
+$versionKey = 'ef645aba8f54125e65eb5092ecb74931';
 
 #see if config file is already writtened.
 $config_path = '../config.php';
@@ -221,6 +221,7 @@ $db->run = "CREATE TABLE IF NOT EXISTS `ebb_online` (
   `time` varchar(40) NOT NULL default '',
   `location` varchar(90) NOT NULL default ''
 ) ENGINE=MyISAM";
+
 $db->query();
 $db->close();
 //ebb_pm

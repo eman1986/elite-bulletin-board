@@ -3,7 +3,7 @@ ob_start();
 define('IN_EBB', true);
 /*
 Filename: upgrade.php
-Last Modified: 11/17/2014
+Last Modified: 03/04/2015
 
 Term of Use:
 This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@ if(isset($_GET['action'])){
 
 #config data.
 $template_path = "../template/clearblue2";
-$versionKey = 'a2e57d59fd590d801e9729578255e857';
+$versionKey = 'ef645aba8f54125e65eb5092ecb74931';
 
 #see if config file is already written.
 $config_path = '../config.php';
